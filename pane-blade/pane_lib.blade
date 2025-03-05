@@ -1,0 +1,75 @@
+// A video with associated slides.
+function vid(title, first_slide, last_slide, url)
+  video(controls, controlsList="nodownload")
+    source(src=url, type="video/mp4")
+    | Your browser does not support the video tag.
+  p.mc-video-title
+    = title
+    |  (Slides 
+    = first_slide
+    |  - 
+    = last_slide
+    | )
+
+// A video without associated slides.
+function video(title, url)
+  p
+  video(controls, controlsList="nodownload")
+    source(src=url, type="video/mp4")
+    | Your browser does not support the video tag.
+  p.mc-video-title
+    = title
+
+// These create collapsible sections in a tutorial.
+// Use:
+//   call tutorial_section("Title", "id")
+//   div.collapse#id
+//     ...
+// Or:
+//   call tutorial_section_expanded("Title", "id")
+//   div.collapse.show.in#id
+//     ...
+function tutorial_section_expanded(title, id)
+  h2
+    button.btn.btn-link.mc-caret(type="button" data-toggle="collapse" data-target="##{id}" aria-expanded="true" aria-controls="#{id}")
+      i.fa.fa-caret-right.mc-if-collapsed
+      i.fa.fa-caret-down.mc-if-expanded
+    = title
+function tutorial_section(title, id)
+  h2
+    button.btn.btn-link.collapsed.mc-caret(type="button" data-toggle="collapse" data-target="##{id}" aria-expanded="false" aria-controls="#{id}")
+      i.fa.fa-caret-right.mc-if-collapsed
+      i.fa.fa-caret-down.mc-if-expanded
+    = title
+function tutorial_subsection(title, id)
+  h3
+    button.btn.btn-link.collapsed.mc-caret(type="button" data-toggle="collapse" data-target="##{id}" aria-expanded="false" aria-controls="#{id}")
+      i.fa.fa-caret-right.mc-if-collapsed
+      i.fa.fa-caret-down.mc-if-expanded
+    = title
+function tutorial_subsubsection(title, id)
+  h4
+    button.btn.btn-link.collapsed.mc-caret(type="button" data-toggle="collapse" data-target="##{id}" aria-expanded="false" aria-controls="#{id}")
+      i.fa.fa-caret-right.mc-if-collapsed
+      i.fa.fa-caret-down.mc-if-expanded
+    = title
+function tutorial_subsubsubsection(title, id)
+  h5
+    button.btn.btn-link.collapsed.mc-caret(type="button" data-toggle="collapse" data-target="##{id}" aria-expanded="false" aria-controls="#{id}")
+      i.fa.fa-caret-right.mc-if-collapsed
+      i.fa.fa-caret-down.mc-if-expanded
+    = title
+function tutorial_quiz(title, id)
+  h3
+    button.btn.btn-link.collapsed.mc-caret(type="button" data-toggle="collapse" data-target="##{id}" aria-expanded="false" aria-controls="#{id}")
+      i.fa.fa-caret-right.mc-if-collapsed
+      i.fa.fa-caret-down.mc-if-expanded
+    = title
+
+
+function external_link(text, url)
+  span(style="white-space: nowrap;")
+    a(href=url, target="_blank")
+      = text
+      |  
+      i.fa.fa-up-right-from-square.mc-external-link

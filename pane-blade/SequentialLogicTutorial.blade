@@ -1,0 +1,116 @@
+.mc-auto-pane-contents.mc-markdown
+  a(name="top")
+  :markdown
+    # Sequential Logic
+    (~10 min)
+    
+    In this tutorial, you’ll learn to create simple sequential logic in TL-Verilog.
+    
+    ## Table of Contents
+  ul.mc-toc
+    li(onclick="ide.anchorLink(this, 'fib-seq')")
+      | Fibonacci Sequence
+    li(onclick="ide.anchorLink(this, 'counter')")
+      | Counter
+    li(onclick="ide.anchorLink(this, 'wrapup')")
+      | Wrap-Up
+    
+  a(name="fib-seq")
+  :markdown
+    ## Fibonacci Sequence
+  p
+    | The example for this tutorial is a circuit that computes the Fibonacci Sequence,
+    | where each number in the series is the sum of the previous two, starting with
+    | two ones: 1, 1, 2, 3, 5, 8, 13, ....
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/sequential_tutorial.tlv\")") Load Fibonacci Example
+  p  
+    | This is expressed in a single TL-Verilog assignment expression for the TL-Verilog 
+    | signal
+    <span.tlv_ident_pipe_sig.mc-ident-font
+      | $num
+    | , on lines 5 and 6.  This expression can be read: “Assign a 16-bit number
+    | to one if reset otherwise the sum of the two numbers in the previous two cycles.”
+  p  
+    | The signals referenced in this expression are:
+  
+  ul
+    li
+      span
+        span.tlv_ident_alignment_expr_1c.mc-ident-font
+          | >>1
+        span.tlv_ident_pipe_sig.mc-ident-font
+          | $num 
+        | and 
+        span.tlv_ident_alignment_expr_1c.mc-ident-font
+          | >>2
+        span.tlv_ident_pipe_sig.mc-ident-font
+          | $num
+        | : the previous two values of 
+        span.tlv_ident_pipe_sig.mc-ident-font
+          |$num
+        | .
+    li
+      span
+        span.tlv_ident_sv_sig.mc-ident-font
+          | *reset
+        | : a reference to a SystemVerilog reset signal (in this case provided by the
+        <span>.mc-ident-font.mc-ident-font
+          | m4_makerchip_module
+        | macro).
+      
+  p
+    | The use of 
+    span.tlv_ident_alignment_expr_1c.mc-ident-font
+      | >>1
+    span.tlv_ident_pipe_sig.mc-ident-font
+      | $num  
+    | and 
+    span.tlv_ident_alignment_expr_1c.mc-ident-font
+      | >>2
+    span.tlv_ident_pipe_sig.mc-ident-font
+      | $num 
+    | implies staging of 
+    span.tlv_ident_pipe_sig.mc-ident-font
+      |$num 
+    | through two flip-flops.  
+    | The three stages are represented in the “Diagram” as green rectangles, within
+    | which, the flip-flops are represented as grey squares.
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | Take a look at the waveform. Zoom in. Do you see the Fibonacci Sequence?
+        | (Values are in hexadecimal.)
+    
+  a(name="counter")
+  :markdown
+    ## Counter
+    Your turn
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | Create a 16-bit counter, 
+        span.tlv_ident_pipe_sig.mc-ident-font
+          | $cnt. 
+        | Reset the counter to zero, and, 
+        | when not in reset, assign the counter to its previous value plus one.
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | Debug errors seen in the “Log” view (which may also be annotated on 
+        | code in the “Nav TLV” view).
+        
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | Explore your design in the “Nav TLV” and “Diagram” views.  
+        | Check the waveform.  Does your counter work?
+  p
+    | Having trouble?
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadTLVURL(\"#{basePath}/public/tutorial/tlv/sequential_tutorial_answer.tlv\")") Load Answer
+  a(name="wrapup")
+  :markdown
+    ## Wrap-Up
+    
+    Easy, right? In this tutorial, you implied logic to stage, or pipeline, individual signals.  
+    In the next tutorial, you’ll learn about a construct to more-formally organize and manage 
+    pipelined logic

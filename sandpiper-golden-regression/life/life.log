@@ -1,0 +1,51 @@
+INFORM(0) (PROD_INFO):
+	SandPiper(TM)
+	(DEV) Run as: "java -jar sandpiper.jar --noversion --fmtDeclSingleton --fmtNoRespace --webContent  --noline --xinj --xclk --fmtFullHdlHier --debugSigs --compiler=modelsim -p verilog --outdir=run/gen/life -i run/gen/life/life.m4out.tlv -o life.sv
+	For help, including product info, run with -h.
+
+INFORM(0) (LICENSE):
+	Licensed to "Redwood EDA, LLC" as: Full Edition.
+
+INFORM(0) (FILES):
+	Reading "run/gen/life/life.m4out.tlv"
+	to produce:
+		Translated HDL File: "run/gen/life/life.sv"
+		Generated HDL File: "run/gen/life/life_gen.sv"
+
+INFORM(0) (VERSION): File 'run/gen/life/life.tlv' Line 1 (char 46)
+	Preprocessed as 'run/gen/life/life.m4out.tlv':1(ch46):
+	+---------------------------------------------vv-
+	>\TLV_version [\source run/gen/life/life.tlv] 1c: tl-x.org
+	+---------------------------------------------^^-
+	This version of SandPiper can read this TL-X Version (1c),
+	but your version and license support TL-X 1d.
+	To up-rev this file to TL-X 1d use "--scrub".
+
+INFORM(0) (MULTI-ASSIGN): File 'run/gen/life/life.tlv' Line 98 (char 54)
+	Preprocessed as 'run/gen/life/life.m4out.tlv':98(ch54):
+	+-----------------------------------------------------v
+	|               \SV_plus
+	|                  if (xx < X_SIZE - 1)
+	|                     assign $$right_alive_accum[10:0] = >xx[xx + 1]$horiz_alive_accum;
+	|                  else
+	>                     assign $$right_alive_accum[10:0] = 11'b0;
+	+-----------------------------------------------------^
+	Multiple assignments to |life>yy>xx$right_alive_accum.
+		(Assignments within \SV_plus should have a single explicit assigned signal reference ($$ prefix)
+		with other assigned references implicit ($ prefix).)
+		This may become fatal in future versions.
+
+INFORM(0) (MULTI-ASSIGN): File 'run/gen/life/life.tlv' Line 104 (char 51)
+	Preprocessed as 'run/gen/life/life.m4out.tlv':104(ch51):
+	+--------------------------------------------------v
+	|            \SV_plus
+	|               if (yy < Y_SIZE -1)
+	|                  assign $$below_alive_accum[21:0] = >yy[yy + 1]$vert_alive_accum;
+	|               else
+	>                  assign $$below_alive_accum[21:0] = 22'b0;
+	+--------------------------------------------------^
+	Multiple assignments to |life>yy$below_alive_accum.
+		(Assignments within \SV_plus should have a single explicit assigned signal reference ($$ prefix)
+		with other assigned references implicit ($ prefix).)
+		This may become fatal in future versions.
+

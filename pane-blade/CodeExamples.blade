@@ -1,0 +1,485 @@
+.mc-auto-pane-contents.mc-markdown
+  a(name="top")
+  h1
+    | Examples
+  p
+    | Here are some sample TL-Verilog (and Verilog/SystemVerilog) Makerchip project examples.
+    | Many come with visualizations in the VIZ tab. These are marked with "(VIZ)".
+  h2
+    | Table of Contents
+  
+  h3
+    | Starting Templates
+  ul.mc-toc
+    li(onclick="ide.anchorLink(this, 'barebones')")
+      | Bare-Bones Templates
+    li(onclick="ide.anchorLink(this, 'svtb')")
+      | SystemVerilog Testbench
+    li(onclick="ide.anchorLink(this, 'lib')")
+      | TLV M5 Macro Library Template
+    li(onclick="ide.anchorLink(this, 'fpga')")
+      | FPGA Development Templates
+    li(onclick="ide.anchorLink(this, 'asic')")
+      | ASIC Development Templates
+  h3
+    | Basic Logic Concepts
+  ul.mc-toc
+    li(onclick="ide.anchorLink(this, 'combo')")
+      | Combinational Logic
+    li(onclick="ide.anchorLink(this, 'seq')")
+      | Sequential Logic
+    li(onclick="ide.anchorLink(this, 'pipelines')")
+      | Pipelined Logic
+    li(onclick="ide.anchorLink(this, 'fsm')")
+      | Finite State Machines
+  h3
+    | Development Concepts
+  ul.mc-toc
+    li(onclick="ide.anchorLink(this, 'macros')")
+      | Macros (
+      code \m5
+      |  and 
+      code \TLV
+      | )
+    li(onclick="ide.anchorLink(this, 'imports')")
+      | Importing TL-Verilog/SystemVerilog/Verilog by URL
+    li(onclick="ide.anchorLink(this, 'viz')")
+      | Visual Debug
+  h3
+    | Advanced Logic Concepts
+  ul.mc-toc
+    li(onclick="ide.anchorLink(this, 'hierarchy')")
+      | Hierarchy
+    li(onclick="ide.anchorLink(this, 'flow')")
+      | Transaction Flow
+    li(onclick="ide.anchorLink(this, 'array')")
+      | Arrays
+  h3
+    | Simple Designs
+  ul.mc-toc
+    li(onclick="ide.anchorLink(this, 'div')")
+      | Long Division
+    li(onclick="ide.anchorLink(this, 'cpu')")
+      | CPUs (including WARP-V)
+    li(onclick="ide.anchorLink(this, 'ml')")
+      | Machine Learning
+    li(onclick="ide.anchorLink(this, 'aes')")
+      | AES Encryption
+    li(onclick="ide.anchorLink(this, 'genomics')")
+      | Genomics Accelerator
+    li(onclick="ide.anchorLink(this, 'cloudfpga')")
+      | Hardware-Accelerated Web Applications on Cloud FPGAs
+  h3
+    | Reference
+  ul.mc-toc
+    li(onclick="ide.anchorLink(this, 'webinar')")
+      | Webinar Labs
+    li(onclick="ide.anchorLink(this, 'ref')")
+      | Reference Card
+  
+
+
+  h2 Starting Templates
+  
+  a(name="barebones")
+  h3 Bare-Bones Templates
+
+  p
+    | The template code provided in Makerchip by default, and simple Verilog templates. While Verilog code works in Makerchip, note
+    | several Makerchip features are specific to TL-Verilog, and some tabs will show a red X after compilation of Verilog code.
+    | This is expected behavior.
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/module/IDE/default.tlv\")")
+    | Makerchip Default Template
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/template.sv\")")
+    | Pure Verilog Template
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/sv_template.tlv\")")
+    | TL-Verilog-ready Verilog Template
+
+
+  a(name="svtb")
+  h3 SystemVerilog Testbench
+
+  p
+    | To keep things simple, most Makerchip examples include testbench content (stimulus and checking) within the logic of the example.
+    | In real-world usage, TL-Verilog would define hardware logic within a module, and an outer testbench module would instantiate this module
+    | to test it. This example illustrates this.
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/sv_tb_example.tlv\")")
+    | SV Testbench
+
+  a(name="lib")
+  h3 TLV M5 Macro Library Template
+
+  p
+    | A template for developing a TL-Verilog M5 Macro Library.
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/macro_library_template.tlv\")")
+    | Macro Library Template
+  
+  a(name="fpga")
+  h3 FPGA Development Templates
+
+  p
+    | A template for developing FPGA logic for various FPGA boards, based on this
+    <a>(href="https://github.com/os-fpga/Virtual-FPGA-Lab", target="_blank") Virtual FPGA Lab
+    | project.
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"https://cdn.jsdelivr.net/gh/os-fpga/Virtual-FPGA-Lab@af10a071abb11616a8b9ef17b6e2970f725ebd1d/examples/fpga_template.tlv\")")
+    | TLV FPGA Template (VIZ)
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"https://cdn.jsdelivr.net/gh/os-fpga/Virtual-FPGA-Lab@af10a071abb11616a8b9ef17b6e2970f725ebd1d/examples/fpga_sv_template.tlv\")")
+    | SV FPGA Template (VIZ)
+  
+  a(name="asic")
+  h3 ASIC Development Templates
+
+  p
+    | A template for Tiny Tapeout 10. (Search
+    <a>(href="https://github.com/stevehoover", target="_blank") here
+    | for the latest Tiny Tapeout template.)
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"https://raw.githubusercontent.com/stevehoover/tt10-makerchip-template/57415ad93768146f3fd108e7579111bf14269df9/src/project.tlv\")")
+    | Tiny Tapeout 10 Template (VIZ)
+  
+
+  h2 Basic Logic Concepts
+
+  a(name="combo")
+  h3 Combinational Logic Examples
+
+  h4 Logic Gates
+  p
+    | A simple demonstration of logic gates, good for Intro. to Digital Logic classes.
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"https://cdn.jsdelivr.net/gh/stevehoover/makerchip_examples@70370adbbb3834e370d31845f2c9241ef7d61ce2/logic_gates.tlv\")")
+    | Logic Gates (VIZ)
+
+  h4 Logic Operators
+  p
+    | Various examples of Verilog/TL-Verilog operator/expression syntax.
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"https://cdn.jsdelivr.net/gh/stevehoover/makerchip_examples@70370adbbb3834e370d31845f2c9241ef7d61ce2/basic_logic_examples.tlv\")")
+    | Logic Operators
+
+
+  a(name="seq")
+  h3 Sequential Logic Examples
+
+  h4 Fibonacci Sequence
+  p
+    | The Fibonacci Sequence is a sequence of whole numbers starting with two 1s, where each subsequent value in the sequence
+    | is the sum of the previous two values.
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/fibonacci_example.tlv\")")
+    | Fibonacci Sequence
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/fibonacci_state_example.tlv\")")
+    | Fibonacci Sequence (as state)
+  
+
+  a(name="pipelines")
+  h3 Pipelined Logic Examples
+
+  h4 Pythagorean Theorem Pipeline
+  p
+    | Pythagoras's Theorem provides the length c below, given a and b.
+  .mc-tutorial-figure
+    img.mc-figure-body.resize-160(src="#{basePath}/public/tutorial/images/PipelinesFig1.png")
+    .mc-tutorial-equation
+      span c = sqrt(a2 + b2)
+    .mc-figure-caption
+      span
+        | Pythagorean Theorem
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/pythagorean_example.tlv\")")
+    | Pythagorean Theorem (VIZ)
+  p
+    | You can use plain old Verilog in Makerchip if you really want to. (Some tabs will show a red X after compilation of Verilog code.)
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/verilog_pyth_example.tlv\")")
+    | Pythagorean Theorem Pipeline in Verilog
+  a(name="mul")
+
+  h4 FPGA Multiplier
+  p
+    | Some FPGAs contain fixed-width multiply units. This example shows how the fixed-width multipliers can be used to implement
+    | a wider multiply by summing partial-products in a pipelined calculation. It is based on a
+    <a>(href="http://surf-vhdl.com/how-to-implement-pipeline-multiplier-vhdl/?utm_source=mult-pipe&utm_medium=LK2&utm_campaign=ACLEAD", target="_blank") VHDL example
+    | from
+    <a(href="http://surf-vhdl.com/", target="_blank") Surf VHDL
+    | .
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/fpga_mult_example.tlv\")")
+    | FPGA Multiplier
+  
+
+  a(name="fsm")
+  h3 Finite State Machine Examples
+
+  h4 Elevator Controller FSM
+  p
+    | This example implements an elevator controller in SystemVerilog and TL-Verilog. It suggests different coding styles between the two.
+    | This example is useful for understanding code conversion practices.
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"https://cdn.jsdelivr.net/gh/stevehoover/makerchip_examples@70370adbbb3834e370d31845f2c9241ef7d61ce2/elevator.tlv\")")
+    | Elevator Controller FSM
+
+
+  h2 Development Concepts
+
+  a(name="macros")
+  h3 Text Macros
+
+  p
+    | [M5 and 
+    code \TLV
+    |  macro examples are to come. But you can find documentation for each under the "Learn" menu.]
+
+  a(name="imports")
+  h3 Imported SystemVerilog Designs
+
+  h4 SERV
+  p
+    | These examples illustrate how to import SystemVerilog designs from external repositories and built them in Makerchip.
+  p
+    | Olof Kindgren's
+    <a>(href="https://github.com/olofk/serv", target="_blank") SERV core
+    | is an award-winning bit-serial RISC-V CPU.
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"https://cdn.jsdelivr.net/gh/stevehoover/makerchip_examples@70370adbbb3834e370d31845f2c9241ef7d61ce2/serv.tlv\")")
+    | SERV CPU
+  
+  h4 BaseJump STL
+  p
+    | BaseJump STL is a library of SystemVerilog components from the
+    <a>(href="https://github.com/bespoke-silicon-group", target="_blank") Bespoke Silicon Group
+    | . This example imports the library and uses a FIFO.
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"https://cdn.jsdelivr.net/gh/stevehoover/makerchip_examples@70370adbbb3834e370d31845f2c9241ef7d61ce2/flow_example_basejump_viz.tlv\")")
+    | BaseJump STL
+  
+  a(name="viz")
+  h3 VIZ Examples
+
+  p
+    | While many of the examples on this page have visualization (indicated by "(VIZ)"), these provide a good introduction.
+
+  h4 Intro to VIZ
+  p
+    | Basic step-by-step examples of VIZ features.
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"https://cdn.jsdelivr.net/gh/stevehoover/makerchip_examples@70370adbbb3834e370d31845f2c9241ef7d61ce2/viz_demo.tlv\")")
+    | VIZ Demos (VIZ)
+
+  h4 Conway's Game of Life
+  p
+    | Visualization of a simple simulation.
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"https://cdn.jsdelivr.net/gh/stevehoover/makerchip_examples@70370adbbb3834e370d31845f2c9241ef7d61ce2/life_viz.tlv\")")
+    | Conway's Game of Life (VIZ)
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"https://cdn.jsdelivr.net/gh/stevehoover/makerchip_examples@70370adbbb3834e370d31845f2c9241ef7d61ce2/life_sv_viz.tlv\")")
+    | Conway's Game of Life - SystemVerilog (VIZ)
+  
+  h4 Sorting Network
+  p
+    | Visualization of a simple sorting network.
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"https://cdn.jsdelivr.net/gh/stevehoover/makerchip_examples@70370adbbb3834e370d31845f2c9241ef7d61ce2/sort_viz.tlv\")")
+    | Sorting Network (VIZ)
+  
+  h4 Frog Maze
+  p
+    | A fun little maze solver. It's trickier than it looks for this little frog.
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"https://cdn.jsdelivr.net/gh/stevehoover/makerchip_examples@70370adbbb3834e370d31845f2c9241ef7d61ce2/frog_maze.tlv\")")
+    | Frog Maze (VIZ)
+
+
+  h2 Advanced Logic Concepts
+
+  a(name="hierarchy")
+  h3 Hierarchy Examples
+
+  h4 Conway's Game of Life
+  p
+    | A simple implementation of Conway's Game of Life, using hierarchy to replicate the cell logic.
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"https://cdn.jsdelivr.net/gh/stevehoover/makerchip_examples@70370adbbb3834e370d31845f2c9241ef7d61ce2/life_minimal.tlv\")")
+    | Conway's Game of Life (Simple) (VIZ)
+
+  h4 Incrementer
+  p
+    | A bit-level incrementer, using hierarchy to replicate the bit-slice.
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/incrementer_example.tlv\")")
+    | Incrementer
+
+  h4 Ripple-Carry Adder
+  p
+    | A bit-level ripple-carry adder implemented as a macro.
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"https://cdn.jsdelivr.net/gh/stevehoover/makerchip_examples@70370adbbb3834e370d31845f2c9241ef7d61ce2/ripple_carry.tlv\")")
+    | Ripple-Carry Adder (VIZ)
+
+
+  a(name="flow")
+  h3 Transaction Flow Examples
+
+  h4 Backpressured Pipeline Macro
+  p
+    | This example illustrates the use of an M5 macro that instantiates a backpressured pipeline. In the first case, the
+    | pipeline is empty; in the second, a Pythagorean Theorem example is implemented within the backpressured pipeline.
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/bp_pipe_empty_example.tlv\")")
+    | Backpressured Pipeline
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/bp_pipe_example.tlv\")")
+    | Backpressured Pythagorean Calculation
+
+  h4 Speculation Macro
+  p
+    | This examples shows the use of a macro that provides the control flow for a speculative computation, providing a speculative result
+    | a cycle earlier than the full computation. It illustrates how, with TL-Verilog, bug-prone control logic can be implemented in library
+    | components. This macro is used to implement a variable-delay adder and can provide the speculative flow for other computations just as easily.
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/speculative_adder.tlv\")")
+    | Speculative Add
+  
+  h4 Transaction Flow
+  p
+    | The example microarchitecture below is implemented in 13 lines of code, using a
+    <a(href="https://github.com/stevehoover/tlv_flow_lib" target="_blank") library of flow components
+    | .
+  .mc-tutorial-figure
+    img.mc-figure-body.resize-400(src="#{basePath}/module/IDE/flow_diagram.png")
+    .mc-figure-caption
+      span
+        | Ring uArch w/ various "flow components"
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/flow_example.tlv\")")
+    | Flow Example Above
+
+  h4 Simple Ring
+  p
+    | A simple ring (without use of flow macros) with VIZ. This example was
+    <a>(href="https://www.youtube.com/playlist?list=PL5hpwuXY8XealvOvJQ2nan_tSTeQbbk7B", target="_blank") presented
+    | (virtually) at the Design Automation Conference in 2020,
+    <a>(href="https://docs.google.com/document/d/e/2PACX-1vQSaUIZcN3R6mYC8B-tz6H1W8V7Vjgx8gvPI8PPTXQYHVlyeP5TJg0FzF5sixDsvVPeSuMUn3HqhlaS/pub", target="_blank") comparing
+    | three modern HDLs.
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"https://cdn.jsdelivr.net/gh/stevehoover/makerchip_examples@70370adbbb3834e370d31845f2c9241ef7d61ce2/DAC_ring_example.tlv\")")
+    | Simple Ring (VIZ)
+
+
+  a(name="array")
+  h3 Array Examples
+
+  p
+    | A simple array macro, one holding transactions, and a 2-D transaction array implemented several different ways.
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/array_example.tlv\")")
+    | Array Macro
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/array_any_example.tlv\")")
+    | Transaction Array Macro
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/array2d_example.tlv\")")
+    | 2D Arrays
+
+  
+  h2 Simple Designs
+
+  a(name="div")
+  h3 Long Division
+
+  p
+    | This example performs hexadecimal long division. Pipeline depth is configurable.
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/div_example.tlv\")")
+    | Long Division
+  
+  a(name="cpu")
+  h3 CPUs
+
+  p
+    | A tiny non-pipelined educational CPU in < 200 lines of code.
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/mini_cpu_1_cyc.tlv\")")
+    | Mini-CPU
+  p
+    | A parameterized pipelined version of this mini-CPU in ~250 lines of code.
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/mini_cpu_parameterized.tlv\")")
+    | Pipelined Mini-CPU
+  p
+    | WARP-V, is a highly-adaptable TL-Verilog CPU generator, with flexible pipeline staging
+    | and support for multiple instruction-set architectures (RISC-V, MIPS, ...). WARP-V has been implemented as a cloud FPGA
+    | microservice using
+    <a(href="https://github.com/stevehoover/1st-CLaaS" target="_blank") 1st CLaaS
+    | . The
+    <a>(href="https://github.com/stevehoover/warp-v", target="_blank") WARP-V project
+    | is living and breathing in github and even has a configurator at
+    <a>(href="https://warp-v.org", target="_blank") warp-v.org
+    | .
+  p
+    img(width=300 src="#{basePath}/module/Pane/WARP-V.png")
+  .mc-tutorial-figure
+    img.mc-figure-body.resize-300(src="#{basePath}/module/Pane/WARP-V_4stage.png")
+    .mc-figure-caption
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"https://cdn.jsdelivr.net/gh/stevehoover/warp-v@master/warp-v.tlv\")")
+    | Latest WARP-V (VIZ)
+  p
+    | This toy MIPS CPU example comes from a course at
+    <a(href="https://www.asu.edu/", target="_blank") ASU
+    | .
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/makerchip_tutorial.tlv\")")
+    | MIPS Toy
+  p
+    | This toy MIPS CPU example comes from a course at the
+    <a(href="http://illinois.edu/", target="_blank") University of Illinois
+    | .
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/mips_uiuc_411_mp0.tlv\")")
+    | MIPS Toy 2
+  
+  a(name="ml")
+  h3 Machine Learning
+
+  p
+    | A systolic array matrix multiply circuit, which often forms the building block of machine learning accelerators.
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"https://cdn.jsdelivr.net/gh/stevehoover/makerchip_examples@70370adbbb3834e370d31845f2c9241ef7d61ce2/mat_mul.tlv\")")
+    | Matrix Multiply (VIZ)
+
+  p
+    | A hardware implementation of a neural network (that could use a bit of refactoring).
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"https://cdn.jsdelivr.net/gh/stevehoover/makerchip_examples@70370adbbb3834e370d31845f2c9241ef7d61ce2/neural_network_viz.tlv\")")
+    | Neural Network (VIZ)
+  
+  a(name="aes")
+  h3 AES Encryption
+
+  p
+    | An AES encryption algorithm implemented for Tiny Tapeout as a final project. (Zoom into FPGA chip for VIZ.)
+    <a(href="https://www.linkedin.com/pulse/aes-encryption-taped-out-days-steve-hoover-d4lxe/",  target="_blank") (Read more)
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"https://cdn.jsdelivr.net/gh/stevehoover/makerchip_examples@70370adbbb3834e370d31845f2c9241ef7d61ce2/tiny_tapeout_examples/tt_um_AES.tlv\")")
+    | AES Encryption (VIZ)
+
+  a(name="genomics")
+  h3 Genomics Accelerator (VIZ)
+
+  p
+    | An accelerator for the Smith-Waterman algorithm used to find the best alignment between two nucleotide sequences.
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"https://cdn.jsdelivr.net/gh/stevehoover/makerchip_examples@70370adbbb3834e370d31845f2c9241ef7d61ce2/smith_waterman.tlv\")")
+    | Smith-Waterman Accelerator (VIZ)
+
+  a(name="cloudfpga")
+  h3 Hardware-Accelerated Web Applications on Cloud FPGAs
+
+  p
+    | TL-Verilog is utilized in
+    <a(href="https://github.com/stevehoover/1st-CLaaS" target="_blank") 1st CLaaS
+    | , a framework for creating FPGA-accelerated web and cloud applications
+    | . These fractal flythroughs were generated by an Amazon F1 Cloud FPGA programmed with TL-Verilog logic, and you
+    | can fly for yourself at
+    <a(href="http://fractalvalley.net" target="_blank") fractalvalley.net
+    | .
+  iframe(width="315" height="315" src="https://www.youtube.com/embed/7ZWva5DC4J4" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen)
+  iframe(width="315" height="315" src="https://www.youtube.com/embed/ZhuTOXnpp0k" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen)
+  p
+    | This accelerator was implemented in Makerchip, and debugged with VIZ.
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"https://cdn.jsdelivr.net/gh/stevehoover/makerchip_examples@70370adbbb3834e370d31845f2c9241ef7d61ce2/mandelbrot_as_img.tlv\")")
+    | Mandelbrot Accelerator (VIZ)
+  p
+    | Visit the
+    <a>(href="https://github.com/stevehoover/1st-CLaaS", target="_blank") 1st CLaaS repository
+    | to learn how you can deploy your Makerchip designs in the cloud.
+  
+
+  h2 Reference
+
+  a(name="webinar")
+  h3 Webinar Labs
+
+  p
+    | The following are used in the 2/10/18 webinar,
+    <a>(href="https://www.udemy.com/course/1549918") "Pipelining RISC-V with Transaction-Level Verilog".
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/tdm_lab.tlv\")")
+    | Time-Division Multiplexing (TDM) Lab
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/tdm_example.tlv\")")
+    | TDM Solution
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/webinar_certification.tlv\")")
+    | Certification Challenge
+  
+  a(name="ref")
+  h3 TL-Verilog Reference Card
+
+  p
+    | Complete list of TL-Verilog identifier types and keywords. (Not compilable code.)
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/reference_card.tlv\")")
+    | Reference Card

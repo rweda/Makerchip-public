@@ -1,0 +1,148 @@
+.mc-auto-pane-contents.mc-markdown
+  a(name="top")
+  :markdown
+    # Combinational Logic
+    (~10 min)
+    
+    In this lab, you’ll learn to create simple combinational logic in TL-Verilog.
+  :markdown
+    ## Table of Contents
+  ul.mc-toc
+    li(onclick="ide.anchorLink(this, 'bool')")
+      | Boolean Logic
+    li(onclick="ide.anchorLink(this, 'arith')")
+      | Arithmetic Logic
+    li(onclick="ide.anchorLink(this, 'ternary')")
+      | Ternary Operator
+    li(onclick="ide.anchorLink(this, 'quiz')")
+      | Extra Credit Quiz
+    li(onclick="ide.anchorLink(this, 'wrapup')")
+      | Wrap-Up
+  
+  a(name="bool")
+  :markdown
+    ## Boolean Logic
+    Let's start with a simple AND expression, operating on boolean signals.
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadTLVURL(\"#{basePath}/public/tutorial/tlv/combinatorial_tutorial_1.tlv\")") Load 'AND' Gate Example
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | Lay out panes to see: this tutorial, Editor, Waveform, and other panes as desired, and observe the waveform.
+  p
+    | You'll see in the waveform that
+    <span>.tlv_ident_pipe_sig.mc-ident-font
+      | $out
+    | is only asserted when both
+    <span>.tlv_ident_pipe_sig.mc-ident-font
+      | $in1
+    | and 
+    <span>.tlv_ident_pipe_sig.mc-ident-font
+      | $in2
+    | are asserted.
+  p
+    | Notice that
+    <span>.tlv_ident_pipe_sig.mc-ident-font
+      | $in1
+    | and
+    <span>.tlv_ident_pipe_sig.mc-ident-font
+      | $in2
+    | are not assigned in the code.
+  .mc-tutorial-note
+    .mc-note-body
+      p
+        | Makerchip is kind enough to make up random input values for unassigned signals.
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | Look in both the Log and in NavTLV. You'll see warnings for the unassigned input signals.
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | Back in the Editor, try some expressions of your own. OR, NOT, etc.
+  a(name="arith")
+  :markdown
+    ## Arithmetic Logic
+    Now for some operations on integer (vector) values.
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadTLVURL(\"#{basePath}/public/tutorial/tlv/combinatorial_tutorial_2.tlv\")") Load 'ADD' Example
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | Correlate the waveform with the code, then try other arithmetic operations and expressions.
+        | (Note that waveform values are in hexadecimal.)
+  p
+    | Let's talk a bit about the syntax of the TL-Verilog code you wrote.
+    ul
+      li
+        | TL-Verilog expressions use Verilog syntax (
+        code>
+          | assign
+        | statements without the
+        <code>
+          | assign
+        | keyword). (Refer to Chapter 11 of the
+        <a(href="https://standards.ieee.org/findstds/standard/1800-2012.html", target="_blank")
+          | SystemVerilog (IEEE 1800-2012) Specification
+        | .) Unlike Verilog, signals are prefixed with
+        <code
+          | $
+        | .
+      li
+        | Signal declarations are not required in TL-Verilog, as they are in Verilog.
+      li
+        | The type of a signal is defined where it is assigned. Signals are boolean (single bit)
+        | by default. Our arithmetic expressions used vectors, such as
+        <code
+          | $out[7:0] = ...;
+        | . Note that in this example, explicit bit ranges are also provided in the references to
+        <span>.tlv_ident_pipe_sig.mc-ident-font
+          | $num1
+        | and
+        <span.tlv_ident_pipe_sig.mc-ident-font
+          | $num2
+        | . Had we provided assignments for these signals, the explicit ranges would not be necessary.
+
+  a(name="ternary")
+  :markdown
+    ## Ternary Operator
+    The Verilog ternary operator is quite useful in TL-Verilog. 
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadTLVURL(\"#{basePath}/public/tutorial/tlv/combinatorial_tutorial_3.tlv\")") Load 'MUX' Example
+  p
+    | This code illustrates two uses of the ternary operator to select values. In the second case,
+    <span>.tlv_ident_pipe_sig.mc-ident-font
+      | $big
+    | gets priority over
+    <span>.tlv_ident_pipe_sig.mc-ident-font
+      | $medium
+    | and
+    <span>.tlv_ident_pipe_sig.mc-ident-font
+      | $small
+    | .
+  a(name="quiz")
+  :markdown
+    ## Extra Credit Quiz
+  p
+    | Now, see if you can put this all together.
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadTLVURL(\"#{basePath}/public/tutorial/tlv/combinatorial_tutorial_4.tlv\")") Load 'ALU' Example
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | See if you can provide the missing expression that will add
+        <span>.tlv_ident_pipe_sig.mc-ident-font
+          | $num1
+        | and
+        <span>.tlv_ident_pipe_sig.mc-ident-font
+          | $num2
+        | if
+        <span>.tlv_ident_pipe_sig.mc-ident-font
+          | $op
+        | is 1 and subtract them otherwise.
+  p
+    | If you get it right, the last line of the simulation log will report "Simulation PASSED!!!".
+  p
+    | The correct answer is here.
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadTLVURL(\"#{basePath}/public/tutorial/tlv/combinatorial_tutorial_5.tlv\")") Load 'ALU' Answer
+  a(name="wrapup")
+  :markdown
+    ## Wrap-Up
+    
+    Got the hang of the expression syntax? Are you ready for sequential logic?

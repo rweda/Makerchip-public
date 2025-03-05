@@ -1,0 +1,211 @@
+.mc-auto-pane-contents.mc-markdown
+  a(name="top")
+  :markdown
+    # Transaction Validity
+    (~25 min)
+        
+    ## Table of Contents
+  ul.mc-toc
+    li(onclick="ide.anchorLink(this, 'introduction')")
+      | Introduction
+    li(onclick="ide.anchorLink(this, 'setup')")
+      | Setup
+    li(onclick="ide.anchorLink(this, 'valid-transactions')")
+      | Valid Transactions
+    li(onclick="ide.anchorLink(this, 'clock-gating')")
+      | Clock Gating
+    li(onclick="ide.anchorLink(this, 'summary')")
+      | Statistics
+    li(onclick="ide.anchorLink(this, 'wrapup')")
+      | Wrap-Up
+    
+  a(name="introduction")
+  :markdown
+    ## Introduction
+    In this tutorial, you will continue with the Pythagorean Theorem example from the previous tutorials, 
+    illustrated again in Figure 1, below.
+  
+  .mc-tutorial-figure
+    img.mc-figure-body(src="#{basePath}/public/tutorial/images/ValidityFig1.png")
+    .mc-figure-caption
+      span
+        i Figure 1
+        | : Pipelined Pythagorean Theorem Logic
+  :markdown
+    This pipeline is 3 cycles deep. It has a throughput of one *transaction* per cycle, where a 
+    transaction performs one Pythagorean Theorem calculation per cycle.
+    
+    Pipelining allows us to run with a faster clock and improves the maximum throughput of the logic, 
+    but it is uncommon for a pipeline to run steady-state at maximum throughput. When there is no 
+    available transaction for the pipeline to process, we say the pipeline’s transaction is invalid.
+    In this tutorial, you will introduce *invalid* transactions into the “calc” pipeline. You will see how 
+    knowing when a transaction is invalid aids in debug and is used to save power.
+
+  a(name="setup")
+  :markdown
+    ## Setup
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/validity_tutorial.tlv\")") Load Pythagorean Example
+  p
+    | This is the code from the previous tutorial -- the pipelined Pythagorean Theorem example.
+    | New stimulus has been added for
+    <span.tlv_ident_pipe_sig.mc-ident-font
+      | $valid
+    | .)
+    
+  a(name="valid-transactions")
+  :markdown
+    ## Valid Transactions
+  p
+    | In the
+    <span>.tlv_ident_comment.mc-ident-font
+      | // Stimulus
+    | section of the code,
+    <span>.tlv_ident_pipe_sig.mc-ident-font
+      | $valid
+    | is generated with ¼ probability of assertion, but it is currently unused.
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | Observe the waveform and log output.
+  p
+    | Now, we will make a simple code change to indicate that the
+    <span>.tlv_ident_pipe_sig.mc-ident-font
+      | $valid
+    | signal indicates the validity of the transaction in the calc pipeline. 
+    | We introduce a new scope, called “when” scope. In this example, it is
+    <span.tlv_ident_when.mc-ident-font
+      | ?$valid
+    | .  As with other scopes, like
+    <span>.tlv_ident_pipeline.mc-ident-font
+      | |calc
+    | and
+    <span.tlv_ident_stage_expr.mc-ident-font
+      | @1
+    | , statements under this scope are indented 3 spaces with no tabs.
+  p
+    | The changes to be applied are indicated in comments.
+    
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | Uncomment the two
+        <span>.tlv_ident_comment.mc-ident-font
+          | // [+] ?$valid
+        | lines (leaving just
+        <span.tlv_ident_when.mc-ident-font
+          | ?$valid
+        | ).
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | Indent lines commented with
+        <span>.tlv_ident_comment.mc-ident-font
+          | // [>>>]
+        | by 3 spaces. You can indent the whole block by selecting
+        | the lines, then pressing <Ctrl>-]. (Unindent with <Ctrl>-[.)
+  p
+    | All of the signals assigned under
+    <span>.tlv_ident_when.mc-ident-font
+      | ?$valid
+    | scope only carry meaningful values when
+    <span>.tlv_ident_pipe_sig.mc-ident-font
+      | $valid
+    | is asserted.
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | Run again, debug if necessary, and observe the printed output and waveform.
+  p
+    | The SandPiper™ tool is able to generate code that injects DONT-CARE or X values into 
+    | these signals when not
+    <span>.tlv_ident_pipe_sig.mc-ident-font
+      | $valid
+    | to explicitly convey that they do not carry a value.
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | Observe in the Diagram that
+        <span>.tlv_ident_when.mc-ident-font
+          | ?$valid
+        | applies to all assignments within its scope.
+  p
+    | Use of when conditions leads to cleaner designs and helps with debug.
+  p
+    b Cleaner designs
+    | : The injection of X values ensures that values that are not intended for 
+    | consumption are not inadvertently consumed in a way that impacts behavior. Note, however, 
+    | that Makerchip uses the Verilator simulator, which does not support Xs, so simulation will 
+    | not propagate X values.
+  p
+    b Easier debug
+    | : Having X values in traces filters meaningless noise, as illustrated in Figure 2, 
+    | below.  Though the traces generated by Verilator in Makerchip do not contain Xs, Makerchip is 
+    | able to convey the same information with knowledge of the design. You should have observed a 
+    | similar waveform in Makerchip to that in Figure 2.
+    
+  .mc-tutorial-figure
+    img.mc-figure-body(src="#{basePath}/public/tutorial/images/ValidityFig2.png")
+    .mc-figure-caption
+      span
+        i Figure 2
+        | : Waveform with Xs
+    
+  a(name="clock-gating")
+  :markdown
+    ## Clock Gating
+    When conditions not only result in cleaner designs, they also result in power-efficient ones.
+    It is not necessary to stage values through the pipeline that are invalid. Therefore, it is not 
+    necessary to provide a clock pulse to the staging flip-flops that would stage an invalid value. 
+    Clocks with missing pulses are called “gated clocks”. SandPiper generates and uses gated clocks 
+    based on the condition of the when scope. This can save considerable power.
+    
+    Gated clock signals can be seen in the waveform, under "SV".
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | In the waveform, click the "+" by "SV", and find gated clock signals called
+        <code
+          | clkP_*
+        | . Relate them to the ungated clock and to their corresponding valid signals.
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | Explore the generated code (via "Show Verilog" in the Editor menu) as desired to see how the clock gating logic 
+        | is implemented in the file
+        <span.mc-ident-font
+          | design_gen.sv
+        | .
+  
+  a(name="summary")
+  :markdown
+    ## Statistics
+    TL-Verilog gives you a very concise syntax for representing a simple pipeline. SandPiper is generating from 
+    it well structured, readable code for:
+    * Signal declarations
+    * Staging (flip-flops)
+    * Clock gating
+    * X-injection
+    
+    SandPiper generates some nice statistics to show how much Verilog code you no longer have to write.
+    The following code is a slight modification of the previous example that provides a
+    more accurate comparison between the TL-Verilog and SystemVerilog code for just the design, without printing logic.
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/validity_tutorial_2.tlv\")") Load Pythagorean Comparison Example
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | Observe the statistics reported by SandPiper at the end of the SandPiper log output.
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | From the Editor menu, select "Show Verilog", and explore the generated code and statistics.
+  :markdown
+    The SystemVerilog code, excluding comments, whitespace, and instrumentation code (stimulus and tracing),
+    is a staggering 5.5x the size of the TL-Verilog
+    code. While it is possible to write slightly denser SystemVerilog code,
+    SandPiper is following an industry-adopted coding style for high-speed chip design.
+  a(name="wrapup")
+  :markdown
+    ## Wrap-Up
+    Are you feeling more productive, yet?  You now understand how to implement a simple pipeline. 
+    In the next tutorial, you will learn how pipelines interact. You will introduce feedback and feed-forward 
+    paths within your pipeline.

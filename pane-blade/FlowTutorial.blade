@@ -1,0 +1,215 @@
+.mc-auto-pane-contents.mc-markdown
+  a(name="top")
+  :markdown
+    # Transaction Flows
+    (~30 min)
+    
+    You have learned how to create pipelines in TL-Verilog with transactions 
+    that flow through them. In this lab, you’ll see that the same transaction 
+    can flow through multiple pipelines, queues, and arbiters.
+    
+    ## Table of Contents
+  ul.mc-toc
+    li(onclick="ide.anchorLink(this, 'exercise')")
+      | Exercise: Transaction Flow
+    li(onclick="ide.anchorLink(this, 'certificate')")
+      | Certificate
+    
+  a(name="exercise")
+  :markdown
+    ## Exercise: Transaction Flow
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/flow_tutorial.tlv\")") Load Ring Example
+  :markdown
+    This example implements a ring interconnect, illustrated (without 
+    cycle-level details) below.
+  .mc-tutorial-figure
+    img.mc-figure-body(src="#{basePath}/public/tutorial/images/FlowFig1.png")
+  
+  p
+    | Data packets are queued in the input FIFOs (First In First Out buffers). 
+    | Packets await their opportunity to inject into the ring, and travel around 
+    | the ring to exit at their destination.
+  p
+    | The design is very little code because
+    | it is constructed from M4 macros for the FIFOs 
+    b (m4+simple_bypass_fifo_v2) 
+    | the Ring 
+    b (m4+simple_ring) 
+    | and a testbench 
+    b (m4+router_testbench)
+    | .
+  p
+    | The FIFO and ring macros are designed generically such that any signals 
+    | needed at their outputs will be pulled through them from their inputs. 
+    | Macro arguments for input/output pipeline and pipestage chain the FIFOs
+    | and ring together forming a 
+    i transaction flow 
+    | from the input of the FIFOs, around the ring, and out from each port of the ring.
+    | A 
+    span.tlv_ident_pipe_sig.mc-ident-font
+      | $data 
+    | field is explicitly provided for the transaction. Another field, 
+    span.tlv_ident_pipe_sig.mc-ident-font
+      | $dest
+    | , is provided by the testbench and is used by 
+    b (m4+simple_ring) 
+    | to route the transaction.
+  p
+    | Before exploring how this transaction flow is coded, let’s see what it
+    | can do. Let’s imagine, we need 
+    | to add data protection to the packet by adding a parity field.
+    
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | Uncomment the two lines prefixed with “
+        span.tlv_ident_comment.mc-ident-font
+          | // [+]
+        | ”.
+  p
+    | With that simple two-line change, you implemented or changed 19 lines of 
+    | RTL! These changes carried the new parity field through the FIFOs, into the 
+    | ring, and out. In a real-world design, a simple change like this could change
+    | hundreds of lines of RTL!
+  p
+    | As we add more signals to the transaction, the diagram remains clean. 
+    | Transaction signals (aka fields) are merged into the transaction in the 
+    | diagram. They are shown to exit the transaction when consumed. The 
+    | transaction is seen as 
+    span.tlv_ident_sig_keyword.mc-ident-font
+      | $ANY 
+    | in the diagram.
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | Track the path of 
+        span.tlv_ident_sig_keyword.mc-ident-font
+          | $parity 
+        | in the diagram by 
+        | highlighting the signals through the flow of 
+        span.tlv_ident_sig_keyword.mc-ident-font
+          | $ANY 
+        | assignments and out. Use Ctrl-click to highlight multiple sections of the flow.
+  :markdown
+    Also experiment with highlighting in the Nav-TLV pane. Note that this pane shows
+    the expanded macro instantiations.
+    
+    In previous labs we saw that a pipeline carries a single transaction from 
+    one stage to the next, to the next. A different set of signals pass between 
+    stages through flip-flops based on the production and consumption of 
+    pipesignals (or transaction fields). We say, the transaction “changes 
+    shape” as signals are consumed and produced. The transaction’s “shape” 
+    is the set of signals that must be carried forward.
+    
+    Transaction flows have similar properties. The flow, in this example, 
+    through the FIFOs and ring, defines the path the transaction follows, 
+    and transaction logic, such as the parity calculation, defines what the 
+    transaction does. Like RTL structures (structs), transactions group signals, 
+    but their ability to change shape, makes them unique. Structures and 
+    objects are wonderful constructs for software. Transactions are the right 
+    construct for hardware.
+    
+    Let’s change the shape of our transactions. Let’s say we determine that 
+    parity protection is needed for the ring, but not for the FIFOs. 
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | Move the parity generation statement into 
+        span.tlv_ident_beh_hier_2.mc-ident-font
+          | /port[
+        | *
+        span.tlv_ident_beh_hier_2.mc-ident-font
+          | ]
+        span.tlv_ident_pipeline.mc-ident-font
+          | |ring_in
+        span.tlv_ident_stage_expr.mc-ident-font
+          | @0
+        span.tlv_ident_when.mc-ident-font
+          | ?$accepted
+        span.tlv_ident_beh_hier_2.mc-ident-font
+          | /trans
+        | . Note that all the logic in this stage is defined in the macros, so 
+        | you’ll need to provide scope lines to provide logic in this context.
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | Select 
+        span.tlv_ident_pipe_sig.mc-ident-font
+          | $parity 
+        | in Nav-TLV and find it in the diagram.
+  :markdown
+    The ability of TL-Verilog code to enter, exit, and reenter the same context is basic 
+    enough, but it’s implications are quite significant. It enables a separation
+    of flow, like the FIFOs and ring, from transaction logic, like the parity 
+    calculation. As in this example, flow elements can be implemented 
+    generically in libraries, and transaction logic can be sprinkled within 
+    these flows. Control flow logic tends to be the source of the most complex 
+    bugs, so relegating this to library elements can be a huge productivity win.
+    
+    Let’s insert some transaction logic within the flow defined internally to 
+    a macro.  Imagine that we determine that signal transmission around the 
+    ring is a source of bit errors, and we wish to be able to isolate failures 
+    to a specific port. Our solution is to add parity checking within each 
+    port of the ring. The ring is defined in a library component that we don’t 
+    want to touch.  If it were a SystemVerilog module, we would have no way of 
+    modifying its behavior.  Luckily for us, it is not.
+  p
+    | Packets travel around the ring in 
+    spant.tlv_ident_beh_hier_2.mc-ident-font
+      | /port[
+    | *
+    span.tlv_ident_beh_hier_2.mc-ident-font
+      | ]
+    span.tlv_ident_pipeline.mc-ident-font
+      | |rg
+    span.tlv_ident_beh_hier_2.mc-ident-font
+      | /trans
+    | .
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | Add an assignment of 
+        span.tlv_ident_beh_hier_2.mc-ident-font
+          | /port[
+        | *
+        span.tlv_ident_beh_hier_2.mc-ident-font
+          | ]
+        span.tlv_ident_pipeline.mc-ident-font
+          | |rg
+        span.tlv_ident_stage_expr.mc-ident-font
+          | @2
+        span.tlv_ident_when.mc-ident-font
+          | ?$accepted
+        span.tlv_ident_beh_hier_2.mc-ident-font
+          | /trans
+        span.tlv_ident_pipe_sig.mc-ident-font
+          | $parity_error
+        | .
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | Find this new logic in Nav-TLV and in the diagram.
+  p
+    | Look at all you’ve done with so little code!!!
+  p
+    | To learn more about transaction flow, reference this
+    <a(target="_blank", href="https://arxiv.org/pdf/1811.01780.pdf")
+      | paper
+    | .
+    
+  a(name="certificate")
+  :markdown
+    ## Certificate
+    
+    Congratulations on completing our currently-available tutorials!
+    
+    It's time to brag about your accomplishments.
+  form(action="#{basePath}/module/IDE/TLVCertificate.html", method="get", target="_blank")
+    label(for="name")
+      | Enter your full name: 
+    input(type="text", id="name", name="name")
+    p
+    p
+      input.btn.mc-tutorial-btn(type="submit", value="Create Printable Certificate")
+  button.btn.mc-tutorial-btn(type="button", onclick="ide.linkedinCertificateURL()") Brag on Linkedin
+

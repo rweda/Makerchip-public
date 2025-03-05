@@ -1,0 +1,23 @@
+INFORM(0) (PROD_INFO):
+	SandPiper(TM)
+	(DEV) Run as: "java -jar sandpiper.jar --noversion --webContent  --debugSigs --fmtUseGenerate --compiler=modelsim -p default --outdir=run/gen/amba -i run/gen/amba/design.m4out.tlv -o design.sv
+	For help, including product info, run with -h.
+
+INFORM(0) (LICENSE):
+	Licensed to "Redwood EDA, LLC" as: Full Edition.
+
+INFORM(0) (FILES):
+	Reading "run/gen/amba/design.m4out.tlv"
+	to produce:
+		Translated HDL File: "run/gen/amba/design.sv"
+		Generated HDL File: "run/gen/amba/design_gen.sv"
+
+INFORM(0) (VERSION): File 'run/gen/amba/design.tlv' Line 1 (char 48)
+	Preprocessed as 'run/gen/amba/design.m4out.tlv':1(ch48):
+	+-----------------------------------------------vv-
+	>\TLV_version [\source run/gen/amba/design.tlv] 1c: tl-x.org
+	+-----------------------------------------------^^-
+	This version of SandPiper can read this TL-X Version (1c),
+	but your version and license support TL-X 1d.
+	To up-rev this file to TL-X 1d use "--scrub".
+

@@ -1,0 +1,34 @@
+include "pane_lib.blade"
+
+.mc-auto-pane-contents.mc-markdown.mc-course
+  h1
+    | ChipEXPO-2021 RISC-V Tutorial Videos
+  br
+
+  p
+    | Note that this workshop is an extension of the VSDOpen 2020 tutorial. Until pipelining, the content is the same.
+
+  call vid("Intro and RISC-V ISA", 1, 2, "https://github.com/stevehoover/VSDOpen2020_TLV_RISC-V_Tutorial/raw/refs/heads/master/videos/VSDOpen2020_TLV_RISC-V_Tutorial_SK1_IntroAndRISCV_ISA.mp4")
+  call vid("RISC-V Microarchitecture", 3, 4, "https://github.com/stevehoover/VSDOpen2020_TLV_RISC-V_Tutorial/raw/refs/heads/master/videos/VSDOpen2020_TLV_RISC-V_Tutorial_SK2_RISCV_Uarch.mp4")
+  p
+    | Note: The next video describes the lab setup used in VSDOpen 2020. You'll notice, it's a bit simpler now with everything here in Makerchip.
+  call vid("Starting-point Sandbox", 5, 5, "https://github.com/stevehoover/VSDOpen2020_TLV_RISC-V_Tutorial/raw/refs/heads/master/videos/VSDOpen2020_TLV_RISC-V_Tutorial_SK3_StartingPointSandbox.mp4")
+  call vid("Logic Expressions", 5, 7, "https://github.com/stevehoover/VSDOpen2020_TLV_RISC-V_Tutorial/raw/refs/heads/master/videos/VSDOpen2020_TLV_RISC-V_Tutorial_SK4_LogicExpressions.mp4")
+  p
+    | Before starting this video, click below to
+  p
+    button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"https://raw.githubusercontent.com/stevehoover/VSDOpen2020_TLV_RISC-V_Tutorial/master/starting_point.tlv\")")
+      | Load Starting-point Code
+  p
+    | Note: You'll see in the DIAGRAM tab a yellow "|for_viz_only" box. This provides the VIZ functionality. It is not part of the hardware model and can be ignored.
+  call vid("Instruction Field Decode Labs", 8, 13, "https://github.com/stevehoover/VSDOpen2020_TLV_RISC-V_Tutorial/raw/refs/heads/master/videos/VSDOpen2020_TLV_RISC-V_Tutorial_SK5_DecodeLabs.mp4")
+  call vid("Register File, Instruction Decode, and Arithmetic Logic Unit (ALU)", 14, 17, "https://github.com/stevehoover/VSDOpen2020_TLV_RISC-V_Tutorial/raw/refs/heads/master/videos/VSDOpen2020_TLV_RISC-V_Tutorial_SK6_ALU.mp4")
+  call vid("Branches", 18, 20, "https://github.com/stevehoover/VSDOpen2020_TLV_RISC-V_Tutorial/raw/refs/heads/master/videos/VSDOpen2020_TLV_RISC-V_Tutorial_SK7_Branches.mp4")
+  //call vid("Wrap-Up", 21, 21, "https://github.com/stevehoover/VSDOpen2020_TLV_RISC-V_Tutorial/raw/refs/heads/master/videos/VSDOpen2020_TLV_RISC-V_Tutorial_SK8_WrapUp.mp4")
+  hr
+  h4
+    | Note that the content above was from VSDOpen 2020. The remaining content is specific to ChipEXPO-2021.
+  call vid("Pipelined Logic and Retiming (from MYTH Workshop D3SK3_L1)", 21, 27, "https://github.com/stevehoover/ChipEXPO-2021/raw/refs/heads/master/videos/RV_D3SK3_L1_PipelinedLogicAndReTiming.mp4")
+  call vid("Intro to Validity and its Advantages (from MYTH Workshop D3SK4_L1)", 28, 29, "https://github.com/stevehoover/ChipEXPO-2021/raw/refs/heads/master/videos/RV_D3SK4_L1_IntroductionToValidityAndItsAdvantages.mp4")
+  call vid("Pipelining Walkthrough", 30, 38, "https://github.com/stevehoover/ChipEXPO-2021/raw/refs/heads/master/videos/ChipEXPO_PipeliningWalkthrough.mp4")
+  call vid("Wrap-up", 39, 40, "https://github.com/stevehoover/ChipEXPO-2021/raw/refs/heads/master/videos/ChipEXPO_WrapUp.mp4")

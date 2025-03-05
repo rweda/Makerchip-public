@@ -1,0 +1,6 @@
+,Unknown,Untouched,Logic,Declarations,Staging,Structure,Validity,Instrumentation,Comments,Whitespace,Total Meaningful Chars,Total Chars
+TL-Verilog,0,360,6566,0,96,3090,277,308,9774,11148,10389,31619
+flow_gen.sv,0,0,0,737,9087,617,9904,0,4838,5799,20345,30982
+flow.sv,0,360,19248,10755,0,942,0,0,12157,12068,31305,55530
+SystemVerilog Total,0,360,19248,11492,9087,1559,9904,0,16995,17867,51650,86512
+Color,#505050,#305050,purple,blue,#509050,#1090c0,#E04010,#a07090,#707070,#7090a0,,

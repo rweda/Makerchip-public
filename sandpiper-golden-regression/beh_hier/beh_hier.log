@@ -1,0 +1,105 @@
+INFORM(0) (PROD_INFO):
+	SandPiper(TM) 1.14-2022/10/10-beta-Pro from Redwood EDA, LLC
+	(DEV) Run as: "java -jar /home/steve/repos/mono/sandpiper/target/sandpiper.jar --bestsv --viz --compiler=modelsim -p default --outdir=run/gen/beh_hier -i run/gen/beh_hier/beh_hier.m4out.tlv -o beh_hier.sv
+	For help, including product info, run with -h.
+
+INFORM(0) (LICENSE):
+	Licensed to "Redwood EDA, LLC" as: Full Edition.
+
+INFORM(0) (FILES):
+	Reading "run/gen/beh_hier/beh_hier.m4out.tlv"
+	to produce (relative to "/home/steve/repos/mono/sandpiper"):
+		Translated HDL File: "run/gen/beh_hier/beh_hier.sv"
+		Generated HDL File: "run/gen/beh_hier/beh_hier_gen.sv"
+		Simulation Visualization File: "run/gen/beh_hier/beh_hier.m4out_viz.json"
+
+INFORM(0) (VERSION): File 'run/gen/beh_hier/beh_hier.m4out.tlv' Line 1 (char 14)
+	+-------------vv--------------------------
+	>\TLV_version 1b: tl-x.org
+	+-------------^^--------------------------
+	This version of SandPiper(1.14-2022/10/10-beta-Pro) can read this TL-X Version (1b),
+	but your version and license support TL-X 1d.
+	To up-rev this file to TL-X 1d use "--scrub".
+
+LOGIC_ERROR(5) (UNASSIGNED-SIG): File 'run/gen/beh_hier/beh_hier.m4out.tlv' Line 57 (char 43)
+	+------------------------------------------vvvvvvvvv-
+	|                  $op_a[63:0] =
+	>                     ($op_a_src == IMM) ? $imm_data    :
+	|                     ($op_a_src == BYP) ? $rslt#+1     :
+	|                     ($op_a_src == REG) ? $reg_data#+2 :
+	|                     ($op_a_src == MEM) ? *mem_data_M320H :
+	|                                          64'b0;
+	+------------------------------------------^^^^^^^^^-
+	Signal >core>inst|pipe1$imm_data is used but never assigned.
+
+LOGIC_ERROR(5) (UNASSIGNED-SIG): File 'run/gen/beh_hier/beh_hier.m4out.tlv' Line 57 (char 23)
+	+----------------------vvvvvvvvv----------
+	|                  $op_a[63:0] =
+	>                     ($op_a_src == IMM) ? $imm_data    :
+	|                     ($op_a_src == BYP) ? $rslt#+1     :
+	|                     ($op_a_src == REG) ? $reg_data#+2 :
+	|                     ($op_a_src == MEM) ? *mem_data_M320H :
+	|                                          64'b0;
+	+----------------------^^^^^^^^^----------
+	Signal >core>inst|pipe1$op_a_src is used but never assigned.
+
+LOGIC_ERROR(5) (UNASSIGNED-SIG): File 'run/gen/beh_hier/beh_hier.m4out.tlv' Line 69 (char 55)
+	+------------------------------------------------------vvvvv-
+	>                  $rslt[63:0] = f_ALU($opcode, $op_a, $op_b);
+	+------------------------------------------------------^^^^^-
+	Signal >core>inst|pipe1$op_b is used but never assigned.
+
+LOGIC_ERROR(5) (UNASSIGNED-SIG): File 'run/gen/beh_hier/beh_hier.m4out.tlv' Line 69 (char 39)
+	+--------------------------------------vvvvvvv-
+	>                  $rslt[63:0] = f_ALU($opcode, $op_a, $op_b);
+	+--------------------------------------^^^^^^^-
+	Signal >core>inst|pipe1$opcode is used but never assigned.
+
+WARNING(1) (UNUSED-SIG): File 'run/gen/beh_hier/beh_hier.m4out.tlv' Line 65 (char 22)
+			-> instantiated: 'dummy_file.tlv':103, which
+			   -> instantiated: 'dummy2.tlv':203, which
+	resulted in 'run/gen/beh_hier/beh_hier.m4out.tlv':71(ch22):
+	+---------------------vvvvvv--------------
+	|                     //
+	>                     $warn2 = $foo2;
+	+---------------------^^^^^^--------------
+	Signal >core>inst|pipe1$warn2 is assigned but never used.
+	To silence this message use "`BOGUS_USE($warn2)".
+
+LOGIC_ERROR(5) (UNASSIGNED-SIG): File 'run/gen/beh_hier/beh_hier.m4out.tlv' Line 103 (char 14)
+	+-------------vvvv------------------------
+	|             
+	|      // node:
+	|      
+	|   
+	|
+	>      $foo = $bar;
+	|   
+	|
+	|             
+	+-------------^^^^------------------------
+	Signal >it$bar is used but never assigned.
+
+WARNING(1) (UNUSED-SIG): File 'run/gen/beh_hier/beh_hier.m4out.tlv' Line 103 (char 7)
+	+------vvvv-------------------------------
+	|             
+	|      // node:
+	|      
+	|   
+	|
+	>      $foo = $bar;
+	|   
+	|
+	|             
+	+------^^^^-------------------------------
+	Signal >it$foo is assigned but never used.
+	To silence this message use "`BOGUS_USE($foo)".
+
+WARNING(1) (UNUSED-SIG): File 'run/gen/beh_hier/beh_hier.m4out.tlv' Line 43 (char 19)
+	+------------------vvvvvvvvvvvv-----------
+	>                  $conditioned = $in;
+	+------------------^^^^^^^^^^^^-----------
+	Signal |conditions>tmp2$conditioned is assigned but never used.
+	To silence this message use "`BOGUS_USE($conditioned)".
+
+SandPiper error level 5 is passing; returning status 0.

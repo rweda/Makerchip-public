@@ -1,0 +1,397 @@
+.mc-auto-pane-contents.mc-markdown
+  a(name="top")
+  h1
+    | TL-Verilog Online Courses
+
+  h2
+    | Table of Contents
+  
+  h3.mc-anchor-link(onclick="ide.anchorLink(this, 'riscv')")
+    | RISC-V CPU Design Courses
+  ul.mc-toc
+    li(onclick="ide.anchorLink(this, 'riscv-overview')")
+      | RISC-V Courses - Overview
+    li(onclick="ide.anchorLink(this, 'how-cpu-works')")
+      | How a CPU Works, 1.5-hrs, YouTube with Robert Feranec, 2022
+    li(onclick="ide.anchorLink(this, 'vsdopen')")
+      | RISC-V Tutorial, 2.5-hrs, VSDOpen 2020
+    li(onclick="ide.anchorLink(this, 'chipexpo')")
+      | Building RISC-V using TL-Verilog, 3.5-hrs, ChipEXPO-2021
+    li(onclick="ide.anchorLink(this, 'edx')")
+      | Building a RISC-V CPU Core, 14-hrs, EdX
+    li(onclick="ide.anchorLink(this, 'myth')")
+      | Microprocessor for You in Thirty Hours (MYTH) Workshop
+  h3.mc-anchor-link(onclick="ide.anchorLink(this, 'fpga')")
+    | FPGA Courses
+  h3.mc-anchor-link(onclick="ide.anchorLink(this, 'asic')")
+    | ASIC Courses
+  h3.mc-anchor-link(onclick="ide.anchorLink(this, 'tlv')")
+    | TL-Verilog Training
+  ul.mc-toc
+    li(onclick="ide.anchorLink(this, 'udemy')")
+      | Pipelining RISC-V with Transaction-Level Verilog, 3-hrs, Udemy
+    li(onclick="ide.anchorLink(this, 'texas-am')")
+      | Verification with TL-Verilog, 1-hr
+    li(onclick="ide.anchorLink(this, 'nes')")
+      | NES 2020 TL-Verilog Tutorial, 2-hrs
+    li(onclick="ide.anchorLink(this, 'dac')")
+      | Transcending RTL, DAC 2020, 1-hr
+
+  a(name="riscv")
+  h2
+    | RISC-V CPU Design Courses
+  img.mc-figure-body(src="#{basePath}/module/Pane/risc-v_impl.png", style="width: 50%")
+  a(name="riscv-overview")
+  h3
+    | Overview
+  p
+    | Computer Architecture is traditionally learned in a university setting as a
+    | lecture-and-textbook course with a lab component.
+    | Taking advantage of TL-Verilog and Makerchip, the courses below are lab courses from the
+    | start, where you learn theory by doing.
+  p
+    | While these courses cover the content in various levels of depth,
+    | they all start with logic gates and guide you to
+    | building a simple RISC-V-based CPU.
+  p
+    | No college tuition is required. The first three courses below are made available
+    | by Redwood EDA, LLC FREE through #{(new Date().getMonth() < 6) ? "June" : "December"}
+    | #{new Date().getFullYear()}, so enjoy! (Training geared toward professionals is also available from
+    <a(href="https://redwoodeda.com/contact", target="_blank")
+      | Redwood EDA, LLC
+    | .)
+  h4
+    | RISC-V Course Options
+  table.mc-table2
+    tr
+      th
+        | Course Name
+      th
+        | Duration
+      th
+        | Format
+    tr
+      td
+        a.mc-anchor-link(onclick="ide.anchorLink(this, 'how-cpu-works')")
+          | How Does a CPU Work and How to Create Your Own Processor
+      td
+        | 1.5 hrs
+      td
+        | YouTube Walkthrough Video
+    tr
+      td
+        a.mc-anchor-link(onclick="ide.anchorLink(this, 'vsdopen')")
+          | VSDOpen 2020: RISC-V Tutorial
+      td
+        | 2.5 hrs
+      td
+        | Videos w/ labs
+    tr
+      td
+        a.mc-anchor-link(onclick="ide.anchorLink(this, 'chipexpo')")
+          | ChipEXPO-2021: Building RISC-V using TL-Verilog
+      td
+        | 3.5 hrs.
+      td
+        | Videos w/ labs
+    tr
+      td
+        a.mc-anchor-link(onclick="ide.anchorLink(this, 'edx')")
+          | Building a RISC-V CPU Core
+      td
+        | 14 hrs.
+      td
+        | EdX platform; written content w/ labs and quizzes
+    tr
+      td
+        a.mc-anchor-link(onclick="ide.anchorLink(this, 'myth')")
+          | Microprocessor for You in Thirty Hours (MYTH) Workshop
+      td
+        | 30 hrs.
+      td
+        | Low-cost course w/ videos, labs, and live instruction/help.
+  h4
+    | Certification
+  p
+    | For the two longer courses, certification is available. See course details, below.
+  h4
+    | Language Translation
+  p
+    | Within Makerchip, videos do not have subtitles. If you need language translation (or would like
+    | English transcription), videos for the video-based courses are also available in YouTube playlists,
+    | and YouTube provides auto-generated subtitles in various languages.
+    | Rather than viewing videos within Makerchip:
+  ul
+    li
+      | Open the YouTube playlist listed in the corresponding course description.
+    li
+      | Hover your mouse cursor over the YouTube video and select Settings (gear), then "Subtitles", "English (auto-generated)".
+    li
+      | Select "Subtitles", "English (auto-generated)" again and you'll be able to choose "Auto-translate" to the
+      | language of your choice.
+  h4
+    | Help
+  p
+    | With an appropriate level of respect and after a good faith effort on your part, you might request assistance from the community in the
+    <a(href="https://join.slack.com/t/tl-verilog-users/shared_invite/zt-4fatipnr-dmDgkbzrCe0ZRLOOVm89gA", target="_blank")
+      | TL-Verilog Users Slack Workspace
+    | . To report issues or to inquire about paid assistance, please contact
+    <a(href="https://www.redwoodeda.com/contact", target="_blank")
+      | Redwood EDA, LLC
+    | .
+  
+  a(name="how-cpu-works")
+  h3
+    | How Does a CPU Work and How to Create Your Own Processor
+  p
+    | This video discusses the basic operation of CPUs and how to build a simple one using TL-Verilog and Makerchip. It walks
+    | through the content of the
+    <a.mc-anchor-link(onclick="ide.anchorLink(this, 'vsdopen')")
+      | VSDOpen 2020 tutorial
+    | .
+  p
+    iframe(width="560", height="315", src="https://www.youtube.com/embed/EeHK3Jbgv2s", title="How Does a CPU Work and How To Create Your Own Processor", frameborder="0", allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture", allowfullscreen, style="margin: auto; display: block")
+
+  a(name="vsdopen")
+  h3
+    | VSDOpen 2020: RISC-V Tutorial
+  p
+    | In this tutorial session, you provide the combinational logic for a RISC-V subset core that
+    | executes a simple test program.
+  video(controls, controlsList="nodownload")
+    source(src="https://github.com/stevehoover/VSDOpen2020_TLV_RISC-V_Tutorial/raw/refs/heads/master/videos/VSDOpen2020%20TLV%20RISC%20V%20Tutorial%20Promo.mp4", type="video/mp4")
+    | Your browser does not support the video tag.
+  p.mc-video-title
+    | Promo Video
+  p
+    | To get started, click here to restore the EDITOR to the default code template and to open separate tabs with slides and
+    | videos. Then start with the first video. Be sure to note the changes from the original workshop, noted along with the
+    | videos and in callouts in the slides. (For non-English speakers, subtitles in various languages are
+    | available by instead viewing the
+    <a(href="https://www.youtube.com/playlist?list=PL5hpwuXY8XebJv7giIvVb69j7Te095J4-", target="_blank")
+      | course videos in YouTube
+    | .)
+  p
+    button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/module/IDE/default.tlv\"); ide.openStaticPane(\"VSDOpen Slides\", true); ide.openStaticPane(\"VSDOpen Videos\")")
+      | Start Course
+  
+  a(name="chipexpo")
+  h3
+    | ChipEXPO-2021: Building RISC-V using TL-Verilog
+  p
+    | This tutorial extends the VSDOpen 2020 tutorial with an explanation and demonstration of pipelining the RISC-V subset core.
+  p
+    | To get started, click here to restore the EDITOR to the default code template and to open separate tabs with slides and
+    | videos. Then start with the first video (or the pipelining video if you've already completed the VSDOpen Tutorial).
+    | Be sure to note the changes from the original workshop, noted along with the
+    | videos and in callouts in the slides. (For non-English speakers, subtitles in various languages are
+    | available by instead viewing the
+    <a(href="https://www.youtube.com/playlist?list=PL5hpwuXY8Xeah39tNi81vQBMEUSbrsqAe", target="_blank")
+      | course videos in YouTube
+    | .)
+  p
+    button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/module/IDE/default.tlv\"); ide.openStaticPane(\"ChipEXPO Slides\", true); ide.openStaticPane(\"ChipEXPO Videos\")")
+      | Start Course
+  
+  a(name="edx")
+  h3
+    | Building a RISC-V CPU Core
+  p
+    img.mc-figure-body(src="#{basePath}/module/Pane/LF_EdX_course.png", style="width: 40%")
+  p
+    | In this EdX Course offered by the Linux Foundation and RISC-V International, you can build a single-cycle CPU that nearly implements the complete RV32I
+    | (baseline RISC-V) instruction set. While the other courses are based on video content, this one
+    | is mostly written. While the course is free to audit, certification is available for a fee.
+  p
+    a.btn.mc-tutorial-btn(type="button", href="https://www.edx.org/course/building-a-risc-v-cpu-core", target="_blank")
+      | Take the course in EdX
+  
+  a(name="myth")
+  h3
+    | Microprocessor for You in Thirty Hours (MYTH) Workshop
+  p
+    img.mc-figure-body(src="#{basePath}/module/Pane/myth_banner.png", style="width: 55%")
+  p
+    | The
+    <a>(href="https://www.vlsisystemdesign.com/riscv-based-myth/", target="_blank")
+      | Microprocessor for You in Thirty Hours (MYTH) Workshop
+    | is a 5-day intensive workshop covering RISC-V tools in days 1-2 and pipelined RISC-V
+    | CPU design in days 3-5 using Makerchip and TL-Verilog. (We've also run the course in a 3-week
+    | format with an FPGA focus.) The MYTH Workshop was launched in 2020
+    | and has since certified hundreds of students and professionals on TL-Verilog and CPU design.
+    | Even these two exceptional
+    <a(href="https://riscv.org/blog/2020/12/risc-v-microarchitecture-for-kids-steve-hoover-redwood-eda/", target="_blank")
+      | middle schoolers
+    | successfully completed the course. Subsequent to this workshop, students have taped out their RVMYTH CPU
+    | cores in Open MPW shuttles for SKY130, and this core is used in subsequent workshops from
+    <a(href="https://www.vlsisystemdesign.com/")
+      | VLSI System Design.
+  p
+    | Similar content is available in a fully-asynchronous format through
+    <a>(href="https://fedevel.com/")
+      | FEDEVEL
+    | as "Building your own RISC-V Processor".
+  p
+    | Continued course offerings are expected.
+    | Feel free to
+    <a>(href="https://docs.google.com/forms/d/e/1FAIpQLScBBurTohnXCrzS2rLRk0eB0A177uJivC4s8rFoJr6Ds--02Q/viewform?usp=sf_link", target="_blank")
+      | leave your contact information
+    | if interested in future course offerings.
+  //h4
+    | Note that:
+  //ul
+    li
+      | The slides have been updated subsequent to the video recordings with hints based on feedback from
+      | workshop participants. These appear as yellow callouts.
+    li
+      | The videos were recorded and the github repository was set up for students enrolled in the
+      | course, using a different platform.
+    li
+      | If you'd prefer to have subtitles (in English or various other languages), you can also view the videos in this
+      <a(href="https://youtu.be/171h5Sd6qzw", target="_blank")
+        | YouTube playlist
+      | .
+  //h4
+    | To get set up:
+  //ol
+    li
+      | You may find it convenient to use
+      <a>(href="https://pypi.org/project/makerchip-app/" target="_blank")
+        | Makerchip-app
+      | so your work is automatically saved to your local system.
+      | You can open Makerchip-app (with any starting .tlv file) and return here. If you
+      | choose not to use Makerchip-app, just be sure to open your work in a project and bookmark it,
+      | as well as saving locally on occasion.
+    li
+      | Open this
+      <a>(href="https://github.com/stevehoover/RISC-V_MYTH_Workshop", target="_blank")
+        | workshop repository
+      | (then come back to this tab).
+    li
+      | Click to
+      button.btn.mc-tutorial-btn(type="button" onclick="ide.openStaticPane(\"MYTH Slides\", true); ide.openStaticPane(\"MYTH Videos\", false)")
+        | Open Slides and Videos
+      | , and start watching.
+
+
+  a(name="fpga")
+  h2
+    | FPGA Courses
+  p
+    | The
+    <a>.mc-anchor-link(onclick="ide.anchorLink(this, 'myth')")
+      | MYTH Workshop
+    | has been updated to include FPGA content.
+  p
+    | Other courses may be coming soon.
+    | Feel free to
+    <a>(href="https://docs.google.com/forms/d/e/1FAIpQLScBBurTohnXCrzS2rLRk0eB0A177uJivC4s8rFoJr6Ds--02Q/viewform?usp=sf_link", target="_blank")
+      | leave your contact information
+    | if interested in future course offerings.
+
+
+  a(name="asic")
+  h2
+    | ASIC Design Courses
+  p
+    | A few students in the
+    <a>.mc-anchor-link(onclick="ide.anchorLink(this, 'myth')")
+      | MYTH Workshop
+    have prepared their designs for ASIC tape-outs on the Skywater 130nm process.
+  p
+    a>(href="https://www.vlsisystemdesign.com/")
+      | VLSI System Design
+    | has offered ASIC SKY 130 courses using the "RVMYTH" CPU core from the
+    <a.mc-anchor-link(onclick="ide.anchorLink(this, 'myth')")
+      | MYTH Workshop
+    | .
+  p
+    | Other courses may be coming soon.
+    | Feel free to
+    <a>(href="https://docs.google.com/forms/d/e/1FAIpQLScBBurTohnXCrzS2rLRk0eB0A177uJivC4s8rFoJr6Ds--02Q/viewform?usp=sf_link", target="_blank")
+      | leave your contact information
+    | if interested in future course offerings.
+
+
+  a(name="tlv")
+  h2
+    | TL-Verilog Training
+
+  a(name="udemy")
+  h3
+    | Pipelining RISC-V with Transaction-Level Verilog
+  p
+    img.mc-figure-body(src="#{basePath}/module/Pane/udemy.jpg", style="width: 50%")
+  p
+    a>(href="https://www.udemy.com/course/1549918", target="_blank")
+      | Pipelining RISC-V with Transaction-Level Verilog:
+    br
+    i
+      | Two College Courses in Digital Logic in Three Hours,
+    br
+    | by Steve Hoover, 2018, Udemy
+  p
+    | Set in the context of RISC-V, this training covers various topics of TL-Verilog with lab exercises.
+  p
+    button.btn.mc-tutorial-btn(type="button" onclick="ide.openStaticPane(\"Course Slides\")")
+      | Open Slides
+
+  a(name="texas-am")
+  h3
+    | Verification with TL-Verilog
+  p
+    | This 1-hr video, presented by Steve Hoover introduces TL-Verilog for verification engineers,
+    | highlighting the benefits of timing abstraction and transaction-level design for simplifying test harness
+    | construction and for making verification collateral more resilient to design changes.
+  p
+    button.btn.mc-tutorial-btn(type="button" onclick="ide.openStaticPane(\"Verif Slides\")")
+      | Open Slides
+    b
+      | and watch it here!
+  p
+    iframe(width="560", height="315", src="https://www.youtube.com/embed/BIwpN7za95M", title="YouTube video player", frameborder="0", allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture", allowfullscreen, style="margin: auto; display: block")
+  p
+    Examples from the presentation:
+  p
+    button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/pythagorean_example.tlv\")")
+      | Slide 17 Pythagoras's Theorem Example
+    button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/error_pipeline_solution.tlv\")")
+      | Slide 22 Pipelining Solution
+    button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/fpga_mult_example.tlv\")")
+      | Slide 24 FPGA Multiply Example
+    button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/stall_example.tlv\")")
+      | Slide 34 Stall Pipeline Example
+    button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/flow_example.tlv\")")
+      | Slides 35-40 Flow Example (Similar)
+  a(name="nes")
+  h3
+    | NES 2020 Tutorial Session
+  p
+    | In this 2-hour tutorial session in Silicon Institute of Technology's NES 2020 Conference, Steve Hoover introduces TL-Verilog and Makerchip.
+  h4
+    | Watch it here!
+  p
+    iframe(width="560", height="315", src="https://www.youtube.com/embed/_FFmJZPz6aM?start=1456", title="YouTube video player", frameborder="0", allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture", allowfullscreen, style="margin: auto; display: block")
+
+  a(name="dac")
+  h3
+    | Transcending RTL
+  p
+    i
+      | Invited Session, 57th Design Automation Conference, July 2020
+  p
+    img.mc-figure-body(src="#{basePath}/module/Pane/DAC_heads.png", style="width: 50%")
+  p
+    | For this session, Steve Hoover called upon fellow innovators, Jan Kuper and Jose Renau, to showcase to
+    | the industry the breadth of opportunity that exists between RTL and high-level synthesis. The session
+    | covered the methodologies behind TL-Verilog, Clash, and Pyrope, including an
+    <a(href="https://docs.google.com/document/d/e/2PACX-1vQSaUIZcN3R6mYC8B-tz6H1W8V7Vjgx8gvPI8PPTXQYHVlyeP5TJg0FzF5sixDsvVPeSuMUn3HqhlaS/pub", target="_blank")
+      | apples-to-apples code comparison
+    | . These three modern HDLs are not simply better RTL languages, they are languages that are better than RTL.
+  h4
+    | Watch it here!
+  p
+    iframe(width="560", height="315", src="https://www.youtube.com/embed/cIDGAQ6aQUw", title="YouTube video player", frameborder="0", allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture", allowfullscreen, style="margin: auto; display: block")
+  p
+    button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/dac_2020_ring.tlv\")")
+      | Load EDITOR with DAC Ring Code

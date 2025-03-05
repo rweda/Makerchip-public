@@ -1,0 +1,35 @@
+INFORM(0) (PROD_INFO):
+	SandPiper(TM)
+	(DEV) Run as: "java -jar sandpiper.jar --noversion --fmtDeclSingleton --fmtNoRespace --webContent  --fmtPackAll --stats=operand3_stats --compiler=modelsim -p default --outdir=run/gen/operand_mux -i run/gen/operand_mux/operand3.m4out.tlv -o operand3.sv
+	For help, including product info, run with -h.
+
+INFORM(0) (LICENSE):
+	Licensed to "Redwood EDA, LLC" as: Full Edition.
+
+INFORM(0) (FILES):
+	Reading "run/gen/operand_mux/operand3.m4out.tlv"
+	to produce:
+		Translated HDL File: "run/gen/operand_mux/operand3.sv"
+		Generated HDL File: "run/gen/operand_mux/operand3_gen.sv"
+		Statistics Directory: "run/gen/operand_mux/operand3_stats"
+
+LOGIC_ERROR(5) (UNASSIGNED-SIG): File 'run/gen/operand_mux/operand3.tlv' Line 61 (char 49)
+	Preprocessed as 'run/gen/operand_mux/operand3.m4out.tlv':62(ch49):
+	+------------------------------------------------vvvvv-
+	>            $rslt[63:0] = f_ALU($opcode, $op_a, $op_b);
+	+------------------------------------------------^^^^^-
+	Signal |inst$op_b is used but never assigned.
+
+LOGIC_ERROR(5) (UNASSIGNED-SIG): File 'run/gen/operand_mux/operand3.tlv' Line 61 (char 33)
+	Preprocessed as 'run/gen/operand_mux/operand3.m4out.tlv':62(ch33):
+	+--------------------------------vvvvvvv--
+	>            $rslt[63:0] = f_ALU($opcode, $op_a, $op_b);
+	+--------------------------------^^^^^^^--
+	Signal |inst$opcode is used but never assigned.
+
+INFORM(0) (STATS):
+	SandPiper generated 66% of your HDL code.
+	This includes: 13 signal declarations, 3 flops/latches, and 1 conditional clock signals.
+	View "run/gen/operand_mux/operand3_stats" for more details.
+
+SandPiper error level 5 is passing; returning status 0.

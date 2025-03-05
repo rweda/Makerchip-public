@@ -1,0 +1,161 @@
+.mc-auto-pane-contents.mc-markdown
+  a(name="top")
+  :markdown
+    # Hierarchy
+    (~20 min)
+    
+    In this tutorial, you will learn how to replicate logic using “behavioral hierarchy”.
+    
+    ## Table of Contents
+  ul.mc-toc
+    li(onclick="ide.anchorLink(this, 'exercise1')")
+      | Exercise 1: 3D Distance Calculation
+    li(onclick="ide.anchorLink(this, 'life')")
+      | Exercise 2: Conway’s Game of Life
+    li(onclick="ide.anchorLink(this, 'wrapup')")
+      | Wrap-Up
+    
+  a(name="exercise1")
+  :markdown
+    ## Exercise 1: 3D Distance Calculation
+  p
+    | We return once again to our familiar Pythagorean Theorem pipelined logic.
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/hierarchy_tutorial_1.tlv\")") Load Pythagorean Example
+  p
+    | However, the logic is expressed differently. The logic has two similar 
+    | input coordinates, previously called 
+    span.tlv_ident_pipe_sig.mc-ident-font
+      | $aa 
+    | and 
+    span.tlv_ident_pipe_sig.mc-ident-font
+      | $bb
+    | . We now take advantage of their similarity.  We introduce the “behavioral hierarchy” “
+    span.tlv_ident_beh_hier_2.mc-ident-font
+      | /coord[1:0]
+    | ”. 
+    span.tlv_ident_pipe_sig.mc-ident-font
+      | $aa 
+    | and 
+    span.tlv_ident_pipe_sig.mc-ident-font
+      | $bb 
+    | are now 
+    span.tlv_ident_beh_hier_2.mc-ident-font
+      | /coord[0]
+    span.tlv_ident_pipe_sig.mc-ident-font
+      | $value 
+    | and 
+    span.tlv_ident_beh_hier_2.mc-ident-font
+      | /coord[1]
+    span.tlv_ident_pipe_sig.mc-ident-font
+      | $value
+    | . The new expression of this logic, in 
+    span.mc-ident-font
+      | design.tlv
+    | , is illustrated in Figure 1, below.
+    
+  .mc-tutorial-figure
+    img.mc-figure-body(src="#{basePath}/public/tutorial/images/Hierarchy1Fig1.png")
+    .mc-figure-caption
+      span
+        i Figure 1
+        | : Pythagorean Theorem Logic
+  p
+    | Behavioral hierarchy is simply a way to replicate logic. It can also be used without indices (
+    span.tlv_ident_beh_hier_2.mc-ident-font
+      | /hier
+    | ) to provide named scope to related logic.
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | Relate the diagram with the code.
+  .mc-tutorial-note
+    .mc-note-body
+      p
+        | “[*]” refers to all instances.
+  p
+    | Now, let’s extend this 2D distance calculation to a 3D one, 
+    | calculating distance in 3D space as:
+  .mc-tutorial-equation
+    span
+      | c = sqrt(value[0]^2 + value[1]^2 + value[2]^2)
+  p    
+    | You’re on your own for this one.  You can do it!
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | Modify the design to add a third coordinate.  Run and sanity check the output.
+  p
+    i Hint: Three changes are required -- two under 
+    span.tlv_ident_comment.mc-ident-font
+      | // DUT
+    i , and one under 
+    span.tlv_ident_comment.mc-ident-font
+      | // Print
+  p
+    | Behavioral hierarchy is used inside and outside pipelines to provide 
+    | hierarchy to your design, from top level structure such as CPU cores 
+    | within a multi-core chip, to small bits of logic like the one in this tutorial.
+  .mc-tutorial-note
+    .mc-note-body
+      p
+        | References to pipesignals in other scopes (like “
+        span.tlv_ident_beh_hier_2.mc-ident-font
+          | /coord
+        span.tlv_ident_pipe_sig.mc-ident-font
+          | $sq
+        | ”), begin with an ancestor (parent, grandparent, etc.) or child scope of the 
+        | current scope.  The scope includes behavioral hierarchy and pipelines.
+    
+  a(name="life")
+  :markdown
+    ## Exercise 2: Conway’s Game of Life
+    “Conway’s Game of Life” is a simplistic simulation, depicted below, 
+    representing cell growth with cell reproduction and cell death from 
+    starvation and overpopulation.
+  .mc-turotial-figure
+    img.mc-figure-body-gif(src="#{basePath}/public/tutorial/images/Hierarchy2Conway.gif")
+    .mc-figure-caption
+      span “Conway’s Game of Life” © Kieff CC BY-SA 3.0
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/hierarchy_tutorial_2.tlv\")") Load Life Example
+  p
+    | In each cycle, the liveness of a cell (square in the grid) is based on its 
+    | eight neighboring cells (horizontally, vertically, and diagonally). 
+    | An empty cell comes to life if it had exactly three live neighbors. It dies
+    | if it has fewer than two live neighbors (starvation) or more than three 
+    | (overpopulation).
+  p
+    | This example implements Conway’s Life. The grid is constructed using 
+    | behavioral hierarchy.
+  .mc-tutorial-code
+    .mc-code-body  
+      pre.mc-ident-font
+        span(style="color:#6290c9")
+          |  /yy
+        | [Y_SIZE-1:0]
+        |
+        span(style="color:#6290c9")
+          |    /xx
+        | [X_SIZE-1:0]
+    
+  .mc-tutorial-note
+    .mc-note-body
+      p
+        | “Y_SIZE-1” is a Verilog expression.
+  p
+    | The log contains formatted output.
+    
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | Explore the design to understand the use of hierarchy.
+
+  a(name="wrapup")
+  :markdown
+    ## Wrap-Up
+    
+    Verilog has many constructs for replication and hierarchy: modules, loops,
+    generate loops, packed and unpacked arrays, each
+    with their own quirks and restrictions.  TL-Verilog provides this single form of scope -- behavioral hierarchy -- to replace
+    them all.  In fact, they are generally used in place of structures as well, not just with different syntax,
+    but also with powerful new capabilities, which you'll learn about in the next tutorial, "Transaction Flows".
+    This is where Transaction-Level Verilog gets its name!

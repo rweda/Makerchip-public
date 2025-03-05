@@ -1,0 +1,421 @@
+.mc-auto-pane-contents.mc-markdown
+  a(name="top")
+  :markdown
+    # Alignment (Pipeline Interactions)
+    (~40 min)
+    
+    You have learned how to create a simple pipeline in TL-Verilog. In this lab,
+    you will create interactions between different transactions and different 
+    pipelines.
+    
+    ## Table of Contents
+  ul.mc-toc
+    li(onclick="ide.anchorLink(this, 'exercise1')")
+      | Exercise 1: Distance Accumulator
+    li(onclick="ide.anchorLink(this, 'exercise2')")
+      | Exercise 2: Adding Speculation
+    li(onclick="ide.anchorLink(this, 'wrapup')")
+      | Wrap-Up
+    
+  a(name="exercise1")
+  :markdown
+    ## Exercise 1: Distance Accumulator
+  p
+    | We begin this lab with our familiar Pythagorean Theorem pipeline code in,
+    | illustrated in Figure 1.
+    
+  .mc-tutorial-figure
+    img.mc-figure-body(width="400px", src="#{basePath}/public/tutorial/images/AlignmentFig1.png")
+    .mc-figure-caption
+      span
+        i Figure 1
+        | : Pythagorean Pipeline
+  .mc-tutorial-note
+    .mc-note-body
+      p
+        | Flip-flops are not drawn, as they were in previous tutorial. In this and 
+        | future diagrams, signals and logic progress left-to-right within pipelines, 
+        | and flip-flops are implied where pipesignals cross stages.
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/alignment_tutorial.tlv\")") Load Example
+  p
+    | In addition to the Pythagorean Theorem logic, there is commented code that you will
+    | add to the design over the course of this tutorial. There is new stimulus logic and
+    | printing to support the logic you will add.
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | Familiarize yourself with the initial design by highlighting pipesignals in NavTLV and Diagram.
+  p
+    | We will create a “distance accumulator”, tracking the total distance
+    | traveled in a series of “hops”, depicted in red in Figure 2.
+    
+  .mc-tutorial-figure
+    img.mc-figure-body(src="#{basePath}/public/tutorial/images/AlignmentFig2.png")
+    .mc-figure-caption
+      span
+        i Figure 2
+        | : Four Hops
+  p
+    | Each valid transaction in the
+    <span>.tlv_ident_pipeline.mc-ident-font
+      | |calc
+    | pipeline will represent a valid hop.
+    <span>.tlv_ident_pipe_sig.mc-ident-font
+      | $aa
+    | is the forward-facing distance of the hop, and
+    <span>.tlv_ident_pipe_sig.mc-ident-font
+      | $bb
+    | is the lateral distance, so
+    <span>.tlv_ident_pipe_sig.mc-ident-font
+      | $cc
+    | gives us the distance of a hop.
+  p
+    | We add to our pipeline an accumulator accumulating the computed
+    <span>.tlv_ident_pipe_sig.mc-ident-font
+      | $cc
+    | values and providing a running total distance (total distance in red in Figure 2). 
+    | The logic to do this is illustrated in Figure 3, with new logic in purple.
+    
+  .mc-tutorial-figure
+    img.mc-figure-body(width="600px", src="#{basePath}/public/tutorial/images/AlignmentFig3.png")
+    .mc-figure-caption
+      span
+        i Figure 3
+        | : Distance accumulator
+  p
+    span>.tlv_ident_pipe_sig.mc-ident-font
+      | $tot_dist
+    | accumulates the running-total distance.  Since it holds state, a 
+    | reset value must be supplied.  During reset (
+    span>.tlv_ident_pipe_sig.mc-ident-font
+      | $reset
+    | asserted), the ‘0 leg of the mux is selected to reset
+    <span>.tlv_ident_pipe_sig.mc-ident-font
+      | $tot_dist
+    | to zero.
+    <span>.tlv_ident_pipe_sig.mc-ident-font
+      | $reset
+    | is assigned outside of pipeline scope. This means it is assigned in stage 0 (
+    span.tlv_ident_stage_expr.mc-ident-font
+      | @0
+    | ) of a default (unspecified) pipeline. After reset, while there is no valid hop (
+    span>.tlv_ident_pipe_sig.mc-ident-font
+      | $valid
+    | deasserted),
+    <span>.tlv_ident_pipe_sig.mc-ident-font
+      | $tot_dist
+    | is retained by recirculating it through the mux. When there is 
+    | a valid hop, the adder provides
+    <span>.tlv_ident_pipe_sig.mc-ident-font
+      | $tot_dist
+    | with
+    <span>.tlv_ident_pipe_sig.mc-ident-font
+      | $cc
+    | +
+    <span.tlv_ident_pipe_sig.mc-ident-font
+      | $tot_dist
+    | .
+  .mc-tutorial-note
+    .mc-note-body
+      p
+        | In the diagram above,
+        <span>.tlv_ident_pipe_sig.mc-ident-font
+          | $tot_dist
+        |goes from stage
+        <span>.tlv_ident_stage_expr.mc-ident-font
+          | @4
+        | to stage
+        <span>.tlv_ident_stage_expr.mc-ident-font
+          | @5
+        | through a flip-flop (implied by the stage crossing), and is then drawn
+        | to exit the pipeline from stage
+        <span>.tlv_ident_stage_expr.mc-ident-font
+          | @5
+        | and re-enter at stage
+        <span.tlv_ident_stage_expr.mc-ident-font
+          |@4
+        | . It is drawn outside the pipeline to make clear that there are no 
+        | flip-flops on this path. Feedback (like
+        <span.tlv_ident_pipe_sig.mc-ident-font
+          | $tot_dist
+        | ), feed-forward, and pipeline interactions (like
+        <span.tlv_ident_pipe_sig.mc-ident-font
+          |$reset
+        | ) are all drawn outside of pipelines for this reason.
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | Add this new logic to the code. Look for the comments marked with “(1)”.
+        | Remove “
+        span.tlv_ident_comment.mc-ident-font
+          | //[(1)+]
+        | “ to add the commented lines, and delete the “
+        span.tlv_ident_comment.mc-ident-font
+          | //[(1)-]
+        | “ line.
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | Compile and debug to at least successfully produce NavTLV.
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | Correlate the NavTLV code to Figure 3.
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | Debug further if necessary to produce a Waveform. Observe in the Waveform and Log output that
+        <span>.tlv_ident_pipe_sig.mc-ident-font
+          | $tot_dist
+        | is a running total of
+        <span.tlv_ident_pipe_sig.mc-ident-font
+          | $cc
+        | . 
+  p
+    | Let's look at the new code in more detail:
+  .mc-tutorial-code
+    .mc-code-body
+      pre.mc-ident-font
+        span(style="color:#6290c9")
+          | @4
+          |    ?$valid
+          |        $tot_incr[31:0] = >>1$tot_dist + $cc;
+          |    $tot_dist[31:0] =
+          |        /top<<3$reset ? 32'b0 :        // reset
+          |        $valid        ? $tot_incr :    // add $cc
+          |                        >>1$tot_dist;  // retain
+  p
+    | Observe that while the bulk of the DUT logic is conditioned under 
+    span.tlv_ident_when.mc-ident-font
+      | ?$valid
+    | , 
+    span>.tlv_ident_pipe_sig.mc-ident-font
+      | $tot_dist
+    | is not.
+    <span>.tlv_ident_pipe_sig.mc-ident-font
+      | $tot_dist
+    | holds state from one cycle to the next, and is always valid. 
+    | (In the State Tutorial, you’ll learn a better way to code state.)
+  p
+    | To retain the value of
+    <span>.tlv_ident_pipe_sig.mc-ident-font
+      | $tot_dist
+    | we use the "ahead" "alignment" operator (
+    span.tlv_ident_alignment_expr_1c.mc-ident-font
+      | >>
+    | ) with a value of 1, as we did in the Sequential Logic Tutorial to
+    | recirculate the previous value (the value one cycle ahead in the pipeline).
+    | The value is recirculated into the MUX for the retain case and through the
+    | adder for the increment case.
+  p
+    | We also reference
+    <span>.tlv_ident_pipe_sig.mc-ident-font
+      | $reset
+    | with an alignment. In this case we are referencing into a different pipeline
+    | -- the default (unspecified) pipeline in which
+    <span>.tlv_ident_pipe_sig.mc-ident-font
+      | $reset
+    | is defined. We choose to reference
+    <span>.tlv_ident_pipe_sig.mc-ident-font
+      | $reset
+    | at stage 1. From
+    <span>.tlv_ident_stage_expr.mc-ident-font
+      | @4
+    | context, to reference into another pipeline's
+    <span>.tlv_ident_stage_expr.mc-ident-font
+      | @1
+    | we use
+    <span>.tlv_ident_alignment_expr_1c.mc-ident-font
+      | <<3
+    | (
+    span>.tlv_ident_stage_expr.mc-ident-font
+      | @4 
+    span>.tlv_ident_alignment_expr_1c.mc-ident-font
+      | <<3
+    | =
+    <span.tlv_ident_stage_expr.mc-ident-font
+      | @1
+    | )
+  p
+    | So why do we reference pipesignals using a relative stage offset? Why not just use
+    <span.tlv_ident_stage_expr.mc-ident-font
+      | @
+    | ? We’ve discussed in previous labs how important it is that 
+    | pipelined logic can be easily and safely retimed without any risk of 
+    | impacting functionality. Well, by using relative references, we have 
+    | preserved that property for feedback, feedforward, and pipeline interactions!
+  p
+    | What happens to our design if stage four doesn't meet our cycle time? 
+    | We have to move the mux to stage five. So, we add the
+    <span.tlv_ident_stage_expr.mc-ident-font
+      | @5
+    | , below.
+  .mc-tutorial-code
+    .mc-code-body
+      pre.mc-ident-font
+        span(style="color:#6290c9")
+          |@4
+          |      ?$valid
+          |         $tot_incr[31:0] = >>1$tot_dist + $cc;
+          |@5
+          |      $tot_dist[31:0] = …
+
+  p
+    | The result of this change is depicted in Figure 4. We know that, even though
+    | the small TL-Verilog change resulted in a good bit of RTL change, we have 
+    | not impacted functionality.  Note that, while retiming is functionally-safe,
+    | if consuming logic is moved prior to producing logic, the design is 
+    | infeasible (and the condition will be reported by the SandPiper™ tool).
+    
+  .mc-tutorial-figure
+    img.mc-figure-body(width="600px", src="#{basePath}/public/tutorial/images/AlignmentFig4.png")
+    .mc-figure-caption
+      span
+        i Figure 4
+        | : Retimed mux
+  p
+    | Being able to safely retime complex logic is extremely beneficial for logic 
+    | designers. It also means physical designers can address many timing issues 
+    | without involving a logic designer (and perhaps the verification team when 
+    | things go wrong).
+  p
+    | After making the safe change above, a logic designer might choose to avoid 
+    | excessive staging of reset by changing
+    <span.tlv_ident_alignment_expr_1c.mc-ident-font
+      | <<3
+    span>.tlv_ident_pipe_sig.mc-ident-font
+      | $reset
+    | to
+    <span.tlv_ident_alignment_expr_1c.mc-ident-font
+      | <<4
+    span.tlv_ident_pipe_sig.mc-ident-font
+      | $reset
+    | . This is a functional change (albeit a low-risk one). TL-Verilog has cleanly 
+    | decomposed many RTL changes into two simple changes, which clearly highlight
+    | the functional impact.
+  .mc-tutorial-note
+    .mc-note-body
+      p
+        | Discussing relative references can get confusing. Consider 
+        | that a later transaction is in an earlier stage. Referring to transactions 
+        | as “ahead” or “behind” can be clearer.
+    
+  a(name="exercise2")
+  :markdown
+    ## Exercise 2: Adding Speculation
+    Now, let’s introduce one more feature into our design for extra practice.
+    
+    Often, as logic designers, we optimize performance by doing speculative 
+    calculations, then rolling back the results when we misspeculate. Let’s add 
+    a sort of misspeculation to our design, where we correct the previous hop. 
+    The correction comes in the form of a new hop, let’s call it a “skip,” 
+    where the starting point for the skip is removed from the path. 
+    Figure 5 illustrates this.
+    
+  .mc-tutorial-figure
+    img.mc-figure-body(src="#{basePath}/public/tutorial/images/AlignmentFig5.png")
+    .mc-figure-caption
+      span
+        i Figure 5
+        | : Skip
+  p
+    | Hop 2 is redefined by the skip transaction.
+  p
+    | To perform an updated distance calculation for skip 3, we see in Figure 6 
+    | that the new distance
+    <span>.tlv_ident_pipe_sig.mc-ident-font
+      | $cc3
+    | must be computed using a corrected value for
+    <span>.tlv_ident_pipe_sig.mc-ident-font
+      | $aa
+    | (
+    span>.tlv_ident_pipe_sig.mc-ident-font
+      | $corrected_aa3
+    | =
+    <span>.tlv_ident_pipe_sig.mc-ident-font
+      | $cc2
+    | +
+    <span.tlv_ident_pipe_sig.mc-ident-font
+      | $aa3
+    | ).
+    
+  .mc-tutorial-figure
+    img.mc-figure-body(src="#{basePath}/public/tutorial/images/AlignmentFig6.png")
+    .mc-figure-caption
+      span
+        i Figure 6
+        | : Skip calculation
+  p  
+    | To keep our design simple, we require that skip 3 be sent precisely four 
+    | cycles (the depth of the pipeline) after the misspeculated hop 2, with no 
+    | intervening transactions.  This way
+    <span>.tlv_ident_pipe_sig.mc-ident-font
+      | $cc2
+    | is available for skip 3’s calculation.
+  p
+    | The logic to implement this is shown in Figure 7, below.
+    
+  .mc-tutorial-figure
+    img.mc-figure-body(width="600px", src="#{basePath}/public/tutorial/images/AlignmentFig7.png")
+    .mc-figure-caption
+      span
+        i Figure 7
+        | : Skip logic
+  p
+    | We’ve added a new feedback path for
+    <span>.tlv_ident_pipe_sig.mc-ident-font
+      | $cc
+    | . In our example, this provides
+    <span>.tlv_ident_pipe_sig.mc-ident-font
+      | $cc2
+    | for
+    <span.tlv_ident_pipe_sig.mc-ident-font
+      | $corrected_aa3
+    | .
+    
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | Introduce this logic in the code by removing the two
+        <span>.tlv_ident_comment.mc-ident-font
+          | //<(2)+>
+        | comments to add the lines, and by modifying the line indicated with
+        <span.tlv_ident_comment.mc-ident-font
+          | <(2)*>
+        | . Run and debug as necessary. You can use <Ctrl>-z to undo, 
+        | or re-select this lab to start again in desperation. Save when it runs
+        | successfully. Explore resulting output and waveforms as desired. 
+        | Find a skip in the output, and see how it aborts and extends the 
+        | previous hop.
+  p
+    | Note that we still have our safe retiming property. We always do. However, 
+    | if the pipeline depth were to grow,
+    <span>.tlv_ident_pipe_sig.mc-ident-font
+      | $cc
+    | might no longer be available in stage
+    <span.tlv_ident_stage_expr.mc-ident-font
+      | @4
+    | , and a functional change would be required, such as
+    <span.tlv_ident_alignment_expr_1c.mc-ident-font
+      | <<4
+    span>.tlv_ident_pipe_sig.mc-ident-font
+      | $cc
+    | becomes
+    <span.tlv_ident_alignment_expr_1c.mc-ident-font
+      | <<5
+    span.tlv_ident_pipe_sig.mc-ident-font
+      | $cc
+    | , and the upstream logic would need to reflect this change. A more 
+    | flexible design would parameterize this requirement or provide a 
+    | backpressure or perhaps
+    <span>.tlv_ident_pipe_sig.mc-ident-font
+      | $skip_ok
+    | pipesignal to the upstream logic.
+    
+  a(name="wrapup")
+  :markdown
+    ## Wrap-Up
+    
+    Now you have the tools to make interacting pipelines. In the next lab, 
+    you’ll learn how to create replicated logic.
+    

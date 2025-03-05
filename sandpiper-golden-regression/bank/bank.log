@@ -1,0 +1,30 @@
+INFORM(0) (PROD_INFO):
+	SandPiper(TM)
+	(DEV) Run as: "java -jar sandpiper.jar --noversion --fmtDeclSingleton --fmtNoRespace --webContent  --noline --xinj --xclk --dhtml --stats --compiler=modelsim -p default --outdir=run/gen/bank -i run/gen/bank/bank.m4out.tlv -o bank.sv
+	For help, including product info, run with -h.
+
+INFORM(0) (LICENSE):
+	Licensed to "Redwood EDA, LLC" as: Full Edition.
+
+INFORM(0) (FILES):
+	Reading "run/gen/bank/bank.m4out.tlv"
+	to produce:
+		Translated HDL File: "run/gen/bank/bank.sv"
+		Generated HDL File: "run/gen/bank/bank_gen.sv"
+		HTML TLX File: "run/gen/bank/bank.m4out.html"
+		Statistics Directory: "run/gen/bank/bank.m4out_stats"
+
+INFORM(0) (VERSION): File 'run/gen/bank/bank.tlv' Line 1 (char 46)
+	Preprocessed as 'run/gen/bank/bank.m4out.tlv':1(ch46):
+	+---------------------------------------------vv-
+	>\TLV_version [\source run/gen/bank/bank.tlv] 1c: tl-x.org
+	+---------------------------------------------^^-
+	This version of SandPiper can read this TL-X Version (1c),
+	but your version and license support TL-X 1d.
+	To up-rev this file to TL-X 1d use "--scrub".
+
+INFORM(0) (STATS):
+	SandPiper generated 72% of your HDL code.
+	This includes: 31 signal declarations, 20 flops/latches, and 3 conditional clock signals.
+	View "run/gen/bank/bank.m4out_stats" for more details.
+

@@ -1,0 +1,1001 @@
+include "pane_lib.blade"
+
+.mc-auto-pane-contents.mc-markdown#riscv-course
+  h1
+    | Building a Pipelined RISC-V CPU Core
+  br
+  
+  call tutorial_section_expanded("Introduction", "intro")
+  div.collapse.show.in#intro
+    p
+      | "Building a Pipelined RISC-V CPU Core" is a paid course bought to you by 
+      call external_link("Redwood EDA", "https://redwoodeda.com")
+      |  and 
+      call external_link("Purdue University", "https://purdue.edu")
+      | . You must be registered through 
+      call external_link("nanoHUB", "https://nanohub.org")
+      |  to see the videos here.
+    p
+      | These course videos teach digital logic design and guide you through building a RISC-V processor,
+      | all self-contained within this Makerchip 
+      call external_link("IDE", "https://en.wikipedia.org/wiki/Integrated_development_environment")
+      | .
+
+    h3
+      | Course Overview
+    p
+      | After a series of learning exercises, you'll implement:
+      ul
+        li
+          | a calculator circuit
+        li
+          | a simple (non-pipelined) RISC-V CPU core
+        li
+          | a pipelined RISC-V CPU core
+    h3
+      | Concepts Covered
+    p
+      | The course covers:
+      ul
+        li
+          | logic gates
+        li
+          | combinational logic
+        li
+          | sequential logic
+        li
+          | pipelined logic
+        li
+          | clock gating
+        li
+          | RISC-V CPU core microarchitecture
+        li
+          | memories and registers
+        li
+          | waterfall diagrams
+        li
+          | control and data hazards
+        li
+          | register bypass/forwarding
+    h3
+      | Who is this course for?
+    p
+      | This course is for hobbyists, students, professors, and professionals at all levels. It is for anyone with a technical mindset, an interest in semiconductors and digital logic, and a desire to stay current.
+    h3
+      | Course Duration
+    p
+      | You should set aside 20-30 hours to this course, depending on your
+      | background. Shorter course options can be found in the
+      <a(href="#" onclick="ide.openStaticPane(\"Courses\")")
+        | "Courses" pane
+      | .
+    
+    h3
+      | Course Logistics
+
+    .mc-tutorial-note
+      .mc-note-body
+        p
+          | The slides are available for reference in a separate pane. Note that slide numbers in the
+          | videos are approximate.
+        button.btn.mc-tutorial-btn2(type="button" onclick="ide.openStaticPane(\"RISC-V Slides\")")
+          | Open Slides
+        p
+
+    p
+      | Steps like the one below are for you to complete. Click each one as you
+      | complete it to track your progress and to avoid missing a critical step.
+    .mc-tutorial-step
+      .mc-step-body
+        p
+          | Click this step to mark it "complete".
+
+
+  call tutorial_section("Lesson 1: Combinational Logic", "lesson1")
+  div.collapse#lesson1
+    ul
+      li
+        | 00:00 Welcome
+      li
+        | 04:33 Intro to Logic Gates
+      li
+        | 18:38 Basic MUX Implementation and Intro to Makerchip
+      li
+        | 30:45 Labs for Combinational Logic
+    
+    br
+    call vid("Intro to Logic Gates", 1, 16, "https://nanohub.org/resources/39674/download/Lesson1.mp4")
+    
+    call tutorial_quiz("Quiz for Lesson 1", "quiz1")
+    div.collapse.mc-quiz#quiz1
+      b
+        | Instructions
+      | : Click on each correct answer. If your choice shows in red, try again. If you find the quiz
+      | difficult, review the lesson. Each lesson builds on previous lessons, so a little extra time
+      | reviewing a lesson will help future lessons go smoothly.
+      ol
+        li
+          .mc-question
+            | Which of the below expressions represents a NAND gate?
+          ol.mc-answers.mc-code-answer
+            li.mc-wrong-answer
+              | A & B
+            li.mc-wrong-answer
+              | A | B
+            li.mc-correct-answer
+              | !(A & B)
+            li.mc-wrong-answer
+              | !(A | B)
+        li
+          .mc-question
+            | What logic function is created by this TL-Verilog expression: $out = $sel ? $in1 : $in2;
+          ol.mc-answers
+            li.mc-wrong-answer
+              | An accumulator
+            li.mc-wrong-answer
+              | A transistor
+            li.mc-correct-answer
+              | A multiplexer
+            li.mc-wrong-answer
+              | An XOR gate
+        li
+          .mc-question
+            | Compilation errors can be seen in Makerchip (as of the video recording) in which two tabs?
+            <i
+              | (select two)
+          ol.mc-answers
+            li.mc-wrong-answer
+              | EDITOR
+            li.mc-correct-answer
+              | LOG
+            li.mc-correct-answer
+              | NAV-TLV
+            li.mc-wrong-answer
+              | DIAGRAM
+            li.mc-wrong-answer
+              | WAVEFORM
+        li
+          .mc-question
+            | Signals can be selected and highlighted by clicking on them in which three tabs (as of the video recording)?
+            <i
+              | (select three)
+          ol.mc-answers
+            li.mc-wrong-answer
+              | EDITOR
+            li.mc-wrong-answer
+              | LOG
+            li.mc-correct-answer
+              | NAV-TLV
+            li.mc-correct-answer
+              | DIAGRAM
+            li.mc-correct-answer
+              | WAVEFORM
+        li
+          .mc-question
+            | Makerchip currently (as of the recording) supports:
+            <i
+              | (select one)
+          ol.mc-answers
+            li.mc-wrong-answer
+              | Logic synthesis
+            li.mc-wrong-answer
+              | Formal verification
+            li.mc-correct-answer
+              | Circuit simulation
+            li.mc-wrong-answer
+              | Analog design
+        li
+          .mc-question
+            | A byte value can be declared in TL-Verilog as:
+          ol.mc-answers.mc-code-answer
+            li.mc-wrong-answer
+              | byte $byte;
+            li.mc-wrong-answer
+              | bit $byte[7:0];
+            li.mc-correct-answer
+              | 8’b$byte;
+            li.mc-wrong-answer
+              | $byte[7:0] = …;
+
+
+  call tutorial_section("Lesson 2: Sequential Logic", "lesson2")
+  div.collapse#lesson2
+    ul
+      li
+        | 00:00 Intro to Sequential Logic
+      li
+        | 03:56 Fibonacci Series Circuit and Counter Lab
+      li
+        | 08:44 Values in Verilog
+      li
+        | 12:18 Sequential Calculator Lab
+    
+    br
+    call vid("Intro to Sequential Logic and Counter Lab", 17, 23, "https://nanohub.org/resources/39676/download/Lesson2.mp4")
+
+    call tutorial_quiz("Quiz for Lesson 2", "quiz2")
+    div.collapse.mc-quiz#quiz2
+      ol
+        li
+          .mc-question
+            | Sequential logic requires which of the following two signals (or similar)?
+            <i
+              | (select two)
+          ol.mc-answers
+            li.mc-correct-answer
+              | a clock
+            li.mc-wrong-answer.mc-code-answer
+              | $next
+            li.mc-correct-answer.mc-code-answer
+              | $reset
+            li.mc-wrong-answer.mc-code-answer
+              | $count
+        li
+          .mc-question
+            | How many flip-flops are inferred after
+            <code>
+              | $wide_pulse
+            | by the following TL-Verilog expression:
+            <code
+              | $wide_pulse = ($set || >>1$wide_pulse) && ! >>4$wide_pulse;
+            | ?
+          ol.mc-answers
+            li.mc-wrong-answer
+              | 1
+            li.mc-wrong-answer
+              | 2
+            li.mc-wrong-answer
+              | 3
+            li.mc-correct-answer
+              | 4
+        li
+          .mc-question
+            | The Verilog literal hexadecimal value expression for a byte with a decimal value of 24 is:
+          ol.mc-answers.mc-code-answer
+            li.mc-correct-answer
+              | 8’h18
+            li.mc-wrong-answer
+              | 8’ha4
+            li.mc-wrong-answer
+              | 8’h24
+            li.mc-wrong-answer
+              | 8’h40
+
+  call tutorial_section("Lesson 3: Pipelined Logic", "lesson3")
+  div.collapse#lesson3
+    p
+      ul
+        li
+          | 00:00 Pipelined Logic and Retiming
+        li
+          | 07:31 Pipelined Logic Advantages and Demo in Makerchip
+        li
+          | 14:43 Pipeline Coding and Labs
+        li
+          | 21:47 What to Do When You are Stuck
+        li
+          | 25:38 Reference Solutions with Visualization (link below)
+        li
+          | 31:19 Starting-Point Code and Lab (link below)
+        li
+          | 32:25 Lab on 2-Cycle Calculator
+    .mc-tutorial-step
+      .mc-step-body
+        p
+          | At 25:40 of the Lesson 3 video: Feel free to open
+          <a>(href="https://makerchip.com/sandbox?code_url=https:%2F%2Fraw.githubusercontent.com%2Fstevehoover%2FRISC-V_MYTH_Workshop%2Fmaster%2Freference_solutions.tlv", target="_blank")
+            | Lab Reference Solutions
+          | in a new tab for future reference. (But don't rely heavily on these.)
+    .mc-tutorial-step
+      .mc-step-body
+        p
+          | At 31:19 of the Lesson 3 video: Save your calculator code outside of Makerchip, copy the code (within the
+          <span>.tlv_ident_pipeline.mc-ident-font
+            | |calc
+          | pipeline) then click to load the EDITOR with the
+        p
+          button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"https://raw.githubusercontent.com/stevehoover/RISC-V_MYTH_Workshop/master/calculator_shell.tlv\")")
+            | Calculator Starting-point Code
+    
+    br
+    call vid("Pipelined Logic", 24, 36, "https://nanohub.org/resources/39683/download/Lesson3.mp4")
+
+    call tutorial_quiz("Quiz for Lesson 3", "quiz3")
+    div.collapse.mc-quiz#quiz3
+      ol
+        li
+          .mc-question
+            | Coding pipelined logic in TL-Verilog requires explicit statements to:
+          ol.mc-answers
+            li.mc-wrong-answer
+              | declare each signal/wire
+            li.mc-wrong-answer
+              | instantiate each flip flop
+            li.mc-correct-answer
+              | define combinational logic expressions
+            li.mc-wrong-answer
+              | all of the above
+
+  call tutorial_section("Lesson 4: Validity (When Conditions)", "lesson4")
+  div.collapse#lesson4
+    ul
+      li
+        | 00:00 Intro to Validity and its Advantages
+      li
+        | 06:48 Demo of Total Distance Logic with When Condition
+      li
+        | 25:57 Lab on Calculator with Validity
+      li
+        | 27:46 Lab on Calculator with Single-Value Memory
+    .mc-tutorial-step
+      .mc-step-body
+        p
+          | At 6:48 in the Lesson 4 video: Feel free to
+          <a>(href="https://makerchip.com/sandbox?code_url=https:%2F%2Fraw.githubusercontent.com%2Fstevehoover%2FRISC-V_MYTH_Workshop%2Fmaster%2Fsolutions%2Fdemo_distance.tlv#", target="_blank")
+            | open the Pythagoras's theorem demo code
+          | in a separate Makerchip session.
+    
+    br
+    call vid("Validity (When Conditions)", 37, 43, "https://nanohub.org/resources/39677/download/Lesson4.mp4")
+
+    call tutorial_quiz("Quiz for Lesson 4", "quiz4")
+    div.collapse.mc-quiz#quiz4
+      ol
+        li
+          .mc-question
+            | Validity in TL-Verilog is used to:
+          ol.mc-answers
+            li.mc-wrong-answer
+              | save power
+            li.mc-wrong-answer
+              | avoid bugs
+            li.mc-wrong-answer
+              | simplify debugging
+            li.mc-correct-answer
+              | all of the above
+
+
+  call tutorial_section("Lesson 5: RISC-V CPU Preparation", "lesson5")
+  div.collapse#lesson5
+    ul
+      li
+        | 00:00 Microarchitecture of Single-Cycle RISC-V CPU
+      li
+        | 06:23 Starting-point Code for RISC-V Labs (link below)
+      li
+        | 11:03 Reference Solutions with Visualization (link below) and Things to Come
+
+    .mc-tutorial-step
+      .mc-step-body
+        p
+          | At 6:22 of the Lesson 5 video: Save your calculator code outside of Makerchip, then click to load the EDITOR with the
+        p
+          button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"https://raw.githubusercontent.com/stevehoover/RISC-V_MYTH_Workshop/master/risc-v_shell.tlv\")")
+            | RISC-V Starting-point Code
+    .mc-tutorial-step
+      .mc-step-body
+        p
+          | At 7:13 of the Lesson 5 video: The concept of an assembler is not well covered. In case this is a new concept for you, it is
+          | explained better by the instructor in the "Details" of Chapter 3
+          <a(href="https://github.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/blob/6036bfb1bfc0da88c322479fc87b256daef2f557/course.md#software-compilers-and-cpus", target="_blank")
+            | here
+          | .
+    .mc-tutorial-step
+      .mc-step-body
+        p
+          | At 11:01 of the Lesson 5 video: If not already opened, feel free to open
+          <a>(href="https://makerchip.com/sandbox?code_url=https:%2F%2Fraw.githubusercontent.com%2Fstevehoover%2FRISC-V_MYTH_Workshop%2Fmaster%2Freference_solutions.tlv", target="_blank")
+            | Lab Reference Solutions
+          | in a new tab for future reference. (But don't rely heavily on these.)
+    br
+    call vid("RISC-V CPU Preparation", 1, 4, "https://nanohub.org/resources/39682/download/Lesson5.mp4")
+
+    call tutorial_quiz("Quiz for Lesson 5", "quiz5")
+    div.collapse.mc-quiz#quiz5
+      ol
+        li
+          .mc-question
+            | Which is NOT an essential component of a CPU core?
+          ol.mc-answers
+            li.mc-wrong-answer
+              | Instruction memory
+            li.mc-correct-answer
+              | Inversion buffer
+            li.mc-wrong-answer
+              | Instruction decode logic
+            li.mc-wrong-answer
+              | Register file
+        li
+          .mc-question
+            | PC update directly feeds into which logic?
+          ol.mc-answers
+            li.mc-wrong-answer
+              | Decode
+            li.mc-wrong-answer
+              | Branch unit
+            li.mc-correct-answer
+              | Fetch
+            li.mc-wrong-answer
+              | Register file read
+        li
+          .mc-question
+            | Register file read provides values for which logic?
+          ol.mc-answers
+            li.mc-correct-answer
+              | ALU
+            li.mc-wrong-answer
+              | Decode
+            li.mc-wrong-answer
+              | Fetch
+            li.mc-wrong-answer
+              | PC update
+        li
+          .mc-question
+            | The calculator example was a warm-up exercise for modeling:
+          ol.mc-answers
+            li.mc-wrong-answer
+              | Decoder
+            li.mc-wrong-answer
+              | Branch predictor
+            li.mc-correct-answer
+              | ALU
+            li.mc-wrong-answer
+              | The add instruction
+        li
+          .mc-question
+            | The logic that embodies most of the details of the ISA is:
+          ol.mc-answers
+            li.mc-wrong-answer
+              | The fetch logic
+            li.mc-correct-answer
+              | Decode and ALU
+            li.mc-wrong-answer
+              | The pipeline control logic
+            li.mc-wrong-answer
+              | Instruction and data memories
+        li
+          .mc-question
+            | TL-Verilog files are often processed first by which macro preprocessor?
+          ol.mc-answers
+            li.mc-correct-answer
+              | M4
+            li.mc-wrong-answer
+              | VPP
+            li.mc-wrong-answer
+              | TextWiz
+            li.mc-wrong-answer
+              | Slater
+        li
+          .mc-question
+            | Source code in Makerchip must define a module having all but which interface signal?
+          ol.mc-answers
+            li.mc-wrong-answer
+              | clk
+            li.mc-wrong-answer
+              | reset
+            li.mc-correct-answer
+              | ready
+            li.mc-wrong-answer
+              | passed
+
+
+  call tutorial_section("Lesson 6: Instruction Fetch and Decode", "lesson6")
+  div.collapse#lesson6
+    ul
+      li
+        | 00:00 Implementation Plan and Lab for PC
+      li
+        | 04:17 Lab for Instruction Fetch Logic
+      li
+        | 08:19 Lab for RISC-V Instruction Types (IRSBJU) Decode
+      li
+        | 11:50 Lab for Instruction Immediate Decode Logic
+      li
+        | 14:48 Lab to Decode Instruction Fields
+      li
+        | 15:52 Lab to Apply 'When' Condition to Instruction Fields
+      li
+        | 16:52 Lab to Decode Individual Instructions
+    
+    br
+    call vid("Instruction Fetch and Decode", 5, 14, "https://nanohub.org/resources/39681/download/Lesson6.mp4")
+
+    call tutorial_quiz("Quiz for Lesson 6", "quiz6")
+    div.collapse.mc-quiz#quiz6
+      ol
+        li
+          .mc-question
+            | PC update directly feeds into which logic?
+          ol.mc-answers
+            li.mc-wrong-answer
+              | Decode
+            li.mc-wrong-answer
+              | Branch unit
+            li.mc-correct-answer
+              | Fetch
+            li.mc-wrong-answer
+              | Register file read
+        li
+          .mc-question
+            | Which CPU component determines which computation is to be performed by each instruction?
+          ol.mc-answers
+            li.mc-wrong-answer
+              | PC logic
+            li.mc-correct-answer
+              | Decode logic
+            li.mc-wrong-answer
+              | Register file
+            li.mc-wrong-answer
+              | ALU
+        li
+          .mc-question
+            | Which RISC-V instruction field(s) determine the operation to perform?
+            <i
+              | (select two)
+          ol.mc-answers
+            li.mc-correct-answer
+              | opcode
+            li.mc-wrong-answer
+              | rs1/rs2
+            li.mc-wrong-answer
+              | rd
+            li.mc-wrong-answer
+              | immediate
+            li.mc-correct-answer
+              | function
+        li
+          .mc-question
+            | In RISC-V (RV32I), which instruction field is constructed from different instruction bits depending on the instruction type.
+          ol.mc-answers
+            li.mc-wrong-answer
+              | opcode
+            li.mc-wrong-answer
+              | rd
+            li.mc-correct-answer
+              | immediate
+            li.mc-wrong-answer
+              | rs1 and rs2
+        li
+          .mc-question
+            | Which of the following instruction fields exists for every instruction type:
+          ol.mc-answers
+            li.mc-wrong-answer
+              | funct
+            li.mc-wrong-answer
+              | rd
+            li.mc-wrong-answer
+              | imm
+            li.mc-correct-answer
+              | opcode
+
+
+  call tutorial_section("Lesson 7: Register File, ALU, and Branching", "lesson7")
+  div.collapse#lesson7
+    ul
+      li
+        | 00:00 Lab for Register File Read
+      li
+        | 08:53 Lab for ALU Operations for ADD, ADDI
+      li
+        | 10:50 Lab for Register File Write
+      li
+        | 13:16 Concept of Array and Register File Details
+      li
+        | 18:31 Lab for Implementing Branch Instructions
+      li
+        | 22:05 Lab for Completing Branch Instruction Implementation
+      li
+        | 24:54 Lab to Create Simple Testbench
+    
+    br
+    call vid("Register File, ALU, and Branching", 15, 25, "https://nanohub.org/resources/39675/download/Lesson7.mp4")
+
+    call tutorial_quiz("Quiz for Lesson 7", "quiz7")
+    div.collapse.mc-quiz#quiz7
+      ol
+        li
+          .mc-question
+            | An RV32I register file must support what operations each cycle?
+          ol.mc-answers
+            li.mc-wrong-answer
+              | 1 read and 1 write
+            li.mc-wrong-answer
+              | 1 reads or 1 write
+            li.mc-correct-answer
+              | 2 reads and 1 write
+            li.mc-wrong-answer
+              | 2 reads or writes
+        li
+          .mc-question
+            | Register file read provides values for which logic?
+          ol.mc-answers
+            li.mc-correct-answer
+              | ALU
+            li.mc-wrong-answer
+              | Decode
+            li.mc-wrong-answer
+              | Fetch
+            li.mc-wrong-answer
+              | PC update
+        li
+          .mc-question
+            | The ALU output is sent to which logic?
+          ol.mc-answers
+            li.mc-wrong-answer
+              | PC update
+            li.mc-wrong-answer
+              | Fetch
+            li.mc-correct-answer
+              | Register file write
+            li.mc-wrong-answer
+              | Decoder
+
+  call tutorial_section("Lesson 8: Simple Pipelining, Executing an Instruction Every Three Cycles", "lesson8")
+  div.collapse#lesson8
+    ul
+      li
+        | 00:00 Introduction to Control and Data Flow Hazards
+      li
+        | 09:29 Lab to Create 3-Cycle Valid Signal
+      li
+        | 12:31 Lab to Update CPU to Execute Every Third Cycle
+      li
+        | 16:34 Lab to Distribute Logic Over Three Pipeline Stages
+    
+    br
+    call vid("Simple Pipelining, Executing an Instruction Every Three Cycles", 26, 37, "https://nanohub.org/resources/39678/download/Lesson8.mp4")
+
+    call tutorial_quiz("Quiz for Lesson 8", "quiz8")
+    div.collapse.mc-quiz#quiz8
+      ol
+        li
+          .mc-question
+            | A “hazard” results from:
+          ol.mc-answers
+            li.mc-wrong-answer
+              | A faulty thought process
+            li.mc-correct-answer
+              | Inter-instruction dependencies
+            li.mc-wrong-answer
+              | A pipeline stall
+            li.mc-wrong-answer
+              | Cyclic dependencies
+        li
+          .mc-question
+            | The axes of a waterfall diagram represent:
+          ol.mc-answers
+            li.mc-correct-answer
+              | X: Time; Y: Instruction
+            li.mc-wrong-answer
+              | X: Pipeline stage; Y: Time
+            li.mc-wrong-answer
+              | X: Instruction; Pipeline stage
+            li.mc-wrong-answer
+              | X: Pipeline stage; Y: Instruction
+
+
+  call tutorial_section("Lesson 9: Control and Data Hazard Logic", "lesson9")
+  div.collapse#lesson9
+    ul
+      li
+        | 00:00 Lab to Address Data Hazards with Register File Bypass/Forwarding
+      li
+        | 07:09 Lab to Address Control Flow Hazards (for Branches)
+      li
+        | 11:45 Lab to Complete Instruction Decode
+      li
+        | 13:37 Lab to Code Complete ALU
+    
+    br
+    call vid("Control and Data Hazard Logic", 38, 45, "https://nanohub.org/resources/39679/download/Lesson9.mp4")
+
+    call tutorial_quiz("Quiz for Lesson 9", "quiz9")
+    div.collapse.mc-quiz#quiz9
+      ol
+        li
+          .mc-question
+            | A control flow hazard relates to which of the following instructions:
+          ol.mc-answers
+            li.mc-wrong-answer
+              | loads
+            li.mc-wrong-answer
+              | arithmetic instructions
+            li.mc-correct-answer
+              | branches
+            li.mc-wrong-answer
+              | all of the above
+
+  call tutorial_section("Lesson 10: Data Memory and Load and Store Instructions", "lesson10")
+  div.collapse#lesson10
+    ul
+      li
+        | 00:00 Intro to Load/Store Instructions and Lab for Load Redirect
+      li
+        | 08:17 Lab to Load Data from Memory to Register File
+      li
+        | 14:25 Lab to Instantiate Data Memory
+      li
+        | 18:14 Lab to Add Stores and Loads to the Test Program
+      li
+        | 20:12 Lab to Add Control Logic for Jump Instructions
+      li
+        | 24:40 Wrap-up
+    
+    br
+    call vid("Data Memory and Load and Store Instructions", 46, 56, "https://nanohub.org/resources/39680/download/Lesson10.mp4")
+
+    call tutorial_quiz("Quiz for Lesson 10", "quiz10")
+    div.collapse.mc-quiz#quiz10
+      ol
+        li
+          .mc-question
+            | Which signal is NOT an INPUT signal to a data memory:
+          ol.mc-answers
+            li.mc-wrong-answer
+              | Address
+            li.mc-wrong-answer
+              | Store data
+            li.mc-correct-answer
+              | Load data
+            li.mc-wrong-answer
+              | Read enable
+        li
+          .mc-question
+            | For load and store instructions, the immediate value specifies:
+          ol.mc-answers
+            li.mc-wrong-answer
+              | a result value
+            li.mc-wrong-answer
+              | a PC offset
+            li.mc-correct-answer
+              | an address offset
+            li.mc-wrong-answer
+              | loads and stores have no immediate value
+        li
+          .mc-question
+            | For jump instructions, the immediate value specifies:
+          ol.mc-answers
+            li.mc-wrong-answer
+              | a condition
+            li.mc-wrong-answer
+              | a DMem address
+            li.mc-correct-answer
+              | a PC offset
+            li.mc-wrong-answer
+              | jump instructions have no immediate value
+        li
+          .mc-question
+            | The read enable input to the DMem is driven by which signal:
+          ol.mc-answers.mc-code-answer
+            li.mc-wrong-answer
+              | $br_tgt_pc
+            li.mc-wrong-answer
+              | $src2_valid
+            li.mc-correct-answer
+              | $is_load
+            li.mc-wrong-answer
+              | $is_s_instr
+  
+  call tutorial_section("Final Exam", "final")
+  div.collapse.mc-quiz#final
+    p
+      | See how much you've learned by taking the final exam.
+    ol
+      li
+        .mc-question
+          | For which logic was the ternary operator chained most deeply?
+        ol.mc-answers
+          li.mc-correct-answer
+            | Decode and ALU
+          li.mc-wrong-answer
+            | Fetch and load
+          li.mc-wrong-answer
+            | Register file write
+          li.mc-wrong-answer
+            | Branch target computation
+      li
+        .mc-question
+          | In your pipelined CPU, which category of RISC-V instructions does NOT suffer a penalty (redirect the PC) due to a hazard:
+        ol.mc-answers
+          li.mc-wrong-answer
+            | Branch
+          li.mc-wrong-answer
+            | Jump
+          li.mc-wrong-answer
+            | Load
+          li.mc-correct-answer
+            | Store
+      li
+        .mc-question
+          | Which step in developing the pipelined TL-Verilog CPU resulted in the most change in the generated Verilog code (though we didn’t look at it)?
+        ol.mc-answers
+          li.mc-wrong-answer
+            | Adding the instruction memory
+          li.mc-wrong-answer
+            | Adding the register file
+          li.mc-correct-answer
+            | Retiming the logic in the pipeline
+          li.mc-wrong-answer
+            | Adding support for branch instructions
+      li
+        .mc-question
+          | Which group of instructions involves a comparison?
+        ol.mc-answers
+          li.mc-correct-answer
+            | branch
+          li.mc-wrong-answer
+            | jump
+          li.mc-wrong-answer
+            | load
+          li.mc-wrong-answer
+            | Store
+      li
+        .mc-question
+          | Which feature addresses a read-after-write hazard?
+        ol.mc-answers
+          li.mc-wrong-answer
+            | PC redirection
+          li.mc-wrong-answer
+            | branch prediction
+          li.mc-wrong-answer
+            | pipelining
+          li.mc-correct-answer
+            | register bypass
+      li
+        .mc-question
+          | Which of the instructions below is a valid RISC-V instruction to skip the next instruction if x3 is equal to zero?
+        ol.mc-answers.mc-code-answer
+          li.mc-wrong-answer
+            | BEZ x3, 8
+          li.mc-wrong-answer
+            | BRI x3, 0, 8
+          li.mc-wrong-answer
+            | BAT x3, 8
+          li.mc-correct-answer
+            | BEQ x3, x0, 8
+      li
+        .mc-question
+          | In a TL-Verilog expression assigning
+          <code
+            | $foo
+          | , the value of a signal
+          <code>
+            | $foo
+          | from the previous cycle can be accessed using:
+        ol.mc-answers.mc-code-answer
+          li.mc-correct-answer
+            | >>1$foo
+          li.mc-wrong-answer
+            | prev($foo)
+          li.mc-wrong-answer
+            | $foo--
+          li.mc-wrong-answer
+            | FLOP($foo)
+      li
+        .mc-question
+          | Which one of the following RISC-V features did you implement:
+        ol.mc-answers
+          li.mc-wrong-answer
+            | byte-granular memory access
+          li.mc-wrong-answer
+            | control and status registers
+          li.mc-wrong-answer
+            | exception handling
+          li.mc-correct-answer
+            | conditional branches
+      li
+        .mc-question
+          | Digital logic involving a clock signal and a reset signal is referred to as:
+        ol.mc-answers
+          li.mc-wrong-answer
+            | logic gates
+          li.mc-wrong-answer
+            | combinational logic
+          li.mc-wrong-answer
+            | asynchronous logic
+          li.mc-correct-answer
+            | sequential logic
+      li
+        .mc-question
+          | The TL-Verilog expression,
+          <code>
+            | $foo = 1’b0 ? 1’b1 : $bar;
+          | evaluates to:
+        ol.mc-answers
+          li.mc-wrong-answer
+            | a single-bit zero value
+          li.mc-wrong-answer
+            | a single-bit one value
+          li.mc-correct-answer.mc-code-answer
+            | $bar
+          li.mc-wrong-answer
+            | not enough information to answer
+      li
+        .mc-question
+          | The correct order in which a CPU processes an arithmetic instruction is:
+        ol.mc-answers
+          li.mc-correct-answer
+            | fetch, decode, register read, ALU, register write
+          li.mc-wrong-answer
+            | fetch, decode, register read, register write, ALU
+          li.mc-wrong-answer
+            | decode, fetch, register read, ALU, register write
+          li.mc-wrong-answer
+            | decode, fetch, register read, register write, ALU
+      li
+        .mc-question
+          | What logic function is created by this TL-Verilog expression
+          <code
+            | $val[7:0] = $reset ? 8’b0 : >>1$val + 1;
+          | ?
+        ol.mc-answers
+          li.mc-correct-answer
+            | A counter
+          li.mc-wrong-answer
+            | A multiplexer
+          li.mc-wrong-answer
+            | An adder
+          li.mc-wrong-answer
+            | A shift register
+      li
+        .mc-question
+          | For which two of the following instructions can the next instruction be something other than PC + 4?
+          <i
+            | (select two)
+        ol.mc-answers.mc-code-answer
+          li.mc-correct-answer
+            | BLT
+          li.mc-correct-answer
+            | JAL
+          li.mc-wrong-answer
+            | AUIPC
+          li.mc-wrong-answer
+            | LW
+      li
+        .mc-question
+          | For which two of the following instructions is the ALU used to produce the instruction’s register result value?
+          <i
+            | (select two)
+        ol.mc-answers.mc-code-answer
+          li.mc-correct-answer
+            | ADD
+          li.mc-correct-answer
+            | ADDI
+          li.mc-wrong-answer
+            | BLT
+          li.mc-wrong-answer
+            | LW
+      li
+        .mc-question
+          | In this course, you learned about:
+        ol.mc-answers
+          li.mc-wrong-answer
+            | RISC-V ISA
+          li.mc-wrong-answer
+            | digital logic
+          li.mc-wrong-answer
+            | sequential logic
+          li.mc-wrong-answer
+            | pipelined logic
+          li.mc-wrong-answer
+            | Makerchip
+          li.mc-wrong-answer
+            | TL-Verilog
+          li.mc-wrong-answer
+            | CPU microarchitecture
+          li.mc-correct-answer
+            | all of the above
+
+    h3
+      | Congratulations!!!
+    p
+      | You have completed the course! Please provide feedback on the course
+      | to
+      <a(href="mailto:steve.hoover@redwoodeda.com", target="_blank")
+        | Steve Hoover
+      | .
+    p
+      | Brag about your accomplishment on social media. You deserve it!
+    p
+      | And continue to explore the evolving world of digital logic design, TL-Verilog,
+      | and RISC-V processors.

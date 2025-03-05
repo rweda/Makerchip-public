@@ -1,0 +1,39 @@
+.mc-auto-pane-contents.mc-markdown
+  a(name="top")
+  :markdown
+    # Makerchip Help
+    ## Controls
+    ### NavTLV, Diagram, Waveform:
+    #### Selecting signals/pipelines/hierarchy
+    - **Single**: Left-click
+    - **Multiple**: Ctrl-left-click
+    
+    ### Editor:
+    - **Compile**: Ctrl-Enter
+    - **Indent/Unindent Selection**: Ctlr-’]’ / Ctlr-’[’
+    - **Start searching**: Ctrl-F / Cmd-F
+    - **Find next**: Ctrl-G / Cmd-G
+    - **Find previous**: Shift-Ctrl-G / Shift-Cmd-G
+    - **Replace**: Shift-Ctrl-F / Cmd-Option-F
+    - **Replace all**: Shift-Ctrl-R / Shift-Cmd-Option-F
+    - **Persistent search (dialog doesn't autoclose)**: Alt-F, Enter for next, Shift-Enter for previous
+    - **Jump to line**: Alt-G
+    
+    ### Editor:
+    - **Zoom In/Out**: Mouse-wheel or Ctlr-’]’/’[’
+    - **Pan**: Left-drag
+    
+    Compile and Simulation Flow
+    ---------------------------
+    This is what is happening behind the scenes.
+    
+  img(src="#{basePath}/module/Pane/MakerchipFlow.svg")
+  :markdown
+    ## Terminology
+    **Scratchpad**: A workspace that has not been saved as a project.
+    There is no way to return to a scratchpad once it is closed,
+    so be sure to save it as a project and bookmark the project URL.
+    
+    ## Credits
+    Makerchip is a product of Redwood EDA, LLC, developed by: Steve Hoover, Flyyn Leonard,
+    Alex DeFiore, Joe Aronson, Dmytro Bogatov, and Adilet Issayev.

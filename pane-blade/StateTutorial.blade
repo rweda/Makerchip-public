@@ -1,0 +1,176 @@
+.mc-auto-pane-contents.mc-markdown
+  a(name="top")
+  :markdown
+    # State Signals
+    (~15 min)
+    
+    In this tutorial, you will learn about state signals in TL-Verilog.
+    
+    ## Table of Contents
+  ul.mc-toc
+    li(onclick="ide.anchorLink(this, 'introduction')")
+      | Introduction
+    li(onclick="ide.anchorLink(this, 'exercise')")
+      | Exercise: Counting Transactions
+    li(onclick="ide.anchorLink(this, 'wrapup')")
+      | Wrap-Up
+    
+  a(name="introduction")
+  :markdown
+    ## Introduction
+    We're generally taught that flip-flops are "state" elements. At a low-level,
+    this is true. Flip-flops hold values from one cycle to the next, and they can
+    continue to hold values for any number of cycles thereafter. In other words,
+    flip-flops _can_ hold state.
+    
+    You've used flip-flops in the pipelined logic
+    you built. Did these flip-flps hold state? Well, they held a value from
+    one cycle to the next, but after that, the values were not needed. We used
+    flip-flops only to distribute the pipelined computation in time. The values
+    were transient. From an architectural perspective, we would not consider these
+    values to be state. Flip-flops like these, used for pipelining,
+    can be refered to as "pipe-flops". On the other hand, flip-flops that _are_ used to
+    hold values can be refered to as "state flops". Physically, they are the same.
+    The distinction is in the way they are used.
+    
+    In TL-Verilog, state signals, versus pipesignals, are a more appropriate construct
+    for holding architectural state. Architectural state might include register files,
+    accumulators, control registers, state machine state, etc. Semantically, they
+    are similar to pipesignals. Like pipesignals, they are associated with pipelines
+    and can be automatically staged (though in typical usage, state is captured in
+    a flop and not further). Generally they are associated with either the primary
+    pipeline that updates them, or a default pipeline. Unlike pipesignals, state
+    signals retain their value across invalid transactions (when they have a false
+    "when" condition) and can be consumed when their associated transaction is invalid.
+  p
+    | State signals have a “
+    span.mc-ident-font
+      | $
+    | ” prefix, like pipesignals, but begin with an upper-case letter using 
+    | camelcase delimitation (eg: 
+    span.tlv_ident_pipe_sig.mc-ident-font
+      | $StateSignal
+    | ). (This is referred to as PascalCase, UpperCamelCase, or DromedaryCase.)
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/state_tutorial.tlv\")") Load State Example
+  p
+    | At the end of the code is a statement that keeps track of cycle count:
+  .mc-tutorial-code
+    .mc-code-body
+      p
+        span.tlv_ident_pipe_sig.mc-ident-font $CycCount[
+        | 15:0
+        span.tlv_ident_pipe_sig.mc-ident-font ] 
+        | <= 
+        span.tlv_ident_pipe_sig.mc-ident-font $reset 
+        | ? 16'b0 : 
+        span.tlv_ident_pipe_sig.mc-ident-font $CycCount 
+        | + 16'b1;
+  p  
+    | The use of “<=” is a shorthand syntax for:
+  .mc-tutorial-code
+    .mc-code-body
+      p
+        span.tlv_ident_alignment_expr_1c.mc-ident-font <<1
+        span.tlv_ident_pipe_sig.mc-ident-font $CycCount[
+        | 15:0
+        span.tlv_ident_pipe_sig.mc-ident-font ] 
+        | = 
+        span.tlv_ident_pipe_sig.mc-ident-font $reset 
+        | ? 16'b0 : 
+        span.tlv_ident_pipe_sig.mc-ident-font $CycCount
+        | + 16'b1;
+  p
+    | This can be read, assign 
+    span.tlv_ident_pipe_sig.mc-ident-font
+      | $CycCount 
+    | of the transaction one cycle behind (the next transaction) to the given 
+    | expression. We generally assign the next value of a state based on its 
+    | current value. To initialize the circuit predictably, a reset value must be provided.
+    | Generally speaking, state flops require a reset value, pipe-flops do not.
+    | Future versions of TL-Verilog are expected to introduce simplifications for
+    | providing reset values for state signals.
+  p
+    | The “waterfall logic diagram” in Figure 2 below illustrates how 
+    span.tlv_ident_alignment_expr_1c.mc-ident-font
+      | <<1
+    span.tlv_ident_pipe_sig.mc-ident-font
+      | $CycCount 
+    | is 
+    span.tlv_ident_pipe_sig.mc-ident-font
+      | $CycCount 
+    | for the next transaction. The progression of a transaction 
+    | through the logic in each of its stages can be seen horizontally. At a 
+    | given cycle, a vertically slice gives a picture of what stage each 
+    | transaction is in and what logic is evaluated for it.
+  .mc-tutorial-figure
+    img.mc-figure-body(src="#{basePath}/public/tutorial/images/StateFig1.png")
+    .mc-figure-caption
+      span
+        i Figure 2
+        | : State signal being consumed and assigned
+  p  
+    | In this tutorial, you will use a state signal to maintain a bank account balance.
+
+  a(name="exercise")
+  :markdown
+    ## Counting Transactions
+    The code for this tutorial tracks a bank account balance for deposit and 
+    withdrawal transactions.
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | Familiarize yourself with the design. Note, in particular, the 
+        | assignment of 
+        span.tlv_ident_pipe_sig.mc-ident-font
+          | $Balance
+        | .
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | Notice in the Log how the resulting balance from one transaction is 
+        | the initial balance for the next valid transaction.
+  p
+    span.tlv_ident_pipe_sig.mc-ident-font
+      | $Balance 
+    | is being consumed during the current transaction and assigned a 
+    | value for the next transaction.
+  p
+    | Now, you will implement a state signal that counts the number of successful 
+    | transactions; call it 
+    span.tlv_ident_pipe_sig.mc-ident-font
+      | $NumTransactions
+    | .    
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | Below the first 
+        span.tlv_ident_comment.mc-ident-font
+          | //[(1)] 
+        | line, write the assignment statement for 
+        span.tlv_ident_pipe_sig.mc-ident-font
+          | $NumTransactions
+        | .
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | Uncomment the last 
+        span.tlv_ident_comment.mc-ident-font
+          | //[(1)]
+        | .
+  p
+    |If you need assistance, review the code here.
+  p
+    | When implemented correctly, there should be an incrementing transaction 
+    | number above every successful transaction like the following:
+  .mc-tutorial-code
+    .mc-code-body
+      pre.mc-ident-font
+        |    # KERNEL:  Transaction #: 23
+        |    # KERNEL:      $ 8156 + $ 402 = $ 8558
+    
+  a(name="wrapup")
+  :markdown
+    ## Wrap-Up
+    
+    Now that you know how to use state signals, you have the capability to 
+    consume/assign the same signal across transactions in a pipeline.

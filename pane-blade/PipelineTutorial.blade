@@ -1,0 +1,316 @@
+.mc-auto-pane-contents.mc-markdown
+  a(name="top")
+  :markdown
+    # Pipelines
+    (~20 min)
+    
+    In this 15-minute tutorial, you’ll learn how easy it is to pipeline Verilog logic in TL-Verilog.
+    
+    ## Table of Contents
+  ul.mc-toc
+    li(onclick="ide.anchorLink(this, 'pipelining')")
+      | Pipelining
+    li(onclick="ide.anchorLink(this, 're-pipelining')")
+      | Re-Pipelining
+    li(onclick="ide.anchorLink(this, 'closer-look')")
+      | A Closer Look
+    li(onclick="ide.anchorLink(this, 'wrapup')")
+      | Wrap-Up
+    
+  a(name="pipelining")
+  :markdown
+    ## Pipelining
+  p
+    | Let’s explore some logic to calculate the length c below, given a and b, using Pythagora’s Theorem.
+  .mc-tutorial-figure
+    img.mc-figure-body.resize-160(src="#{basePath}/public/tutorial/images/PipelinesFig1.png")
+    .mc-tutorial-equation
+      span
+        | c = sqrt(a
+        sup 2
+        |  + b
+        sup 2
+        | )
+    .mc-figure-caption
+      span
+        i Figure 1
+        | : Pythagoras’s Theorem
+  
+  p  
+    | This logic can be implemented in a circuit as:
+  .mc-tutorial-figure
+    img.mc-figure-body(src="#{basePath}/public/tutorial/images/PipelinesFig2.png")
+    .mc-figure-caption
+      span
+        i Figure 2
+        | : Pythagorean Theorem Logic
+  
+  p  
+    | The example for this tutorial implements this, along with some code for printing output.
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadTLVURL(\"#{basePath}/public/tutorial/tlv/pipeline_tutorial.tlv\")") Load Pythagorean Example
+  
+  p
+    | Note that we are allowing Makerchip to provide random stimulus for
+    <span>.tlv_ident_pipe_sig.mc-ident-font $aa 
+    | and
+    <span.tlv_ident_pipe_sig.mc-ident-font $bb
+    | .
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | Use the WAVEFORM to explore the signal values in simulation. The waveforms show hexadecimal values.
+        | Hover over the hexadecimal values to see decimal and binary.
+  p
+    | This implementation will not work in a high-frequency design.  There is too much logic to fit 
+    | within a clock period.  The design must be pipelined over three clock cycles by adding three 
+    | sets of flip-flop as drawn below.
+  .mc-tutorial-figure
+    img.mc-figure-body(src="#{basePath}/public/tutorial/images/PipelinesFig3.png")
+    .mc-figure-caption
+      span
+        i Figure 3
+        | : Pipelined Pythagorean Theorem Logic
+  p  
+    | By assigning the pipeline stages of the logic expressions, the flip-flops are added by implication.
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | Uncomment the 
+        span.tlv_ident_stage_expr.mc-ident-font @2 
+        | and 
+        span.tlv_ident_stage_expr.mc-ident-font @3 
+        | lines, including the 
+        code [+]
+        | . These lines delimit the added pipeline stages.
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | Observe the changes in the diagram.
+  :markdown
+    That’s it.  You’ve pipelined the calculation!
+
+  a(name="re-pipelining")
+  :markdown
+    ## Re-Pipelining
+    Let’s say our logic must be stretched across its synthesis block and needs 
+    extra transit time for signal transmission.
+    
+  .mc-tutorial-figure
+    img.mc-figure-body(width="600px", src="#{basePath}/public/tutorial/images/PipelinesFig4.png")
+    .mc-figure-caption
+      span
+        i Figure 4
+        | : Re-Pipelined Pythagorean Theorem Logic
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | Change the design to match Figure 3, above.  Debug, and explore the 
+        | resulting design and simulation as you wish.
+  .mc-tutorial-note
+    .mc-note-body
+      p
+        | With no logic in stage 3, there is no need for an “
+        span.tlv_ident_stage_expr.mc-ident-font @3
+        | ” line.
+  p
+    | This example also comes with LOG output and visualization (in the VIZ tab). It is
+    | currently commented out.
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | Uncomment the VIZ and LOG output line near the bottom of the file. Compile and observe
+        | LOG output, and step through the simulation in the VIZ tab.
+
+    
+  a(name="closer-look")
+  :markdown
+    ## A Closer Look
+    Let’s look a bit more closely at what Redwood EDA, LLC’s SandPiper™ tool is doing 
+    for us as it processes your TL-Verilog code.
+  .mc-tutorial-figure
+    img.mc-figure-body(width="600px",src="#{basePath}/public/tutorial/images/PipelinesFig5.png")
+    .mc-figure-caption
+      span
+        i Figure 5
+        | : Pipesignal $aa_sq.
+  p
+    | Observe, in Figure 5, that 
+    span.tlv_ident_pipe_sig.mc-ident-font
+      | $aa_sq 
+    | passes from stage 0 to stage 2 through two flip-flops.  
+    | These flip-flops are implied by the fact that 
+    span.tlv_ident_pipe_sig.mc-ident-font
+      | $aa_sq 
+    | is produced in stage 0 and consumed in stage 2. 
+    span.tlv_ident_pipe_sig.mc-ident-font
+      | $aa_sq 
+    | is termed a pipesignal. While 
+    span.tlv_ident_pipe_sig.mc-ident-font
+      | $aa_sq 
+    | is a single entity in TL-Verilog, it corresponds to three signals, one 
+    | for each pipeline stage (0, 1, and 2) and two flip-flops in our generated SystemVerilog.
+  p
+    | Let’s take a look at the generated SystemVerilog.
+    
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | In the Editor view, select “Show Verilog”.
+  p
+    | This opens a webpage showing 
+    span.mc-ident-font
+      | design.tlv 
+    | and the produced SystemVerilog files (
+    span.mc-ident-font
+      | design.sv 
+    | and 
+    span.mc-ident-font
+      | design_gen.sv
+    | ).
+    
+  .mc-tutorial-note
+    .mc-note-body
+      p
+        | There are many ways to write equivalent SystemVerilog. SandPiper has 
+        | many options that control the formatting of SystemVerilog/Verilog 
+        | output. The format you are seeing represents each flip-flop, signal, 
+        | and assignment individually.
+  p
+    | Here are the relevant code snippets from 
+    span.mc-ident-font
+      | design_gen.sv 
+    | for pipesignal 
+    span.tlv_ident_pipe_sig.mc-ident-font
+      | $aa_sq
+    | :
+  .mc-tutorial-code
+    .mc-code-body
+      pre.mc-ident-font
+        span(style="color:#6e37ff")
+          |    // Signals for pipesignal "aa_sq".
+          |    logic [31:0] aa_sq_CALC_00H;
+          |    logic [31:0] aa_sq_CALC_01H;
+          |    logic [31:0] aa_sq_CALC_02H;
+          |    // Flip-flops for pipesignal "aa_sq".
+          |    always_ff @(posedge clk)
+          |      aa_sq_CALC_01H[31:0] <=
+          |      aa_sq_CALC_00H[31:0];
+          |
+          |    always_ff @(posedge clk)
+          |      aa_sq_CALC_02H[31:0] <=
+          |      aa_sq_CALC_01H[31:0];
+  p
+    span.mc-ident-font
+      | design_gen.sv
+    | , including the lines above, is “generated” and is generally 
+    | correct-by-construction. Other code, produced in 
+    span.mc-ident-font
+      | design.sv
+    | , is directly translated from 
+    span.mc-ident-font
+      | design.tlv
+    | . The line in which 
+    span.tlv_ident_pipe_sig.mc-ident-font
+      | $aa_sq 
+    | is assigned was translated by SandPiper from:
+    
+  
+  .mc-tutorial-code
+    .mc-code-body
+      p
+        pre.mc-ident-font
+          span.tlv_ident_pipe_sig $aa_sq
+          | [31:0] = 
+          span.tlv_ident_pipe_sig $aa 
+          | * 
+          span.tlv_ident_pipe_sig $aa;
+  p
+    | to: 
+  .mc-tutorial-code
+    .mc-code-body
+      pre.mc-ident-font
+        span(style="color:#6e37ff")
+          |assign aa_sq_CALC_00H[31:0] =
+          |        aa_CALC_00H * aa_CALC_00H;
+  p
+    | The .tlv and .sv lines above appear on corresponding lines of their 
+    | respective files, so an error in the SystemVerilog line is easy to relate 
+    | to its source .tlv line.
+  p
+    | Explore the produced code as you feel inclined.
+    
+  .mc-tutorial-note
+    .mc-note-body
+      p
+        | The
+        <code>
+          | $
+        | used for pipesignals can be thought of as a combination of the 
+        | pipe character,
+        <code
+          | |
+        | , and
+        <code
+          | S
+        | , for signal (or pipe + signal = pipesignal).
+  p
+    | Note that when you re-pipelined this logic, the TL-Verilog testbench (printing) code was unaffected.
+    | Even though the print statement now accesses signals that are distributed across different stages 
+    | of the pipeline, the print statement remains unchanged.  
+    span.tlv_ident_pipe_sig.mc-ident-font
+      | $bb 
+    |are automatically staged to 
+    | stage 4 for printing alongside the corresponding 
+    span.tlv_ident_pipe_sig.mc-ident-font
+      | $cc
+    | . (This is, of course, a toy example.  
+    | In a real model, the testbench code would be excluded when compiled for synthesis, and the associated
+    | staging flops would not be generated in hardware.)
+  p
+    | In TL-Verilog, logic can be retimed safely, guaranteed not to impact behavior.  “
+    span.tlv_ident_stage_expr.mc-ident-font
+      | @
+    | ” statements 
+    | have no influence over the overall behavior of the design.  They are 
+    i physical 
+    | attributes controlling the implementation of the 
+    i behavioral model 
+    | , which is said to be 
+    i timing-abstract
+    | .  You need not think timing-abstractly to code TL-Verilog, but you will find the 
+    | safe-retiming properties made possible by this separation of behavioral and physical 
+    | design to be very empowering.
+  .mc-tutorial-note
+    .mc-note-body
+      p
+        | Are you wondering, why we aren’t using the names , 
+        span.tlv_ident_pipe_sig.mc-ident-font
+          | $a
+        | , 
+        span.tlv_ident_pipe_sig.mc-ident-font
+          | $b
+        | , and 
+        span.tlv_ident_pipe_sig.mc-ident-font
+          | $c
+        | ?  Identifiers like 
+        span.tlv_ident_pipe_sig.mc-ident-font
+          | $any
+        | , 
+        span.tlv_ident_pipe_sig.mc-ident-font
+          | $Any
+        | , and 
+        span.tlv_ident_pipe_sig.mc-ident-font
+          | $ANY 
+        | are actually different types in TL-Verilog. To distinguish types, names must begin 
+        | with two alphabetic characters. Pipesignals and pipelines are lower-case with
+        <code>
+          | _
+        | for delimitation.
+  a(name="wrapup")
+  :markdown
+    ## Wrap-Up
+    
+    You should now be comfortable using TL-Verilog pipeline constructs to distribute logic within 
+    a pipelines.  Continue through the next few tutorials, and you’ll be able to code *any* digital 
+    logic in TL-Verilog.  In the next tutorial, you’ll add two very powerful lines to this example which 
+    simplify debug and create a low-power implementation.

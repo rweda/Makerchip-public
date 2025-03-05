@@ -1,0 +1,14 @@
+INFORM(0) (PROD_INFO):
+	SandPiper(TM)
+	(DEV) Run as: "java -jar sandpiper.jar --noversion --fmtDeclSingleton --fmtNoRespace --webContent  --clkEnable --noline --xclk --fmtInlineInjection --fmtFlatSignals --bestsv --debugSigs --compiler=modelsim -p default --outdir=run/gen/clk_enable -i run/gen/clk_enable/design.m4out.tlv -o design.sv
+	For help, including product info, run with -h.
+
+INFORM(0) (LICENSE):
+	Licensed to "Redwood EDA, LLC" as: Full Edition.
+
+INFORM(0) (FILES):
+	Reading "run/gen/clk_enable/design.m4out.tlv"
+	to produce:
+		Translated HDL File: "run/gen/clk_enable/design.sv"
+		Generated HDL File: "run/gen/clk_enable/design_gen.sv"
+

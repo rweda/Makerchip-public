@@ -1,0 +1,54 @@
+/*
+Copyright (c) 2015, Steven F. Hoover
+All rights reserved.
+*/
+.tlx_unknown {
+  color: #505050;
+  font-style: normal;
+  font-weight: normal;
+}
+.tlx_untouched {
+  color: #305050;
+  font-style: italic;
+  font-weight: normal;
+}
+.tlx_logic {
+  color: purple;
+  font-style: normal;
+  font-weight: normal;
+}
+.tlx_declarations {
+  color: blue;
+  font-style: normal;
+  font-weight: normal;
+}
+.tlx_staging {
+  color: #509050;
+  font-style: normal;
+  font-weight: normal;
+}
+.tlx_structure {
+  color: #1090c0;
+  font-style: normal;
+  font-weight: normal;
+}
+.tlx_validity {
+  color: #E04010;
+  font-style: normal;
+  font-weight: normal;
+}
+.tlx_instrumentation {
+  color: #a07090;
+  font-style: normal;
+  font-weight: normal;
+}
+.tlx_comments {
+  color: #707070;
+  font-style: normal;
+  font-weight: normal;
+}
+.tlx_whitespace {
+  color: #7090a0;
+  font-style: normal;
+  font-weight: normal;
+}

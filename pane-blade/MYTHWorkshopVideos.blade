@@ -1,0 +1,234 @@
+include "pane_lib.blade"
+
+.mc-auto-pane-contents.mc-markdown.mc-course
+  h1
+    | Microprocessor for You in Thirty Hours Workshop, Day 3-5 Videos
+  br
+  
+
+  h2(style="font-weight: 800; font-style: italic")
+    | Entire Playlist in one Frame on YouTube
+  iframe(width="560", height="315", src="https://www.youtube.com/embed/videoseries?list=PL5hpwuXY8XeZYK7Eunigk_bE3r6-0GYjH", title="YouTube video player", frameborder="0", allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share", allowfullscreen)
+
+  .mc-tutorial-note
+    .mc-note-body
+      p
+        | Slide numbers in the videos are approximate.
+  .mc-tutorial-note
+    .mc-note-body
+      p
+        | Reference the slides as you watch videos. The slides contain corrections in speech bubbles.
+  h3
+    | For Day 3, Skill 4, Lesson 4 (D3SK4_L4):
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | Open
+        <a>(href="https://makerchip.com/sandbox?code_url=https:%2F%2Fraw.githubusercontent.com%2Fstevehoover%2FRISC-V_MYTH_Workshop%2Fmaster%2Fcalculator_shell.tlv", target="_blank")
+          | Calculator Starting-point Code
+        | in a new tab for reference.
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | Open
+        <a>(href="https://makerchip.com/sandbox?code_url=https:%2F%2Fraw.githubusercontent.com%2Fstevehoover%2FRISC-V_MYTH_Workshop%2Fmaster%2Freference_solutions.tlv", target="_blank")
+          | Lab Reference Solutions
+        | in a new tab for reference.
+
+  h3
+    | For Day 4, Skill 1, Lesson 2 (D4SK1_L2):
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | Save your calculator code outside of Makerchip, then click to load the EDITOR with the
+      p
+        button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"https://raw.githubusercontent.com/stevehoover/RISC-V_MYTH_Workshop/master/risc-v_shell.tlv\")")
+          | RISC-V Starting-point Code
+
+  h2(style="font-weight: 800; font-style: italic")
+    | Or, All Videos Individually
+  .mc-tutorial-note
+    .mc-note-body
+      p
+        | These work best in Chrome.
+  .mc-tutorial-note
+    .mc-note-body
+      p
+        | Slide numbers in the videos are approximate.
+  h2
+    | Day 3: Digital Logic Using Makerchip and TL-Verilog
+  br
+  h3
+    | Day 3, Skill 1: Combinational Logic
+  call vid("D3SK1_L0: Welcome", 1, 1, "https://drive.google.com/uc?export=download&id=1-TDSpj9T_M4T0rhCHY0tDpKrc-DwcIqK")
+  call vid("D3SK1_L1: Intro to Logic Gates", 2, 10, "https://drive.google.com/uc?export=download&id=1ctR2HyZDfTXi_BE1T6YDVwp8ttjXQve8")
+  call vid("D3SK1_L2: Basic MUX Implementation and Intro to Makerchip", 11, 13, "https://drive.google.com/uc?export=download&id=1ZuOi4Jc61L25pkgk1zV6ujKEckJUGmU_")
+  .mc-tutorial-note
+    .mc-note-body
+      p
+        | For the video below, note the following correction:
+      p
+        | For "Lab: Combinational Calculator", Oops! Syntax for these MUX
+        | selects was not yet introduced. Use e.g.
+      <span>(style="font-family: mono")
+        | ($op[1:0] == 2'b00)
+      | for select 0 expression.
+  call vid("D3SK1_L3: Labs for Combinational Logic", 14, 18, "https://drive.google.com/uc?export=download&id=1qji8pHbjePrtejUxK6hFQXs9qV2W0kd_")
+  h3
+    | Day 3, Skill 2: Sequential Logic
+  call vid("D3SK2_L1: Intro to Sequential Logic and Counter Lab", 19, 23, "https://drive.google.com/uc?export=download&id=1M3Z5jMztTilkMiEUo4Gjk_GBulpYC2zH")
+  call vid("D3SK2_L2: Sequential Calculator Lab", 24, 25, "https://drive.google.com/uc?export=download&id=16WiSNacXQ4BfU8TAzEQiOzb0N8ejERwt")
+  h3
+    | Day 3, Skill 3: Pipelined Logic
+  call vid("D3SK3_L1: Pipelined Logic and Retiming", 26, 31, "https://drive.google.com/uc?export=download&id=1zyahKRUsTC1bojGH6tdYK2Uiu_4b2tJB")
+  call vid("D3SK3_L2: Pipelined Logic Advantages and Demo in Makerchip", 32, 33, "https://drive.google.com/uc?export=download&id=1oO3uIyiPgH6JlOEIrNlQ4nKBvqKb8upI")
+  call vid("D3SK3_L3: Lab on Error Conditions Within Computation Pipeline", 34, 34, "https://drive.google.com/uc?export=download&id=1C4carCvIuhnB49TqW2cMuMakC118ipE_")
+  .mc-tutorial-note
+    .mc-note-body
+      p
+        | For the video below, note the following corrections:
+      p
+        | For "Lab: Counter and Calculator in Pipeline", At this point, be sure to use the Calculator
+        | Starter Code from the github repo. After this exercise, you can comment out the viz macro and use the VIZ tab to debug.
+      p
+        | The
+        <span>.tlv_ident_pipe_sig.mc-ident-font
+          | $reset
+        <span>.tlv_ident_hdl_code
+          | = *reset
+        | expression should be moved under the pipeline and pipestage as well.
+  call vid("D3SK3_L4: Lab on 2-Cycle Calculator", 35, 36, "https://drive.google.com/uc?export=download&id=1eE-LJyfiB7jTYsX60384Os5HnXNAMDZ8")
+  h3
+    | Day 3, Skill 4: Validity (When Conditions)
+  call vid("D3SK4_L1: Intro to Validity and its Advantages", 37, 38, "https://drive.google.com/uc?export=download&id=1KS8iCBUVg5ueh2AtImvy59jJ1AtEr59L")
+  call vid("D3SK4_L2: Demo of Total Distance Logic with When Condition", 39, 39, "https://drive.google.com/uc?export=download&id=1jgorFPJFgbOs9qfRxN0jc9Drl4HpYEJS")
+  call vid("D3SK4_L3: Demo of Total Distance Logic with When Condition (cont'd)", 39, 39, "https://drive.google.com/uc?export=download&id=1fQkk2otSGYeIbtlv_rsEUw9-WdRIfcb-")
+  call vid("D3SK4_L4: Lab on Calculator with Validity, Reference Solutions, and Visual Debug", 43, 43, "https://drive.google.com/uc?export=download&id=1FgupM0K43vxMyg14FNXXKZG8HSE0znXX")
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | Open
+        <a>(href="https://makerchip.com/sandbox?code_url=https:%2F%2Fraw.githubusercontent.com%2Fstevehoover%2FRISC-V_MYTH_Workshop%2Fmaster%2Fcalculator_shell.tlv", target="_blank")
+          | Calculator Starting-point Code
+        | in a new tab for reference.
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | Open
+        <a>(href="https://makerchip.com/sandbox?code_url=https:%2F%2Fraw.githubusercontent.com%2Fstevehoover%2FRISC-V_MYTH_Workshop%2Fmaster%2Freference_solutions.tlv", target="_blank")
+          | Lab Reference Solutions
+        | in a new tab for reference.
+  .mc-tutorial-note
+    .mc-note-body
+      p
+        | For the video below, note the following correction:
+      p
+        | Missing from this logic: it is necessary to provide a default recirculation of
+        <span>.tlv_ident_pipe_sig.mc-ident-font
+          | $out
+        | for
+        <span>.tlv_ident_pipe_sig.mc-ident-font
+          | $out
+        | mux. Previously there was no need for a "retain value" case, but now mem operations must retain
+        <span>.tlv_ident_pipe_sig.mc-ident-font
+          | $out
+        | (and it doesn't hurt to retain for illegal (6, 7) op inputs as well).
+  call vid("D3SK4_L5: Lab on Calculator with Single-Value Memory and Info on Lab Resources", 43, 43, "https://drive.google.com/uc?export=download&id=1pvPCGCIGAg2APY-ml1hGmmTBN6tefDg0")
+  call vid("D3SK4_L6: Day 3 Wrap-up", 43, 43, "https://drive.google.com/uc?export=download&id=1Yu7gXOdx0yAUMHkLBacyHn3tgSXQSnqd")
+  br
+  h2
+    | Day 4: Building a Single-Cycle RISC-V Subset CPU Core
+  br
+  h3
+    | Day 4, Skill 1: Preparation
+  call vid("D4SK1_L1: Microarchitecture of Single-Cycle RISC-V CPU", 1, 2, "https://drive.google.com/uc?export=download&id=1EIVRLyHJt7-1UlXvlQ2P-RzBd8NxWzNk")
+  call vid("D4SK1_L2: Starting-point Code for RISC-V Labs (Part 1)", 3, 3, "https://drive.google.com/uc?export=download&id=1oEEppKS3SJ1lL2pMPqkYyaHT1FfWIDfs")
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | Save your calculator code outside of Makerchip, then click to load the EDITOR with the
+      p
+        button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"https://raw.githubusercontent.com/stevehoover/RISC-V_MYTH_Workshop/master/risc-v_shell.tlv\")")
+          | RISC-V Starting-point Code
+  p
+  call vid("D4SK1_L3: Starting-point Code for RISC-V Labs (Part 2)", 4, 4, "https://drive.google.com/uc?export=download&id=1euDcUhqO15zyD2jvnx04-eY_ssh1l8ZZ")
+  h3
+    | Day 4, Skill 2: Instruction Fetch and Decode
+  call vid("D4SK2_L1: Implementation Plan and Lab for PC", 5, 6, "https://drive.google.com/uc?export=download&id=1zi3Aa9WY6c-V74ucn5fdG1VVFzj8-vFj")
+  call vid("D4SK2_L2: Lab for Instruction Fetch Logic", 7, 8, "https://drive.google.com/uc?export=download&id=16aKDboK8hOM_zQzVHIqTU8SxSnjIISf1")
+  call vid("D4SK2_L3: Lab for RISC-V Instruction Types (IRSBJU) Decode", 9, 9, "https://drive.google.com/uc?export=download&id=14hE658zywuPu-htB8pnKEmIzTgn0K7VS")
+  call vid("D4SK2_L4: Lab for Instruction Immediate Decode Logic", 10, 10, "https://drive.google.com/uc?export=download&id=1G1Hpwu1STVG7TD1ACqxIRne9smxHBI9A")
+  call vid("D4SK2_L5: Lab to Decode Instruction Fields", 11, 11, "https://drive.google.com/uc?export=download&id=1Uidife1r3hixrKkoeBF9cLDU-Ew3R84g")
+  call vid("D4SK2_L6: Lab to Apply 'When' Condition to Instruction Fields", 12, 12, "https://drive.google.com/uc?export=download&id=1nmS3nVFWBodbgoOBtsrtLDjWYSW-PZNU")
+  .mc-tutorial-note
+    .mc-note-body
+      p
+        | For the video below, note the following correction:
+      p
+        span>.tlv_ident_pipe_sig.mc-ident-font
+          | $funct7
+        | is not valid for SLLI/SRLI/SRAI, so we shouldn't be using it for these instructions. In any case, it will not actually cause any harm for this workshop.
+      p
+        | Also note that the character before "BOGUS_USE" is a backtick.
+  call vid("D4SK2_L7: Lab to Decode Individual Instructions", 13, 13, "https://drive.google.com/uc?export=download&id=10vX1JQh1To30ADfyrSTK-7MRemhEftZF")
+  h3
+    | Day 4, Skill 3: Register File, ALU, and Branching
+  p
+    .mc-tutorial-note
+      .mc-note-body
+        p
+          | For the video below, note that your design is growing. You might notice the waveform viewer has hidden the signals. Look for the "+" to open them.
+  call vid("D4SK3_L1: Lab for Register File Read (Part 1)", 14, 16, "https://drive.google.com/uc?export=download&id=1O4YE9EUPMTdAf_kE7OORMfMciReiRJ6O")
+  call vid("D4SK3_L2: Lab for Register File Read (Part 2)", 17, 17, "https://drive.google.com/uc?export=download&id=1DhwssvscS55tVWI3ic1gsKEF_SRcE_Mz")
+  call vid("D4SK3_L3: Lab fol ALU Operations for ADD, ADDI", 18, 18, "https://drive.google.com/uc?export=download&id=1cprkSF6ha-q3GUxI0as3_YyU4kD-lJzc")
+  call vid("D4SK3_L4: Lab for Register File Write", 19, 20, "https://drive.google.com/uc?export=download&id=1zH6CLOYinn7rfqqmMMIIEyFfGFTpOjfn")
+  call vid("D4SK3_L5: Concept of Array and Register File Details", 21, 22, "https://drive.google.com/uc?export=download&id=13jvghWt1Uj-y-oD0yvOpNiBdV4A0h4a2")
+  call vid("D4SK3_L6: Lab for Implementing Branch Instructions", 21, 21, "https://drive.google.com/uc?export=download&id=1zEpVFKCwZhksIpePvauLfqmAbtwmApSb")
+  call vid("D4SK3_L7: Lab for Completing Branch Instruction Implementation", 22, 22, "https://drive.google.com/uc?export=download&id=1zni_kkBW6PKvqcnLEt7Odbrelj_zPBws")
+  call vid("D4SK3_L8: Lab to Create Simple Testbench", 25, 25, "https://drive.google.com/uc?export=download&id=12qcHzkIH5rnjHjRjAnGWl9P4ckyJA7YJ")
+  br
+  h2
+    | Day 5: Completing and Pipelining the CPU Core
+  br
+  h3
+    | Day 5, Skill 1: Simple Pipelining, Executing an Instruction Every Three Cycles
+  call vid("D5SK1_L1: Introduction to Control and Data Flow Hazards", 26, 28, "https://drive.google.com/uc?export=download&id=1GCquo5o3WdIbqtIr7zatgf37Mhhmq8Et")
+  call vid("D5SK1_L2: Lab to Create 3-Cycle Valid Signal", 29, 35, "https://drive.google.com/uc?export=download&id=1BLZZnme3aTSu4q1XP7iRp05xfuwV3123")
+  call vid("D5SK1_L3: Lab to Update CPU to Execute Every Third Cycle", 36, 36, "https://drive.google.com/uc?export=download&id=1bWLygi7ZX7O8gwGEB1Uy_jKwZLEiZe3M")
+  call vid("D5SK1_L4: Lab to Distribute Logic Over Three Pipeline Stages", 37, 37, "https://drive.google.com/uc?export=download&id=1B7CvKYhbXvCQD4IHh97Sck5_QEkK6AKe")
+  h3
+    | Day 5, Skill 2: Control and Data Hazard Logic
+  call vid("D5SK2_L1: Lab to Address Data Hazards with Register File Bypass/Forwarding", 38, 39, "https://drive.google.com/uc?export=download&id=1xZIYDz7QPIsuUA3_6e1NU6LGltnpyVx-")
+  call vid("D5SK2_L2: Lab to Address Control Flow Hazards (for Branches)", 40, 42, "https://drive.google.com/uc?export=download&id=1ahHCjc-ixIo87AzRflEoEN-wjuPWf485")
+  call vid("D5SK2_L3: Lab to Complete Instruction Decode", 43, 44, "https://drive.google.com/uc?export=download&id=17-MRuk4TTF4SNytT50ofhrLo-4mWTJJE")
+  call vid("D5SK2_L4: Lab to Code Complete ALU", 45, 45, "https://drive.google.com/uc?export=download&id=1WYEyK_QhThP-msmbAExf5UXNGZTzfYJP")
+  h3
+    | Day 5, Skill 3: Data Memory and Load and Store Instructions
+  call vid("D5SK3_L1: Intro to Load/Store Instructions and Lab for Load Redirect", 46, 48, "https://drive.google.com/uc?export=download&id=1Ij34DIDGflEk0d0Z0TwJyvNE2evp58F_")
+  .mc-tutorial-note
+    .mc-note-body
+      p
+        | For the video below, note the following correction:
+      p
+        | Also provide the right register index for the write of
+        <span.tlv_ident_pipe_sig.mc-ident-font
+          $ld_data
+        | .
+  call vid("D5SK3_L2: Lab to Load Data from Memory to Register File", 49, 49, "https://drive.google.com/uc?export=download&id=18debFHtI-fngK6Mw3SvG0LFBq5cUdheK")
+  .mc-tutorial-note
+    .mc-note-body
+      p
+        | For the video below, note the following corrections:
+      p
+        | The final input of the memory (
+        span.tlv_ident_pipe_sig.mc-ident-font
+          | $dmem_rd_index[5:0]
+        | ) should not exist.
+  call vid("D5SK3_L3: Lab to Instantiate Data Memory", 50, 51, "https://drive.google.com/uc?export=download&id=1qspsns24Ni9Cl0_sxL7uMdw8OxJoUjHX")
+  call vid("D5SK3_L4: Lab to Add Stores and Loads to the Test Program", 52, 52, "https://drive.google.com/uc?export=download&id=13UWjjvjD8sagBmnin3SYpOpQbT_lQjmi")
+  call vid("D5SK3_L5: Lab to Add Control Logic for Jump Instructions", 52, 53, "https://drive.google.com/uc?export=download&id=1mokD1UTUXmx55ihEDu_WGEWiMJzAnymu")
+  .mc-tutorial-note
+    .mc-note-body
+      p
+        | For the video below, some discussion reflects the initial course offering and may not be relevant to you.
+  call vid("D5SK3_L6: Wrap-up", 54, 57, "https://drive.google.com/uc?export=download&id=1BfBZX8mDSn2WtJ1Zu_NNLMN31-2arjTI")

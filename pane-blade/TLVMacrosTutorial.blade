@@ -1,0 +1,124 @@
+.mc-auto-pane-contents.mc-markdown
+  a(name="top")
+  :markdown
+    # TL-Verilog Macros Tutorial
+    (~30 min)
+    
+    In this tutorial, you'll learn how to create TL-Verilog components as macros.
+    
+    ## Table of Contents
+  ul.mc-toc
+    li(onclick="ide.anchorLink(this, 'intro')")
+      | Overview
+    li(onclick="ide.anchorLink(this, 'adder')")
+      | Ripple-Carry Adder Example
+    li(onclick="ide.anchorLink(this, 'lab')")
+      | Lab
+    li(onclick="ide.anchorLink(this, 'wrapup')")
+      | Wrap-Up
+
+  a(name="intro")
+  :markdown
+    ## Introduction
+  p
+    | Redwood EDA tools extend TL-Verilog with macro support using the M5 macro preprocessor with a bit
+    | of TL-Verilog-specific syntactic sugar.
+    | Reusable blocks of TL-Verilog code may be provided as the bodies of "TL-Verilog macros blocks".
+    | These may be instantiated with text parameters substituted in the macro bodies. In this tutorial,
+    | macro parameters will be used to provide input
+    | and output signal names, hierarchy names, and constant expressions.
+  p
+    | TL-Verilog macro blocks serve a similar role to modules in Verilog. Of course, Verilog modules may be used
+    | in TL-Verilog as well. TL-Verilog macro blocks, though, while less formal, can be a bit more powerful since they
+    | instantiate code in transaction-level context. Eventually, TL-Verilog will support
+    | native modularity features. In the meantime, macro preprocessing gets the job done adequately.
+
+  a(name="adder")
+  :markdown
+    ## Ripple-Carry Adder Example
+  p
+    | In this tutorial, you will work with an adder circuit that is constructed at the bit level.
+    | This circuit is known as a ripple-carry adder. It is constructed from "full adder" circuits
+    | that each compute one bit of the sum and pass a carry bit to the next full adder as depicted below.
+    | Here, A[3:0] and B[3:0] are the addends, S[3:0] is the sum, and C[4:0] are carry bits (where C[0]
+    | is likely tied to zero).
+  p
+    a(title="en:User:Cburnett, CC BY-SA 3.0 &lt;http://creativecommons.org/licenses/by-sa/3.0/&gt;, via Wikimedia Commons", href="https://commons.wikimedia.org/wiki/File:4-bit_ripple_carry_adder.svg")
+      img(width="256", alt="4-bit ripple carry adder", src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/4-bit_ripple_carry_adder.svg/256px-4-bit_ripple_carry_adder.svg.png")
+
+  p
+    button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"https://raw.githubusercontent.com/stevehoover/makerchip_examples/c29eed35c3982fe01db4ef32455dd79ee9308abf/ripple_carry.tlv\")")
+      | Load Ripple Carry Example
+  
+  p
+  | Click above and familiarize yourself with the (commented) ripple-carry adder TL-Verilog code that loads
+  | into the EDITOR tab, observing the following:
+  
+  ul
+    li
+      | The full adder circuit is defined in a macro, as is the entire ripple-carry circuit which instantiates
+      | the full adders in the replicated context
+      <span.tlv_ident_beh_hier_2.mc-ident-font
+        | /slice[*]
+      | .
+    li
+      | The bit-level inputs and outputs are connected to vector signals in the top-level module (mainly just for
+      | easier viewing in the WAVEFORM and VIZ tabs).
+    li
+      | The
+      <span>.tlv_ident_keyword1.mc-ident-font
+        | \viz_js
+      | section provides the visualization in the VIZ tab, and the coding of this feature can be
+      | ignored for now.
+    li
+      | Observe that the macro preprocessing of the source code produces the pure TL-Verilog code in the NAV-TLV
+      | tab by substituting parameters through the instantiations.
+
+  a(name="lab")
+  :markdown
+    ## Lab
+  p
+  | Once you feel comfortable with the logic and macro mechanisms of this example, modify the example to add three values instead of two.
+  p
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | Create a third addend. It must be one bit wider than the original ones. Compile and check the LOG to catch syntax errors.
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | Instantiate another ripple-carry adder in
+        <span.tlv_ident_beh_hier_2.mc-ident-font
+          | /slice2
+        | , this one, one bit wider.
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | Connect its inputs and outputs such that it adds the new addend to the original adder's output, thus producing a
+        | sum of all three addends. Compile and debug any errors in the LOG. (Some warnings are expected.)
+  .mc-tutorial-step
+    .mc-step-body
+      p  
+        | Assign another output signal. This must be one bit wider than the original one. Compile.
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | Though we're not focused on visualization code in this lab, see if you can update the
+        <span>.tlv_ident_keyword1.mc-ident-font
+          | \viz_js
+        | code to show the new computation.
+        | If you have trouble, simply delete the entire
+        <span>.tlv_ident_keyword1.mc-ident-font
+          | \viz_js
+        | block.
+  .mc-tutorial-step
+    .mc-step-body
+      p  
+        | Debug your circuit using the LOG, NAV-TLV, VIZ, WAVEFORM, and DIAGRAM tabs.
+  
+  a(name="wrapup")
+  :markdown
+    ## Wrap-Up
+    
+    Now you can define reusable components with TL-Verilog.
+    

@@ -1,0 +1,3586 @@
+include "pane_lib.blade"
+
+.mc-auto-pane-contents#riscv-course
+  a(name="top")
+  
+  h1
+    | Building a RISC-V CPU Core
+    
+  call tutorial_section_expanded("Course Description", "course-description")
+  .collapse.show.in#course-description
+    p
+      i
+        | Create a CPU with modern open-source circuit design tools, methodologies, and microarchitecture online.
+    p
+      | This mini-workshop is a crash course in digital logic design and basic CPU microarchitecture.
+      | Using the Makerchip online integrated development environment (IDE), you’ll implement everything
+      | from logic gates to a simple, but complete, RISC-V CPU core. You’ll be amazed by what you can do
+      | using freely-available online tools for open-source development. You’ll walk away with
+      | fundamental skills for a career in logic design, and you’ll position yourself on the forefront
+      | by learning to use the emerging Transaction-Level Verilog language extension (even if you don’t
+      | already know Verilog).
+
+
+  call tutorial_section("Welcome!", "welcome")
+  .collapse#welcome
+    p
+      | Welcome to "Building a RISC-V CPU Core"!
+
+    call video("Welcome Video", "https://github.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/raw/main/videos/BuildingRISCV_Welcome.mp4")
+
+    call tutorial_subsection("Transcription", "welcome-transcription")
+    .collapse#welcome-transcription
+
+      ol
+        li
+          | Hi. My name is Steve Hoover.
+        li
+          | I’m the founder of a startup called Redwood EDA and your instructor for this course.
+        li
+          | In this course, you’ll learn digital logic design and CPU microarchitecture.
+        li
+          | You’ll use register-transfer-level, or RTL, logic to implement a RISC-V CPU core.
+        li
+          | At Redwood EDA, our focus goes beyond RTL.
+        li
+          | We focus on advanced modeling using Transaction-Level Verilog, which is a follow-on to
+          | the Verilog and SystemVerilog RTL languages.
+        li
+          | You’ll actually be using Transaction-Level Verilog (or TL-Verilog) in this course.
+        li
+          | Though Verilog would suffice, it’s actually easiest to learn digital logic using
+          | TL-Verilog and you can follow this up by learning the legacy constructs of Verilog
+          | and by learning the advanced concepts in TL-Verilog.
+        li
+          | This course starts very basic with logic gates.
+        li
+          | You may already have experience with digital logic, and this is fine. Don’t skip ahead.
+        li
+          | You’ll be presented with these concepts in a new context, and you’ll zip right through
+          | them, to get very quickly to TL-Verilog, CPU architecture, and RISC-V.
+        li
+          | To keep the course self-paced, it is based mostly on written content, so you won’t see
+          | much more of me, but I wanted to at least say hello and kick things off in person.
+        li
+          | So, “hello”; welcome to Building a RISC-V CPU Core. I hope you have a pleasant and
+          | informative journey.
+
+
+  call tutorial_section("Chapter 1: Learning Platform", "chapter-1")
+  .collapse#chapter-1
+    
+    call tutorial_subsection("Overview", "chapter-1-overview")
+    .collapse#chapter-1-overview
+
+      h3
+        | Introduction
+      p
+        | This mini-workshop is a crash course in digital logic design and basic CPU
+        | microarchitecture. Using the Makerchip online integrated development environment
+        | (IDE), you will implement everything from logic gates to a simple, but complete,
+        | RISC-V CPU core. You will be amazed by what you can do using freely-available
+        | online tools for open-source development. You will walk away with fundamental
+        | skills for a career in logic design, and you will position yourself on the forefront
+        | by learning to use the emerging Transaction-Level Verilog language extension (even if
+        | you don’t already know Verilog).
+
+      h4
+        | Learning Objectives:
+      p
+        | In this chapter, you will be introduced to the course and its learning platform. You
+        | will:
+      ul
+        li
+          | Understand the resources available to you for completing this course.
+        li
+          | Familiarize yourself with the learning platform: Makerchip.com.
+        li
+          | Familiarize yourself with the structure of the course.
+
+    call tutorial_subsection("Makerchip IDE", "makerchip-ide")
+    .collapse#makerchip-ide
+
+      call video("Makerchip Introduction", "https://github.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/raw/main/videos/BuildingRISCV_MakerchipIntro.mp4")
+
+      call tutorial_subsubsection("Transcription", "makerchip-transcription")
+      .collapse#makerchip-transcription
+
+        ol
+          li
+            | Alright! Let me take you now to makerchip.com.
+          li
+            | And I'll open up the integrated development environment by clicking here.
+          li
+            | Makerchip is an evolving platform, so it's possible that it may look different for
+            | you.
+          li
+            | I'll open an example so we have something to look at.
+          li
+            | You'll find various examples here, along with a number of tutorials that you should
+            | feel free to run through anytime, to either reinforce a concept you're having trouble
+            | with,
+          li
+            | or to go beyond what we cover in this course.
+          li
+            | I'll open up this long division example. This circuit performs division similar to
+            | how you would do long division on paper.
+          li
+            | I'm not going to focus on the circuit, but rather on the features of Makerchip.
+          li
+            | The long division design is now in our editor pane, where we can edit our circuit
+            | model.
+          li
+            | This is written in transaction level Verilog; compilation happened automatically when I opened the example.
+          li
+            | But we would compile our design from this e-menu or using Control + Enter.
+          li
+            | I'll recompile and you'll see spinners on the tabs while the model is compiling and
+            | simulating.
+          li
+            | We can see the log output in the log tab.
+          li
+            | It's important to always check your logs first every time you compile and fix any
+            | errors and unexpected warnings.
+          li
+            | Many errors are non-fatal and you'll still be able to compile and simulate,
+          li
+            | but it's much easier to debug errors from the log than to debug your simulation.
+          li
+            | I'm going to split panes and place the log tab down, here so I can always keep an
+            | eye on it.
+          li
+            | So, we've now got a logic diagram of our circuit here and simulation has generated
+            | waveforms, which show us the values on all the signals essentially the wires in our
+            | circuit for the duration of the circuit simulation.
+          li
+            | I'm going to again split panes so I can see the waveform and the logic diagram at
+            | the same time.
+          li
+            | Let me put the waveforms down here.
+          li
+            | These various views are linked. We can click this signal here, for example, and it
+            | will highlight in the circuit diagram.
+          li
+            | It also highlights in this NAV TLV tab. This tab shows our code similar to the editor,
+            | but this is a representation of our code as interpreted by the tools.
+          li
+            | You'll use this version of your code to debug your designs.
+          li
+            | Errors and warnings will be highlighted in this code, corresponding to some of the
+            | errors you'll see in the logs.
+          li
+            | So, the general debug flow is to use your waveform to track down incorrect simulation
+            | behavior,
+          li
+            | and then you'll trace the signal back through the logic diagram and code and fix the
+            | issue.
+          li
+            | Note that you can hover over logic in the diagram to see the logic expressions.
+          li
+            | Also note that you can jump from a NAV TLV line to the editor by clicking on the line
+            | number.
+          li
+            | So, you can track from the incorrect simulation behavior back to the faulty source
+            | code.
+          li
+            | There's also a VIZ tab, which will further simplify debug for large designs.
+          li
+            | We'll talk about that one later.
+          li
+            | We'll take a look at a few other things in the IDE later as well, but this is
+            | everything you'll need to get started.
+
+
+      h4
+        | Labs
+
+      p
+        | Steps like the one below are for you to complete. Click each one as you
+        | complete it to track your progress and to avoid missing a critical step.
+      .mc-tutorial-step
+        .mc-step-body
+          p
+            | Click this step to mark it "complete".
+
+
+    call tutorial_subsection("Lab: Introduction to Makerchip", "lab-makerchip-ide")
+    .collapse#lab-makerchip-ide
+
+      p
+        | This first lab simply gives you a chance to play with the features of the Makerchip IDE.
+        | Your challenge is simply to reproduce the screenshot below (or close to it).
+
+      .mc-tutorial-figure
+        img.mc-figure-body(width="512" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/Makerchip_IDE.png")
+        .mc-figure-caption
+          span
+            i Makerchip Screenshot
+
+      p
+        | To reproduce the above screenshot, complete the following steps. (Or, if the
+        | features of Makerchip have changed, find similar steps to follow by exploring on your own.)
+        | In case you have trouble, a screen capture of this lab is provided below.
+
+      .mc-tutorial-step
+        .mc-step-body
+          p
+            | Open the “Validity Tutorial”.
+
+      .mc-tutorial-step
+        .mc-step-body
+          p
+            | Click “Load Pythagorean Example”.
+
+      .mc-tutorial-step
+        .mc-step-body
+          p
+            | Split panes and move tabs between panes.
+
+      .mc-tutorial-step
+        .mc-step-body
+          p
+            | Zoom/pan in Diagram with the mouse wheel and drag.
+
+      .mc-tutorial-step
+        .mc-step-body
+          p
+            | Zoom Waveform w/ “Zoom In” button.
+
+      .mc-tutorial-step
+        .mc-step-body
+          p
+            | Click `$bb_sq` to highlight.
+
+
+      call tutorial_subsubsection("Lab Solution", "lab-makerchip-solution")
+      .collapse#lab-makerchip-solution
+        
+        p
+          | In case you had trouble, here’s a screen capture of this lab. (no audio)
+
+        call video("Solution Video", "https://github.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/raw/main/videos/BuildingRISCV_MakerchipIntro.mp4")
+
+    call tutorial_quiz("Knowledge Check", "ch1-knowledge-check")
+    .collapse.mc-quiz#ch1-knowledge-check
+      b
+        | Instructions
+      | : Click on each correct answer. If your choice shows in red, try again. If you find the quiz
+      | difficult, review the lesson. Each lesson builds on previous lessons, so a little extra time
+      | reviewing a lesson will help future lessons go smoothly.
+      ol
+        li
+          .mc-question
+            | Compilation errors can be seen in Makerchip (as of the video recording) in which two tabs (select all that apply):
+          ol.mc-answers
+            li.mc-wrong-answer
+              | EDITOR
+            li.mc-correct-answer
+              | LOG
+            li.mc-correct-answer
+              | NAV-TLV
+            li.mc-wrong-answer
+              | DIAGRAM
+            li.mc-wrong-answer
+              | WAVEFORM
+          
+          .mc-question
+            | Signals can be selected and highlighted by clicking on them in which tabs (as of the video recording) (select all that apply):
+          ol.mc-answers
+            li.mc-wrong-answer
+              | EDITOR
+            li.mc-wrong-answer
+              | LOG
+            li.mc-correct-answer
+              | NAV-TLV
+            li.mc-correct-answer
+              | DIAGRAM
+            li.mc-correct-answer
+              | WAVEFORM
+
+
+  call tutorial_section("Chapter 2: Digital Logic", "chapter-2")
+  .collapse#chapter-2
+
+    call tutorial_subsection("Overview", "chapter-2-overview")
+    .collapse#chapter-2-overview
+
+      h3
+        | Introduction
+      p
+        | This chapter provides an opportunity to explore basic circuits within the Makerchip iDE.
+        | It establishes a baseline understanding of the fundamental principles of digital logic
+        | design, and how to design digital logic using TL-Verilog and the Makerchip IDE.
+
+      h4
+        | Learning Objectives:
+
+      p
+        | By the end of this chapter, you should:
+      ul
+        li
+          | Be familiar with basic logic gates.
+        li
+          | Be comfortable composing logic gates into higher-order combinational logic functions,
+          | including multiplexers and arithmetic circuits.
+        li
+          | Understand the TL-Verilog language syntax for expressing combinational and arithmetic
+          | logic functions.
+        li
+          | Comprehend "sequential logic", which is sequenced by a clock signal, and how to express
+          | sequential logic in TL-Verilog.
+        li
+          | Have gained experience debugging combinational circuits in Makerchip, including the use
+          | of Visual Debug capabilities, unique to the Makerchip platform.
+
+    call tutorial_subsection("Combinational Logic", "combinational-logic")
+    .collapse#combinational-logic
+
+      call tutorial_subsubsection("Concept: Logic Gates", "concept-logic-gates")
+      .collapse#concept-logic-gates
+
+        p
+          i
+            | If you are already familiar with logic gates feel free to skip this “Concept”.
+
+        p
+          | In digital circuits, wires stabilize to one of two voltages: a high voltage (VDD) or a low
+          | voltage (VSS or ground). So, a wire carries a boolean value, where high and low voltages
+          | can be viewed as 1/0, true/false, asserted/deasserted, on/off, etc. This provides an
+          | important abstraction for composing higher-order logic functions with predictable behavior.
+
+        p
+          | Logic gates are the basic building blocks for implementing logic functions. The table below
+          | shows basic logic gates. Their function is defined by the “truth tables”, which show, for
+          | each combination of input values (A & B), what the output value (X) will be. Be sure to
+          | understand the behavior of each gate.
+
+        p
+          b Table: Logic Gates
+          .mc-tutorial-figure
+            img.mc-figure-body(width="512" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/Logic_Gates.png")
+        p
+          | Note:
+        ul
+          li
+            b AND
+            |  and 
+            b OR
+            |  gates follow their English meanings.
+          li
+            | The small circle (or “bubble”) on the output of some gates indicates an inverted output.
+          li
+            | XOR and 
+            b XNOR
+            |  are “exclusive” 
+            b OR
+            |  and 
+            b NOR
+            | , where “exclusive” means “but not both”.
+
+        p
+          | Logic gates can be combined by connecting them with wires to create “combinational” circuits that implement higher-order logic functions.
+          | This is illustrated by the circuit below, a circuit known as a “full adder”, though we're not concerned with it's function, just the idea
+          | of connecting gates with wires.
+
+        .mc-tutorial-figure
+          img.mc-figure-body(width="400" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/full_adder1.png")
+          .mc-figure-caption
+            span
+              i Full adder circuit
+
+        p
+          | For a given set of input values, such as the ones depicted below, values will propagate left-to-right, producing output values
+          | from the circuit.
+
+        .mc-tutorial-figure
+          img.mc-figure-body(width="400" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/full_adder2.png")
+          .mc-figure-caption
+            span
+              i Example of boolean value propagation through gates
+
+      call tutorial_subsubsection("Lab: Inverter", "lab-inverter")
+      .collapse#lab-inverter
+        p
+          | Let’s try coding an inverter (a 
+          b NOT
+          |  gate) in Makerchip. Carefully perform each step below.
+
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | Reload the Makerchip IDE to begin with the default code template. (You could also use 
+              b Ctrl-Z
+              |  in the Editor to restore to the default template or load the default template from the
+              | Examples page.)
+        
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | The first line of the source file specifies the TL-Verilog language version. If it is other
+              | than “1d”, it may be necessary to revert the language version to be consistent with this
+              | course. In this case, check the GitHub repository for guidance.
+        
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | In place of 
+              code
+                | //...
+              | , type 
+              code
+                | $out = ! $in1;
+              | . (Be sure to preserve the 3-spaces of indentation, similar to the surrounding expressions.)
+              | This is an inverter, where signal 
+              code $out
+              |  is the inverse of signal 
+              code $in1
+              | .
+        
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | Compile and simulate (under Editor’s “E” menu, or 
+              b
+                | Ctrl-Enter
+              | ). If any red X’s appear on the tabs (vs. green checkmarks), make sure you followed the
+              | instructions properly and try to resolve the issue. Use the LOG to debug if necessary, or
+              | use the video below in times of desperation.
+        
+        p
+          | Exploring the results, we make a few key observations.
+        
+        ul
+          li
+            | Unlike Verilog, there was no need to declare your signals (wires) (
+            code
+              | $out
+            |  and 
+            code
+              | $in1
+            | ). In TL-Verilog, your assignment statement acts as the declaration of its output signal(s).
+          li
+            | This circuit has a dangling (disconnected) input signal and a dangling output signal. (It also probably has
+            | a dangling 
+            code
+              | $reset
+            |  signal that was provided in the template.) These result in non-fatal warning/error
+            | conditions. They are reported, but they do not prevent simulation.
+        
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | Observe the non-fatal errors in the LOG and in the corresponding mouse-over pop-ups in NAV-TLV.
+        
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | See in the WAVEFORM that the inverter’s output is indeed the inverse of its input.
+        ul
+          li
+            | It was not necessary to provide stimulus for the input signal 
+            code $in1
+            | . The Makerchip platform provides random stimulus (input values)
+            | for dangling inputs. As your designs mature, it's better to avoid dangling signals and write 
+            i
+              | test benches
+            |  that provide more-targeted stimulus, but, while your code is under development,
+            | automatic stimulus can be a real convenience.
+        
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | Find the logic expression for your inverter in the DIAGRAM in a mouse-over pop-up. Select the
+              | expression in the DIAGRAM and observe the highlighting in other panes.
+        
+        call tutorial_subsubsubsection("Lab Solution", "lab-inverter-solution")
+        .collapse#lab-inverter-solution
+          p
+            | Here’s a screen capture of the lab solution. (no audio)
+              
+          call video("Solution Video", "https://github.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/raw/main/videos/LF-BuildingRISCV_Solution2_Inverter.mp4")
+
+      call tutorial_subsubsection("TL-Verilog Syntax Philosophy", "tlv-syntax-philosophy")
+      .collapse#tlv-syntax-philosophy
+        p
+          | TL-Verilog defines syntax very rigidly, which can impose an additional burden for newcomers with
+          | coding style preferences.
+        .mc-tutorial-note
+          .mc-note-body
+            p
+              | Why so rigid? This rigidity has an important benefit. In industry code
+              | is touched by many hands from many teams, and this rigidity enforces consistency.
+        p
+          | The TL-Verilog Syntax Specification can be found from the Makerchip “Help” menu, but we'll
+          | cover the necessary points as we go.
+
+      call tutorial_subsubsection("Boolean Logic Expressions", "tlv-syntax-logic")
+      .collapse#tlv-syntax-logic
+        p
+          | Boolean logic has taken on various notations in different fields of study. The following chart
+          | shows some of these mathematical notations as well as TL-Verilog operators (which are the same as
+          | Verilog) for basic logic gates.
+        p
+          b Table: Boolean Logic Syntaxes
+            .mc-tutorial-figure
+              img.mc-figure-body(width="512" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/Boolean_logic.png")
+        p
+          | You can use parentheses to group expressions to form more complex logic functions. If a statement
+          | is extended to multiple lines, these lines must have greater indentation than the first line.
+          | Statements must always end with a semicolon. Always have a space before and after the “=”. For
+          | example:
+        p
+          .mc-tutorial-code2
+            | $foo = (  $val1 &&   $val2) ||
+            |        (! $val1 && ! $val2);
+      
+      call tutorial_subsubsection("Indentation in TL-Verilog", "tlv-syntax-indentation")
+      .collapse#tlv-syntax-indentation
+        p
+          | In TL-Verilog (within 
+          code \TLV
+          |  code blocks), indentation and whitespace are meaningful. Tabs (which
+          | have no consistently-defined behavior) are not permitted. Each level of indentation is 3 spaces
+          | (and the Makerchip editor helps with this).
+      
+      call tutorial_subsubsection("TL-Verilog Signal Names", "tlv-syntax-signal-names")
+      .collapse#tlv-syntax-signal-names
+        p
+          | As long as you stick with the suggested signal names throughout this course, you won’t have any
+          | trouble, but note that TL-Verilog is picky about signal names too.
+        .mc-tutorial-note
+          .mc-note-body
+            p
+              | While languages typically leave choices like camel-case vs. underscore
+              | delimitation up to coding conventions, TL-Verilog enforces these choices.
+            p
+              | Naming restrictions serve several purposes:
+              ul
+                li
+                  | They enforce consistency.
+                li
+                  | They distinguish types.
+                li
+                  | As TL-Verilog is processed into Verilog, auto-generated logic can use Verilog signal names
+                  | that cannot conflict with those named by the coder.
+            p
+              | Specifically, TL-Verilog signal names (e.g.
+              code $my_sig
+              | ):
+              ul
+                li
+                  | are prefixed with “$”.
+                li
+                  | are composed of tokens (e.g., "my" and "sig") delimited by underscores ("_") where each token is a string of lower-case
+                  | characters followed by zero or more digits
+                li
+                  | begin with at least two alphabetic (lower-case) characters (e.g. "my").
+            p
+              | So, for example, these are legal signal names:
+              ul
+                li
+                  code $in_valid
+                li
+                  code $val1
+            p
+              | And these are not:
+              ul
+                li
+                  code $a
+                  | (too short)
+                li
+                  code
+                    | $Sig
+                  |  (uses upper case; this is actually a “state signal”, which we will not use in this course).
+                li
+                  code
+                    | $val_1
+                  |  (all tokens must begin with alphabetic characters, and "1" does not).
+        
+        .mc-tutorial-note
+          .mc-note-body
+            p
+              | Elsewhere you may see the term “pipesignal” referring to these TL-Verilog signals. The distinction
+              | between Verilog signals and TL-Verilog pipesignals is not relevant in this course, and we will
+              | simply use the short-hand term “signals” throughout.
+      
+      call tutorial_subsubsection("Lab: Logic Gates", "lab-logic-gates")
+      .collapse#lab-logic-gates
+        
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | As you did with the inverter, try other single-gate logic expressions.
+        .mc-tutorial-figure
+          img.mc-figure-body(width="600" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/tlv_full_adder.png")
+          .mc-figure-caption
+            span
+              i Full adder circuit for reference
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | For a bit more practice with TL-Verilog expression syntax, try coding the full adder circuit above. Try it first with each
+              | logic gate as a separate statement, then try combining the three gates producing 
+              code $carry_out
+              |  into a single statement with parentheses to group subexpressions. Confirm your design and its connectivity in the DIAGRAM, but don't worry
+              | too much about the functionality of the circuit.
+        
+        call tutorial_subsubsubsection("Lab Solution", "lab-logic-gates-solution")
+        .collapse#lab-logic-gates-solution
+          p
+            | In case you had trouble, here’s a screen capture of this lab. (no audio)
+          
+          call video("Solution Video", "https://github.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/raw/main/videos/LF-BuildingRISCV_Solution3_FullAdder.mp4")
+    
+    
+    call tutorial_subsection("Arithmetic and Vector Logic", "arithmetic-logic")
+    .collapse#arithmetic-logic
+      
+      call tutorial_subsubsection("Binary Arithmetic", "concept-arithmetic-logic")
+      .collapse#concept-arithmetic-logic
+        
+        p
+          i
+            | If you have prior experience with hardware description languages (HDLs), and are comfortable with
+            | binary and hexadecimal, you can safely skip this “Concept”.
+        p
+          | We are all comfortable representing numbers in base ten, or decimal. In decimal, we use ten digits,
+          | 0-9. To count past 9, we wrap the digit back to 0 and increment the next
+          | place value, which is worth ten. Base ten, unfortunately, is very awkward for digital logic. Base
+          | two or any power of two (4, 8, 16) is much more natural. In base two, or binary, we have digits 0
+          | and 1. Each digit can be represented by a bit. Base sixteen, or hexadecimal, is also very common.
+          | In hexadecimal the digits are 0-9 and A-F (for ten through fifteen). A single hexadecimal digit can
+          | be represented by four bits. The table below shows values zero through twenty in decimal, binary,
+          | and hexadecimal.
+        p
+          b Table: Decimal, binary, and hexadecimal number systems
+          table
+            tr
+              th Decimal (base 10)
+              th Binary (base 2)
+              th Hexadecimal (base 16)
+            tr
+              td 00
+              td 00000
+              td 00
+            tr
+              td 01
+              td 00001
+              td 01
+            tr
+              td 02
+              td 00010
+              td 02
+            tr
+              td 03
+              td 00011
+              td 03
+            tr
+              td 04
+              td 00100
+              td 04
+            tr
+              td 05
+              td 00101
+              td 05
+            tr
+              td 06
+              td 00110
+              td 06
+            tr
+              td 07
+              td 00111
+              td 07
+            tr
+              td 08
+              td 01000
+              td 08
+            tr
+              td 09
+              td 01001
+              td 09
+            tr
+              td 10
+              td 01010
+              td 0A
+            tr
+              td 11
+              td 01011
+              td 0B
+            tr
+              td 12
+              td 01100
+              td 0C
+            tr
+              td 13
+              td 01101
+              td 0D
+            tr
+              td 14
+              td 01110
+              td 0E
+            tr
+              td 15
+              td 01111
+              td 0F
+            tr
+              td 16
+              td 10000
+              td 10
+            tr
+              td 17
+              td 10001
+              td 11
+            tr
+              td 18
+              td 10010
+              td 12
+            tr
+              td 19
+              td 10011
+              td 13
+            tr
+              td 20
+              td 10100
+              td 14
+        p
+          | HDLs support “vector” signals that hold multiple bits. Vectors can be used to represent binary-encoded
+          | (signed or unsigned) integer values. For example, a 5-bit vector could hold the value 13 as bit values
+          | 01101. HDLs support arithmetic operations, such as addition, that operate on these bit vector values.
+        
+      call tutorial_subsubsection("Arithmetic Logic and Vectors: TL-Verilog Syntax", "arithmetic-logic-tlv-syntax")
+      .collapse#arithmetic-logic-tlv-syntax
+        
+        p
+          | In TL-Verilog, the most common data types of signals are booleans (as you used in the previous lab) and bit vectors.
+          | A vector is declared by providing a bit range in its assignment, e.g.:
+        p
+          code $vect[7:0] = ...;
+        p
+          | This defines an 8-bit vector of bits numbered 7 down to 0.
+        p
+          | To reference a complete vector signal on the
+          | right-hand side of an expression (to the right of the 
+          code =
+          | ), a bit range is not needed. The full range of bits will be used, as defined in that signal's assignment. When a range 
+          i
+            | is
+          |  provided on the right-hand side, the given range of bits is extracted from the given vector signal. So, in
+          | the expression:
+        p
+          code $out[3:0] = $in1[5:2] - $in2;
+        p
+          code $in1[5:2]
+          |  extracts bits 5 down to 2 from the vector 
+          code $in1
+          | , which might be declared as 
+          code $in1[31:0]
+          | , for example. This extracted range of bits is interpreted as a binary value, and 
+          code $in2
+          |  is subtracted from this value.
+        .mc-tutorial-note
+          .mc-note-body
+            p
+              | If a signal is referenced on the right-hand side without a bit range, such as 
+              code $in2
+              |  above, but has no assignment to define its range,
+              | there will be a warning for the undefined signal, and it will be treated as a boolean value.
+              | A bit range can be included in this case to define the width of used bits, thus providing
+              | the desired random stimulus.
+        p
+          | In summary, we have:
+          table
+            tr
+              th
+                | Side of 
+                code =
+                |  Expression
+              th Reference
+              th Meaning
+            tr
+              td(rowspan="2")
+                | Left (assigned)
+              td
+                code $vect
+              td
+                | Boolean signal (1 bit)
+            tr
+              td
+                code $vect[7:0]
+              td
+                | An 8-bit vector
+            tr
+              td(rowspan="2")
+                | Right (used)
+              td
+                code $vect
+              td
+                | Full-width signal (assumed boolean if unassigned)
+            tr
+              td
+                code $vect[7:3]
+              td
+                | Range of bits extracted from 
+                code $vect
+        p
+          | In Verilog and TL-Verilog, arithmetic operators, like 
+          code +
+          | , 
+          code -
+          | , 
+          code *
+          | , 
+          code /
+          | , and 
+          code %
+          |  (modulo) can be used on vectors.
+        
+        .mc-tutorial-note
+          .mc-note-body
+            p
+              | Without these operators, these arithmetic functions would have to be constructed from
+              | gates. An adder circuit, for example, can be constructed using the full-adder
+              | circuit we saw earlier. The full adder handles a single bit of the addition, so
+              | an adder circuit can be constructed by replicating the full adder circuit for
+              | each bit in the addition. Such an adder, depicted below, is called a “ripple-carry
+              | adder”.
+          
+          .mc-tutorial-figure
+            img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/ripple-carry-adder.png")
+            .mc-figure-caption
+              span
+                i Ripple-carry adder circuit composed of full adders
+        
+        p
+          | Other vector operators are supported including comparison operators like 
+          code ==
+          | , 
+          code !=
+          | , 
+          code >
+          | , 
+          code >=
+          | , 
+          code <
+          | , 
+          code <=
+          | . We will only cover the operators needed for this course.
+        
+      call tutorial_subsubsection("Lab: Arithmetic operators", "lab-arithmetic-operators")
+      .collapse#lab-arithmetic-operators
+        
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | Click here to overwrite your editor contents with a simple adder circuit:
+            p
+              code $out[7:0] = $in1[6:0] + $in2[6:0];
+            p
+              button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/adder.tlv\")")
+                | Load Adder Expression
+
+        .mc-tutorial-note
+          .mc-note-body
+            p
+              | Since 
+              code $in1
+              |  and 
+              code $in2
+              |  are not declared, we provide their bit widths on the right-hand side (thus avoiding interpretation as boolean signals).
+        
+        .mc-tutorial-note
+          .mc-note-body
+            p
+              | Values of vector signals are represented in the waveform viewer in hexadecimal. You can mouse over
+              | the hexadecimal value to see binary and decimal values (depending on the signals bit-width).
+
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | Observe the values in the waveform, then try other arithmetic expressions and comparisons to become comfortable with their syntax.
+
+        call tutorial_subsubsubsection("Lab Solution", "lab-arithmetic-operators-solution")
+        .collapse#lab-arithmetic-operators-solution
+          p
+            | In case you had trouble, here’s a screen capture of this lab. (no audio)
+              
+          call video("Solution Video", "https://github.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/raw/main/videos/LF-BuildingRISCV_Solution4_Arithmetic.mp4")
+        
+      call tutorial_subsubsection("Multiplexers", "multiplexers")
+      .collapse#multiplexers
+        
+        p
+          i
+            | If you are already familiar with multiplexers and ternary expressions, you may skim through this “Concept”, but note the
+            | suggested coding style for chained ternary expressions before moving on to the Calculator Lab.
+        p
+          | One of the most important logic functions is a multiplexer (or MUX). It is similar to an 
+          code if
+          |  or 
+          code case
+          |  statement in software (where each condition assigns the same variable/signal). The simplest multiplexer,
+          | depicted below, selects between two boolean data inputs (
+          code $in0
+          |  and 
+          code $in1
+          | ).
+        .mc-tutorial-figure
+          img.mc-figure-body(width="200" src="#{basePath}/public/tutorial/images/mux2.png")
+          .mc-figure-caption
+            span
+              i A two-way single-bit multiplexer with one-bit select
+        p
+          | When 
+          code $sel
+          |  is 1, the output 
+          code $out
+          |  is driven with the value of 
+          code $in1
+          | . When 
+          code $sel
+          |  is 0, 
+          code $out
+          |  is driven with the value of 
+          code $in0
+          | .
+        p
+          | The MUX depicted above can be constructed from basic logic gates as below.
+        .mc-tutorial-figure
+          img.mc-figure-body(width="300" src="#{basePath}/public/tutorial/images/mux2_gates.png")
+          .mc-figure-caption
+            span
+              i Gate-level implementation of a multiplexer
+        p
+          | We might read this implementation as “assert the output (
+          code $out
+          | ) if 
+          code $in1
+          |  is asserted and selected (by 
+          code $sel == 1
+          | ) OR 
+          code X2
+          |  is asserted and selected (by 
+          code S == 0
+          | )”.
+        p
+          | Verilog provides no less than six reasonable syntaxes for coding a MUX, each with pros and cons.
+          | TL-Verilog favors the use of the "ternary operator" (
+          code ?
+          |  
+          code :
+          | ), and we will stick with this throughout the course. This simple MUX can be expressed using the ternary
+          | operator as:
+        p
+          code
+            | $out = $sel ? $in1 : $in0;
+        p
+          | This can be read, “
+          code $out
+          |  is: if 
+          code $sel
+          |  then 
+          code $in1
+          |  otherwise 
+          code $in0
+          | .”
+        p
+          | This basic MUX can be extended:
+        ul
+          li
+            | The data inputs and output can be vectors (all of the same width).
+          li
+            | There could be more than two data inputs (thus requiring multiple select conditions).
+        p
+          | The following illustrates a four-way MUX with any data width, selected by the four bits of 
+          code $sel[3:0]
+          | .
+        .mc-tutorial-figure
+          img.mc-figure-body(width="250" src="#{basePath}/public/tutorial/images/decoded_mux4.png")
+          .mc-figure-caption
+            span
+              i A four-input multiplexer
+        p
+          | In this figure, it is assumed that exactly one of the select bits should be asserted at
+          | any given time to select the corresponding input. This is referred to as a “decoded” select, and the 
+          code $sel[3:0]
+          |  bits are said to be "one-hot". (A similar term, "mutually exclusive" would mean that at most one bit is asserted,
+          | but would not exclude the possibility of zero asserted bits.)
+        p
+          | This four-way decoded-select MUX could be implemented as a chain of two-input MUXes, as shown below.
+        .mc-tutorial-figure
+          img.mc-figure-body(width="300" src="#{basePath}/public/tutorial/images/decoded_chained_mux4.png")
+          .mc-figure-caption
+            span
+              i A four-input multiplexer, implemented as a chain of two-input multiplexers
+        p
+          | Using this implementation, 
+          code $sel[3]
+          |  has the highest priority, overriding the other select bits if multiple are asserted (though this
+          | would typically be avoided). Since 
+          code $sel[0]
+          |  has the lowest priority, 
+          code $in0
+          |  is selected if none of the others inputs are selected, presuming 
+          code $sel[0]
+          |  to be 1. Thus 
+          code $sel[0]
+          |  is not used.
+        p
+          | As a TL-Verilog expression, this MUX (8-bits wide) can be coded as:
+        p
+          code $out[7:0] = $sel[3] ? $in3 : ($sel[2] ? $in2 : ($sel[1] ? $in1 : $in0));
+        p
+          | Ternary expressions evaluate left-to-right, so the parentheses can be dropped:
+        p
+          code $out[7:0] = $sel[3] ? $in3 : $sel[2] ? $in2 : $sel[1] ? $in1 : $in0;
+        p
+          | Chained ternary expressions can get very messy. The following layout is much easier to read.
+        p
+          .mc-tutorial-code2
+            | $out[7:0] =
+            |    $sel[3]
+            |       ? $in3 :
+            |    $sel[2]
+            |       ? $in2 :
+            |    $sel[1]
+            |       ? $in1 :
+            |    //default
+            |         $in0;
+        p
+          | The above layout is recommended for all chained ternary expressions in this course.
+        p
+          | The multiplexers you will implement in this course have select signals that come from independent expressions and are not packed
+          | into a single signal. In some cases, these expressions decode a binary value. This value can be referred to as an
+          | "encoded" select. With four inputs, the encode select signal would be two bits to encode values 0-3.
+          | A similar MUX using an encoded select signal could be coded as:
+        p
+          .mc-tutorial-code2
+            | $out[7:0] =
+            |    $sel == 2'd3
+            |       ? $in3 :
+            |    $sel == 2'd2
+            |       ? $in2 :
+            |    $sel == 2'd1
+            |       ? $in1 :
+            |    //default
+            |         $in0;
+      
+      call tutorial_subsubsection("Lab: Calculator", "lab-calculator")
+      .collapse#lab-calculator
+        
+        p
+          | Next, you’ll try coding the circuit below. This circuit implements a calculator that can perform +, -,
+          | *, or / on two input values.
+          
+        .mc-tutorial-figure
+          img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/Calculator_Lab_image.png")
+          .mc-figure-caption
+            span
+              i Combinational calculator circuit
+        
+        p
+          | This circuit performs all four possible operations on the given input values, then selects the right one
+          | based on the encoded (binary) select signal 
+          code $op[1:0]
+          | .
+        .mc-tutorial-note
+          .mc-note-body
+            p
+              | It may seem wasteful to perform all computations when only one is needed, but, since hardware
+              | evaluates in parallel, circuits like this are not uncommon. This design does, however, consume unnecessary power.
+          
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | Since we wouldn’t want you to lose your work, use the "Project" menu to save your work to a local
+              | file or to the Makerchip server. The status text in the upper right will confirm that your file is
+              | auto-saving.
+          
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | Code the circuit by providing an expression for each of the signals named in the diagram (other than
+              | inputs). Be sure to use the exact names shown and the exact select encodings shown on the MUX inputs.
+              | This will be important later.
+          
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | Be sure your LOG contains only expected errors/warnings about dangling signals.
+          
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | Inspect the circuit diagram to make sure it looks right. (Don’t worry about the waveforms just yet,
+              | we’ll debug this circuit in the next two labs.)
+        
+        call tutorial_subsubsubsection("Lab Solution", "lab-calculator-solution")
+        .collapse#lab-calculator-solution
+          p
+            | In case you had trouble, here’s a screen capture of this lab.
+          
+          call video("Solution Video", "https://github.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/raw/main/videos/LF-BuildingRISCV_Solution5_ComboCalculator.mp4")
+    
+    call tutorial_subsection("Literals and Concatenation", "literals-and-concatenation")
+    .collapse#literals-and-concatenation
+      
+      call tutorial_subsubsection("Literals", "literals")
+      .collapse#literals
+        
+        p
+          | If you are familiar with Verilog expression syntax, you may safely
+          | skip this “Concept and Syntax”.
+        p
+          | This expression:
+        p
+          code $foo[7:0] = 6;
+        p
+          | Defines 
+          code $foo
+          |  to hold a constant value of 6. In this case the 6 is coerced to eight bits by the assignment.
+          | Often it is necessary to be explicit about the width of a literal:
+        p
+          code $foo[7:0] = 8'd6;
+        p
+          | explicitly assigns 
+          code $foo
+          |  to an 8-bit decimal (“d”) value of 6. (To be clear, the”’” is the single-quote character.) Equivalently,
+          | we could have written:
+        p
+          code $foo[7:0] = 8'b110;   // 8-bit binary six
+        p
+          | or
+        p
+          code $foo[7:0] = 8'h6;   // 8-bit hexadecimal six
+      
+      call tutorial_subsubsection("Concatenation", "concatenation")
+      .collapse#concatenation
+        
+        p
+          | Concatenation of bit vectors is simply the combining of two bit vectors one after the other to form a
+          | wider bit vector. The syntax is clear from this example:
+        p
+          code $word[15:0] = {$upper_byte, $lower_byte};
+      
+      call tutorial_subsubsection("Lab: Calculator Stimulus", "lab-calculator-stimulus")
+      .collapse#lab-calculator-stimulus
+        
+        p
+          | Your calculator circuit is driven with random 32-bit inputs. You may have observed that the computation
+          | often underflows or overflows, meaning the correct result value would be too large (> 2^32) or too small
+          | (< 0) to express in the 32-bit 
+          code $out
+          |  signal.
+        p
+          | It will be easier to visually verify the simulation behavior if we use smaller input values. So let’s
+          | randomize only the lower bits of 
+          code $val1
+          |  and 
+          code $val2
+          | . To reduce the chance of underflow, let’s use a smaller value for 
+          code $val2
+          |  than 
+          code $val1
+          | .
+        
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | Return to your calculator project.
+        
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | Assign 
+              code $val1
+              |  such that its upper 26 bits are zero and its remaining 6 bits are random. To do so, you’ll use a
+              | literal and a concatenation. For the random bits use a new unassigned signal, 
+              code $val1_rand[5:0]
+              | .
+        
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | Assign 
+              code $val2
+              |  similarly, but randomizing only the lower 4 bits.
+        
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | The default code template you started with in Makerchip compiles without strict bit-width checking.
+              | Let’s enable strict checking to make sure you got this right.
+        
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | Below 
+              code m4_makerchip_module
+              | , add this on its own line: 
+              code /* verilator lint_on WIDTH */
+              | . and 
+              b
+                | Ctrl-Enter
+              |  to compile and simulate. Debug LOG messages as necessary.
+        
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | Now, it should be easier to understand the waveforms, so visually verify the
+              | operation of your calculator.
+
+        call tutorial_subsubsubsection("Lab Solution", "lab-calculator-stimulus-solution")
+        .collapse#lab-calculator-stimulus-solution
+          p
+            | In case you had trouble, here’s a screen capture of this lab. (no audio)
+          
+          call video("Solution Video", "https://github.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/raw/main/videos/LF-BuildingRISCV_Solution6_CalcStimulus.mp4")
+    
+    call tutorial_subsection("Visual Debug", "visual-debug")
+    .collapse#visual-debug
+      
+      call tutorial_subsubsection("Lab: Visual Debug", "lab-visual-debug")
+      .collapse#lab-visual-debug
+        
+        p
+          | Waveform viewers have been the standard debug tool for circuit design since dinosaurs roamed the earth.
+          | But Makerchip supports a better debug methodology as well. We’ve prepared some custom visualization to
+          | help with the debug of your calculator. As always, check the box for each step when done, to ensure you
+          | perform all required steps.
+        p
+          | To include this visualization:
+        
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | Paste this single line below the 
+              code m4_makerchip_module
+              |  line to include the visualization library:
+            p
+              code
+                | m4_include_lib(['https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core/main/lib/calc_viz.tlv']);
+            p
+              | It may be necessary to correct the single-quote characters by retyping them after cut-and-pasting.
+        
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | Add this line as the last line in the 
+              code \TLV
+              |  region: 
+              code
+                | m4+calc_viz()
+              |  to instantiate the visualization. 
+              b
+                | Ctrl-Enter
+              | .
+        
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | You should now see a calculator in the VIZ pane. If necessary, debug the LOG. In NAV-TLV the 
+              code m4_include_lib
+              |  line should have turned into a comment, and the 
+              code m4+calc_viz()
+              |  macro instantiation should have expanded to a block of 
+              code \viz_js
+              |  code.
+        
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | Lay out your IDE so you can see both VIZ and WAVEFORM. Step through VIZ to see the operations
+              | performed by your calculator. Note that your calculator, like the waveform, is showing values in
+              | hexadecimal. Relate what you see in VIZ to what you see in the waveform. If you notice incorrect
+              | behavior, debug it by isolating the faulty logic and fixing it.
+        
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | Be sure your work is saved.
+        
+        p
+          | Typically, you would create your own custom visualizations as you develop your circuit, so you
+          | can see the big picture simulation behavior more easily. In this course, you will focus on the
+          | hardware logic, and we provide visualization for you. If you are curious, though, you can see the
+          | visualization code in the NAV-TLV pane, where macros are expanded.
+        
+        call tutorial_subsubsubsection("Lab Solution", "lab-visual-debug-solution")
+        .collapse#lab-visual-debug-solution
+          p
+            | In case you had trouble, here’s a screen capture of this lab.
+          
+          call video("Solution Video", "https://github.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/raw/main/videos/LF-BuildingRISCV_Solution7_CalcVIZ.mp4")
+    
+    call tutorial_subsection("File Structure and Tool Flow", "file-structure-and-tool-flow")
+    .collapse#file-structure-and-tool-flow
+      
+      call tutorial_subsubsection("Introduction", "flow-intro")
+      .collapse#flow-intro
+        
+        p
+          i
+            | This “File Structure and Tool Flow” topic is entirely optional.
+          | It describes the TL-Verilog file
+          | structure used within Makerchip and the motivations for it. It describes the use of the M4 macro
+          | preprocessor and other aspects of the tool flow used behind the scenes when you compile and simulate.
+          | Feel free to skip over it, but we know some of you will be curious, especially those who have experience
+          | with Verilog.
+        p
+          | To get more insight on this topic, you can EITHER follow the self-guided tour,
+          | OR the video below.
+      
+      call tutorial_subsubsection("Self-Guided Tour", "flow-self-guided-tour")
+      .collapse#flow-self-guided-tour
+        
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | First, in the IDE’s “Help” menu, select “Help”, and read through this help page.
+        p
+          | Your TL-Verilog source file is first processed by the M4 macro preprocessor. This is how we imported
+          | and used the calculator visualization. The resulting TL-Verilog file is processed into SystemVerilog
+          | or Verilog by Redwood EDA’s SandPiper™ tool. You can see how your code is processed into Verilog by
+          | SandPiper by opening “Show Verilog” under the Editor’s “E” menu.
+        p
+          | Verilator is an open-source tool used to compile your Verilog code into a C++ simulator. This simulator
+          | is run to produce the trace data that you can view in the waveform viewer.
+        p
+          | The LOG tab shows output from all these tools. Output from M4 and SandPiper is in blue, and
+          | output from Verilator and its resulting simulation are in black.
+        p
+          | TL-Verilog features are used to define the logic within a (System)Verilog module. Code comments below
+          | explain the parts of a TL-Verilog source file structured for use within Makerchip.
+        p
+          .mc-tutorial-code2
+            | \m4_TLV_version 1d --bestsv: tl-x.org
+            |    // This version line specifies:
+            |    //   o that macro preprocessing using M4 is enabled
+            |    //   o the language version in use (1d)
+            |    //   o optionally command-line arguments
+            |    //   o a link to docs.
+            | \SV
+            |    // This region contains SystemVerilog (or Verilog) code.
+            |    // SandPiper passes this code through to the Verilog file without
+            |    // any processing.
+            | 
+            |    m4_makerchip_module
+            |       // This M4 macro expands to a Verilog module definition with
+            |       // an interface that is required by the Makerchip platform.
+            |       // This module interface provides the communication between
+            |       // Makerchip and your design.
+            |       //
+            |       // It includes global clock and reset input signals
+            |       // via this interface and its output signals “passed”
+            |       // and “failed” can be driven to end the simulation with a
+            |       // “Simulation Passed” or “Simulation FAILED” message in the
+            |       // LOG.
+            |       //
+            |       // To see the expansion of this macro, look in the NAV-TLV
+            |       // pane. This macro also provides a random vector that can
+            |       // be used for stimulus and it provides some Verilator
+            |       // configuration.
+            | \TLV
+            |    // TL-Verilog syntax is enabled in this region to express your
+            |    // logic. In this course, we'll always declare our logic
+            |    // here within the m4_makerchip_module, but you could also
+            |    // put your TLV logic in a separate module with an interface
+            |    // that is yours to define.
+            | 
+            |    $reset = *reset;
+            |       // In \TLV context, *reset references the (System)Verilog
+            |       // reset signal. Here we simply connect it to a TL-Verilog
+            |       // $reset pipesignal.
+            | 
+            |    // YOUR LOGIC HERE
+            | 
+            |    *passed = ...;
+            |    *failed = ...;
+            |       // Assert either of these to end simulation (before Makerchip
+            |       // cycle limit).
+            | 
+            | \SV
+            |    // Back to SystemVerilog context to end the module.
+            |    endmodule
+        
+      call tutorial_subsubsection("OR, Use the video", "flow-video")
+      .collapse#flow-video
+        
+        call video("Solution Video", "https://github.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/raw/main/videos/LF-BuildingRISCV_Solution7_CalcVIZ.mp4")
+        
+        call tutorial_subsubsubsection("Video Transcription", "flow-video-transcription")
+        .collapse#flow-video-transcription
+          
+          ol
+            li Okay. So, back now again, inside Makerchip.
+            li Let me talk a little bit about the compilation and simulation flow that happens behind the scenes.
+            li Under the Help menu, there's a Help page that describes some of the controls available inside of Makerchip and then talks about this compilation and simulation flow.
+            li So, when you compile from the editor, your code gets sent to the Makerchip server.
+            li The first thing that happens to your code is it gets processed by an open source macro preprocessor, that's been around for ages, called m4.
+            li And really, the use of this macro pre-processing is a temporary measure while we explore features of Transaction Level Verilog.
+            li Transaction Level Verilog is a fairly new language it's evolving and macro pre-processing gives us a way to explore language capabilities before we sort of harden them in the language spec.
+            li So, m4 is currently used for modularity and reuse, it allows us to define macros of TL Verilog logic that we can then instantiate,
+            li it gives us a parameterization of those modules, it gives us the ability to define constants, and it gives us the ability to programmatically generate TL Verilog logic.
+            li After m4 pre-processing, we have what I guess we'll call a clean TL Verilog file that gets sent to SandPiper, at least in our case,
+            li so, SandPiper is Redwood EDA's tool for processing TL Verilog logic into Verilog or (System)Verilog.
+            li SandPiper is also producing the views that you see inside of Makerchip.
+            li So, the Navigable TL Verilog, the logic diagram which is produced using another open source tool called Graphviz,
+            li and it's also producing this view that we'll look at shortly that shows us how the TL Verilog logic is turned into Verilog.
+            li So, out of SandPiper, we have Verilog or (System)Verilog code that we send now to another open source tool called Verilater.
+            li Verilator is compiling and simulating your model.
+            li So, Verilator builds a C++ simulator out of your model,
+            li and the simulation then produces trace data which is represented by the waveform viewer.
+            li Also, not represented here is VIZ. VIZ is a newer feature in Makerchip and
+            li so Sandpiper is passing along the visualization code back to the frontend and the visualization code is accessing the trace data just like the waveform viewer to represent the visualizations.
+            li All of these steps are producing log output, which is also captured,
+            li and if we take a look at that log, the first portion of the log here in blue is from SandPiper,
+            li and then the portion here in black is from Verilator.
+            li So this is both Verilator compilation, as well as Verilator simulation.
+            li And in the case of this empty model, the simulation is not producing any output, and then we get our PASSED or FAILED message.
+            li We'll talk about where that comes from shortly.
+            li Alright. So, let's talk about that pane I promised we would talk about.
+            li Actually, let me load something a little bit more interesting before we look at that.
+            li So, just so we have some TL Verolog code to look at, but from the editor under the e-menu, "Show Verilog" opens up this pane, this tab, sorry, this view here
+            li and this view is representing for us how your TL Verilog logic is compiled by SandPiper into Verilog code.
+            li So, we see here on the bottom left your TL Verilog logic that you would also see in the NAV TLV tab.
+            li This code is turned into translated Verilog code to the right of it, and you can see the code, that's the Verilog code is line for line with the original TL Verilog code.
+            li That is a really nice property actually when you have errors on your Verilog code. Your Verilog-based tool stack likely has no understanding of the TL Verilog source so it's going to report errors and conditions against your Verilog code.
+            li This line for line property means that all of those conditions that are reported against your Verilog apply to your TL Verilog logic as well.
+            li In addition to that translated code you have, above it, the generated code. So, this is things like
+            li signal declarations, flip-flops. These are for the most part correct by construction.
+            li So, these are your flip-flops in green, this is signals that are unassigned, this is the random stimulus provided for them, and then at the bottom, we've got some declarations that are used for tracing your TL Verilog signals.
+            li Alright. So dropping out of that and back to Makerchip.
+            li So, let's just look here at the structure now of a TL Verilog file. So, your TL Verilog file
+            li and for this, let me revert back to the starting template and compile that so your TL Verilog file starts off with a version line.
+            li This specifies the language version that's used in the remainder of the file. So this file contains TL Verilog logic using TL Verilog 1d syntax.
+            li And we're enabling m4 macro preprocessing.
+            li This line also contains a link to information about this language, so link to tlx.org.
+            li After that, we have a section... I should say a region of (System)Verilog code.
+            li So this code is just passed through by SandPiper, and if we look at the NAV TLV, we can see the macro expansion
+            li of this m4 macro, which is providing the standard module interface that's required within Makerchip.
+            li So, this is the interface by which your logic communicates with the Makerchip simulation.
+            li So Makerchip is providing you with a clock and a reset.
+            li It's also providing you with a cycle count just for convenience.
+            li And then your logic is able to communicate with the platform by reporting passing or failing status from your simulation. And this, if you assert either of these signals, that will stop simulation,
+            li and report PASSED or FAILED. And we can see that in the log we're getting PASSED.
+            li After the module definition, so TL Verilog is currently used to define logic within a Verilog module, and the first thing we do in that TL Verilog region
+            li is hook up our $reset Verilog signal coming from here
+            li to a TL Verilog pipesignal, and in this course, we really don't talk about the distinction between TL Verilog signals and Verilog signals,
+            li but TL Verilog signals have a property known as timing abstraction and that's why we're generally hooking up our Verilog signals to TL Verilog signals.
+            li Of course, in this course we're only expressing our logic in TL Verilog and you don't have to worry about the connection between Verilog and TL Verilog.
+            li This is where your logic would go and then,
+            li here we are hooking up the passed and failed signals to communicate that our simulation passed after 40 cycles, in this case.
+            li So, there's really no checking here, but this is essentially our test bench to verify that the simulation did the right thing. Here we're just reporting passed after 40 cycles.
+            li And then we go back into System Verilog context to end our module and that's that.
+            li Alright. So now you can jump back into the written course content and read a little bit about the motivation for this file structure and the evolution of TL Verilog.
+        
+      call tutorial_subsubsection("Motivation", "flow-motivation")
+      .collapse#flow-motivation
+        
+        p
+          | For those curious about the motivation for this file structure, it is necessary to understand the strategy
+          | for evolving TL-Verilog from Verilog. The ultimate goal is to eventually introduce a new modeling language
+          | philosophically different from Verilog in all respects. This will play out over the next decade or decades.
+          | In the meantime, we work toward this incrementally, layering on Verilog as a working starting point, with
+          | TL-Verilog as a language extension to Verilog. This layering also provides an essential and incremental
+          | migration path. And, as tools mature, it is always possible to fall back on Verilog.
+        p
+          | Also noteworthy is the fact that TL-Verilog is really a Verilog implementation of TL-X, a language extension
+          | defined to layer atop any HDL to extend it with transaction-level features. So there is a migration path from
+          | any supported HDL (and, as of this writing, Verilog is the only one).
+        p
+          | By using TL-Verilog syntax only within module definitions, Verilog-based tools that are used to stitch the
+          | interconnections between modules can remain blissfully unaware of TL-Verilog. Within the Verilog module,
+          | other forms of modularity and hierarchy, particular to TL-Verilog can be employed.
+        p
+          | Everything we’ll do in this course will be inside the 
+          code \TLV
+          |  region, but now you understand how this connects with Verilog-based tools.
+        
+        .mc-tutorial-note
+          .mc-note-body
+            p
+              | Everything we do in this course could be done just as well in Verilog, but, by using TL-Verilog, you
+              | will be poised for further learning of the true power of transaction-level design.You will be able to
+              | follow this course up with others where you will pipeline your design with ease. (Also, the Makerchip
+              | DIAGRAM tab only works with TL-Verilog.)
+    
+    
+    call tutorial_subsection("Sequential Logic", "sequential-logic")
+    .collapse#sequential-logic
+      
+      call tutorial_subsubsection("Clock and Flip-Flops: Concept", "clock-and-flip-flops-concept")
+      .collapse#clock-and-flip-flops-concept
+        
+        p
+          | If you are familiar with sequential logic and flip-flops, you can safely skip this concept.
+        p
+          | Sequential logic introduces a clock signal.
+        
+        .mc-tutorial-figure
+          img.mc-figure-body(width="400" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/Clock_waveform.png")
+          .mc-figure-caption
+            span
+              i Clock waveform
+        
+        p
+          | The clock is driven throughout the circuit to “flip-flops” which sequence the logic. Flip-flops come in
+          | various flavors, but the simplest and most common type of flip-flop, and the only one we will concern
+          | ourselves with, is called a “positive-edge-triggered D-type flip-flop”. These drive the value at their
+          | input to their output, but only when the clock rises. They hold their output value until the next rising
+          | edge of their clock input.
+        
+        .mc-tutorial-figure
+          img.mc-figure-body(width="200" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/A_flip-flop.png")
+          .mc-figure-caption
+            span
+              i A flip-flop
+        
+        p
+          | Although there are also flip-flops that act on the falling edge of the clock, our circuits will operate
+          | only on the rising edge. Additionally there are flip-flops that incorporate logic functions. Tools can
+          | choose to implement our designs using these flip-flops even though we will not be explicit about doing so
+          | in our source code. Since we will use only D flip-flops, we will henceforth refer to them simply as
+          | flip-flops, or even just “flops”.
+      
+      call tutorial_subsubsection("Sequential Logic Example and Reset", "sequential-logic-example-and-reset")
+      .collapse#sequential-logic-example-and-reset
+        
+        p
+          | Before getting too theoretical about sequential logic, let’s look at an example. Let’s look at a circuit
+          | that computes the Fibonacci sequence. Each number in the Fibonacci sequence is the sum of the previous two
+          | numbers: 1, 1, 2, 3, 5, 8, 13, … This circuit will perpetually compute the next number in the sequence:
+        
+        .mc-tutorial-figure
+          img.mc-figure-body(width="400" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/Fibonacci_circuit_incomplete.png")
+          .mc-figure-caption
+            span
+              i Fibonacci circuit (incomplete)
+        
+        p
+          | With each rising clock edge, the values will propagate through the flops, shifting one flop to the right,
+          | producing this waveform.
+        
+        .mc-tutorial-figure
+          img.mc-figure-body(width="400" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/Fibonacci_waveform_incomplete.png")
+          .mc-figure-caption
+            span
+              i Fibonacci sequence circuit waveforms
+        
+        p
+          | This circuit however is incomplete. What’s missing? Reset. We need a way to initialize our circuit with two
+          | 1s to begin the sequence.
+        p
+          | Unlike a combinational circuit, where output values are purely a function of the input values, sequential
+          | circuits have internal state -- the values held by flip-flops. Every sequential circuit needs the ability to
+          | get to a known “reset” state. And therefore, every sequential circuit will have a 
+          code reset
+          |  signal responsible for accomplishing this. The circuit must be designed such that, if 
+          code reset
+          |  is asserted for many cycles, the logic will stabilize to a known reset state.
+        p
+          | The easiest approach to providing a reset capability is to force every flip-flop to a reset value when 
+          code reset
+          |  is asserted. This methodology is used by some design teams, but if area and power are a concern we can do
+          | better.
+        p
+          | In our Fibonacci circuit, we only need to reset the first flip-flop.
+        
+        .mc-tutorial-figure
+          img.mc-figure-body(width="400" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/fib.png")
+          .mc-figure-caption
+            span
+              i Fibonacci series circuit
+        
+        p
+          | While 
+          code $reset
+          |  is asserted, a 1 value is driven into 
+          code $num
+          | . The clock continues to toggle during reset, and the 1 value propagates through both flops, resetting them
+          | both to a 1 value.
+        p
+          | This provides the initial two 1s in the sequence. When 
+          code $reset
+          |  is deasserted, 
+          code $num
+          |  takes on a value of 2, and the circuit continues to produce a new value in the sequence in each subsequent
+          | clock cycle.
+        
+        .mc-tutorial-figure
+          img.mc-figure-body(width="400" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/Fibonacci_waveforms.png")
+          .mc-figure-caption
+            span
+              i Fibonacci sequence circuit waveforms
+        
+        .mc-tutorial-note
+          .mc-note-body
+            p
+              | It is common for 
+              code $reset
+              |  to be provided as a negatively asserted signal, perhaps named 
+              code rstn
+              | , meaning reset occurs when 
+              code rstn
+              |  is 0,
+              | and 
+              code rstn
+              |  is 1 during normal operation. Though the motivation for this is rarely relevant with modern logic
+              | synthesis tools, you will still commonly see this in practice. We will stick with a positively asserted 
+              code $reset
+              | .
+        .mc-tutorial-note
+          .mc-note-body
+            p
+              | Often the reset capability is physically incorporated into the flip-flop itself. We will provide our
+              | reset logic explicitly. Logic synthesis tools can choose to implement the behavior using a “reset
+              | flip-flop”.
+      
+      call tutorial_subsubsection("Sequential Logic: TL-Verilog Syntax", "sequential-logic-tl-verilog-syntax")
+      .collapse#sequential-logic-tl-verilog-syntax
+        
+        p
+          | In TL-Verilog, we can reference the previous and previous-previous versions of 
+          code $num
+          |  as 
+          code >>1$num
+          |  and 
+          code >>2$num
+          | . Unlike RTL, in TL design we need not assign these explicitly. They are implicitly available for use, and
+          | the need for flip-flops is implied.
+        
+        .mc-tutorial-figure
+          img.mc-figure-body(width="400" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/Fibonacci_circuit_labeled.png")
+          .mc-figure-caption
+            span
+              i Fibonacci circuit labeled with staged signal references
+        
+        p
+          | So this example can be coded as:
+        p
+          code $num[31:0] = $reset ? 1 : (>>1$num + >>2$num);
+      
+      call tutorial_subsubsection("Concept: Generalization of Sequential Logic", "generalization-of-sequential-logic")
+      .collapse#generalization-of-sequential-logic
+        
+        p
+          | A sequential circuit, containing flops and combinational logic can be viewed as follows.
+        
+        .mc-tutorial-figure
+          img.mc-figure-body(width="400" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/Generalized_sequential_circuit.png")
+          .mc-figure-caption
+            span
+              i Generalized view of a sequential circuit
+        
+        p
+          | During each cycle of the clock, the combinational logic evaluates, then the clock rises and next state
+          | becomes state, and the process continues.
+      
+      call tutorial_subsubsection("Lab: Counter", "lab-counter")
+      .collapse#lab-counter
+        
+        p
+          | Now, you try. Similar to the Fibonacci sequence circuit, you’ll create a 16-bit free running counter, depicted
+          | below.
+        
+        .mc-tutorial-figure
+          img.mc-figure-body(width="400" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/Counter_circuit.png")
+          .mc-figure-caption
+            span
+              i A counter circuit
+        
+        p
+          | 
+          code $cnt
+          |  resets to zero (
+          code 16'b0
+          | ) and, after reset, begins incrementing by one (
+          code 16'b1
+          | ) each cycle.
+        
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | Reload or reset Makerchip to begin again from the default template.
+        
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | Confirm that the default template is providing you with a 
+              code $reset
+              |  signal as:
+              code
+              | $reset = *reset;
+        
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | Create the single-statement expression for this circuit. When you get the waveform below, you’ve got it right.
+              | For reference, this is the expression for the Fibonacci circuit:
+            p
+              code
+              | $num[31:0] = $reset ? 1 : (>>1$num + >>2$num);
+        
+        .mc-tutorial-figure
+          img.mc-figure-body(width="400" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/Counter_lab_waveform.png")
+          .mc-figure-caption
+            span
+              i Correct waveform for counter circuit lab
+        
+        call tutorial_subsubsubsection("Lab Solution", "lab-counter-solution")
+        .collapse#lab-counter-solution
+          
+          p
+            | In case you had trouble with the Counter lab, here is a screen capture
+            | of the steps you had to perform. (no audio)
+          
+          call video("Solution Video", "https://github.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/raw/main/videos/LF-BuildingRISCV_Solution8_Counter.mp4")
+      
+      call tutorial_subsubsection("Lab: Recirculating Calculator", "recirculating-calculator")
+      .collapse#recirculating-calculator
+        
+        p
+          | A real (old-school) calculator displays the result of each calculation. It holds onto this result value and
+          | uses it as the first operand in the next computation. If you enter “+ 3” in the calculator, it adds three to
+          | the previous result. Let’s update our calculator to act like this. Each cycle, we’ll perform a new calculation,
+          | based on the previous result.
+        p
+          | This previous result is state. And wherever we have state, we must have a 
+          code $reset
+          |  that will set that state to a known value. As in a real calculator, we will reset the value to zero.
+        p
+          | To recirculate the result (
+          code $out
+          | ), and reset it to zero, we would have:
+        
+        .mc-tutorial-figure
+          img.mc-figure-body(width="400" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/Sequential_calculator_circuit.png")
+          .mc-figure-caption
+            span
+              i Logic modifications for this lab to sequentialize the calculator circuit
+        
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | Return to your combinational calculator project.
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | Assign 
+              code $val1[31:0]
+              |  to the previous value of 
+              code $out
+              |  (replacing its old assignment).
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | Add a 
+              code $reset
+              |  signal and a new (highest priority) MUX input to reset 
+              code $out
+              |  to zero.
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | Visually confirm proper operation in VIZ and WAVEFORM. Note that negative values will be represented with
+              | upper bits equal to 1 (so “fff…” in hexadecimal). (You could disable subtraction to prevent negative values.)
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | You may want to save your work outside of Makerchip.
+        
+        call tutorial_subsubsubsection("Lab Solution", "lab-recirc-calc-solution")
+        .collapse#lab-recirc-calc-solution
+          
+          p
+            | In case you had trouble, here’s a screen capture of this lab. (no audio)
+          
+          call video("Solution Video", "https://github.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/raw/main/videos/LF-BuildingRISCV_Solution9_SequentialCalculator.mp4")
+    
+    
+    call tutorial_quiz("Knowledge Check", "ch2-knowledge-check")
+    .collapse.mc-quiz#ch2-knowledge-check
+      
+      p
+        | Answer the following questions to check your understanding of the material in this chapter.
+      
+      ol
+        li
+          .mc-question
+            | What logic function is created by this TL-Verilog expression: 
+            code $out = $sel ? $in1 : $in2;
+          ol.mc-answers
+            li.mc-wrong-answer A transistor
+            li.mc-correct-answer A multiplexer
+            li.mc-wrong-answer A precondition
+        li
+          .mc-question
+            | A byte value can be declared in TL-Verilog as:
+          ol.mc-code-answer
+            li.mc-wrong-answer byte $byte;
+            li.mc-wrong-answer bit $byte[7:0];
+            li.mc-wrong-answer 8'b$byte;
+            li.mc-correct-answer $byte[7:0] = …;
+        li
+          .mc-question
+            | The Verilog literal hexadecimal value expression for a byte with a decimal value of 24 is:
+          ol.mc-code-answer
+            li.mc-correct-answer 8'h18
+            li.mc-wrong-answer 8'ha4
+            li.mc-wrong-answer 8'h24
+            li.mc-wrong-answer 8'h40
+        li
+          .mc-question
+            | Sequential logic requires which of the following signals (or similar) (select all that apply):
+          ol.mc-answers
+            li.mc-correct-answer a clock
+            li.mc-wrong-answer.mc-code-answer $next
+            li.mc-correct-answer.mc-code-answer $reset
+            li.mc-wrong-answer.mc-code-answer $count
+  
+  call tutorial_section("Chapter 3: The Role of RISC-V", "chapter-3-the-role-of-risc-v")
+  .collapse#chapter-3-the-role-of-risc-v
+    
+    call tutorial_subsection("Introduction", "chapter-3-introduction")
+    .collapse#chapter-3-introduction
+      
+      p
+        | This chapter describes, at a high level, the role played by RISC-V and how it fits into the scene. How does a
+        | program get compiled and eventually execute on a RISC-V CPU core?
+    
+    call tutorial_subsection("Learning Objectives", "chapter-3-learning-objectives")
+    .collapse#chapter-3-learning-objectives
+      
+      p
+        | By the end of this chapter, you should understand:
+      
+      ol
+        li
+          | The role of compilers and assemblers
+        li
+          | The role of an instruction set architecture (ISA)
+        li
+          | General properties of RISC-V versus other ISAs
+        li
+          | Software, Compilers, and CPUs
+    
+    call tutorial_subsection("Software, Compilers, and CPUs", "chapter-3-software-compilers-and-cpus")
+    .collapse#chapter-3-software-compilers-and-cpus
+      
+      p
+        | Likely you have experience writing programs in languages like Python, JavaScript, Java, C++, etc. These
+        | languages are portable and can run on just about any CPU hardware. CPU’s do not execute these languages
+        | directly. They execute raw 
+        code machine instructions
+        |  that have been encoded into bits as defined by an 
+        code instruction set architecture
+        |  (ISA). Popular ISAs include x86, ARM, MIPS, RISC-V, etc.
+      p
+        | A 
+        i compiler
+        |  does the job of translating a program’s source code into a 
+        i binary file
+        |  or 
+        i executable
+        |  containing machine instructions for a particular ISA. An operating system (and perhaps a runtime
+        | environment) does the job of loading the binary file into memory for execution by the CPU hardware that
+        | understands the given ISA.
+      
+      .mc-tutorial-figure
+        img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/compilation1.png")
+        .mc-figure-caption
+          span
+            i Software development and execution flow
+      
+      p
+        | The binary file is easily interpreted by hardware but not so easily by
+        | a human. The ISA defines a human readable form of every instruction as
+        | well as the mapping of those human readable 
+        i assembly instructions
+        |  into bits. In addition to producing binary files, compilers can
+        | generate 
+        i assembly code
+        | . An assembler can compile the assembly code
+        | into a binary file. In addition to providing visibility to compiler
+        | output, assembly programs can also be written by hand. This is useful
+        | for hardware tests and other situations where direct low-level control
+        | is needed. You will use assembly-level test programs in this course to
+        | debug your RISC-V design.
+      
+      .mc-tutorial-figure
+        img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/compilation2.png")
+        .mc-figure-caption
+          span
+            i Assembly code development and execution flows
+    
+    call tutorial_subsection("RISC-V Overview", "chapter-3-risc-v-overview")
+    .collapse#chapter-3-risc-v-overview
+      
+      p
+        | In this course, you will build a simple CPU that supports the RISC-V ISA. RISC-V has very rapidly gained
+        | popularity due to its open nature--its explicit lack of patent protection and its community focus. Following
+        | the lead of RISC-V, MIPS and PowerPC have subsequently gone open as well.
+      p
+        | RISC-V is also popular for its simplicity and extensibility, which makes it a great choice for this course.
+        | “RISC”, in fact, stands for “reduced instruction set computing” and contrasts with ‘complex instruction set
+        | computing” (CISC). RISC-V (pronounced “risk five”) is the fifth in a series of RISC ISAs from UC Berkeley. You
+        | will implement the core instructions of the base RISC-V instruction set (RV32I), which contains just 47
+        | instructions. Of these, you will implement 31 (Of the remaining 16, 10 have to do with the surrounding system,
+        | and 6 provide support for storing and loading small values to and from memory).
+      p
+        | Like other RISC (and even CISC) ISAs, RISC-V is a 
+        i load-store architecture
+        | . It contains a register file capable of storing up to 32 values (well, actually 31). Most instructions read
+        | from and write back to the register file. Load and store instructions transfer values between memory and the
+        | register file.
+      p
+        | RISC-V instructions may provide the following fields:
+        
+        ol
+          li
+            b opcode
+            | : Provides a general classification of the instruction and determines which of the
+            | remaining fields are needed, and how they are laid out, or encoded, in the remaining instruction bits.
+          li
+            b function field
+            |  (funct3/funct7)
+            | : Specifies the exact function performed by the instruction, if not fully specified by the opcode.
+          li
+            b rs1/rs2
+            | : The indices (0-31) identifying the register(s) in the register file containing the source
+            | operand values on which the instruction operates.
+          li
+            b rd
+            | : The index (0-31) of the register into which the instruction’s result is written.
+          li
+            b immediate
+            | : A value contained within the instruction bits themselves. This value may provide an offset for
+            | indexing into memory or a value upon which to operate (in place of the register value indexed by rs2).
+      
+      p
+        | All instructions are 32 bits. The R-type encoding provides a general layout of the instruction fields used by
+        | all instruction types. R-type instructions have no immediate value. Other instruction types use a subset of the
+        | R-type fields and provide an immediate value in the remaining bits.
+        
+      .mc-tutorial-figure
+        img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/RISC-V_instruction_formats.png")
+        .mc-figure-caption
+          span
+            i RISC-V base instruction formats (from the RISC-V specifications)
+      
+      p
+        | You’ll learn further details of the ISA as you build your CPU.
+    
+    
+    call tutorial_quiz("Knowledge Check", "chapter-3-knowledge-check")
+    .collapse.mc-quiz#chapter-3-knowledge-check
+      
+      p
+        | Answer the following questions to check your understanding of the material in this chapter.
+      
+      ol
+        li
+          .mc-question
+            | An assembler produces:
+          
+          ol.mc-answers
+            li.mc-wrong-answer A program
+            li.mc-wrong-answer Assembly code
+            li.mc-correct-answer A binary file
+            li.mc-wrong-answer A memory image
+        li
+          .mc-question
+            | RISC-V is:
+          ol.mc-answers
+            li.mc-wrong-answer A CPU
+            li.mc-correct-answer An ISA
+            li.mc-wrong-answer A philosophy
+            li.mc-wrong-answer A microarchitecture
+        li
+          .mc-question
+            | In a load-store architecture, an arithmetic instruction reads and writes values from and to:
+          ol.mc-answers
+            li.mc-wrong-answer Memory
+            li.mc-correct-answer A register file
+            li.mc-wrong-answer Either memory or register file
+        li
+          .mc-question
+            | Which RISC-V instruction field(s) determine the operation to perform (select two):
+          ol.mc-answers
+            li.mc-correct-answer opcode
+            li.mc-wrong-answer rs1/rs2
+            li.mc-wrong-answer rd
+            li.mc-wrong-answer immediate
+            li.mc-correct-answer function
+  
+  
+  call tutorial_section("Chapter 4: RISC-V-Subset CPU", "chapter-4-risc-v-subset-cpu")
+  .collapse#chapter-4-risc-v-subset-cpu
+    
+    call tutorial_subsection("Overview", "chapter-4-overview")
+    .collapse#chapter-4-overview
+      
+      p
+        | In this chapter, you will build a subset of your RISC-V CPU core capable of executing a test program that
+        | adds numbers from 1 to 9. Subsequently, you will complete the functionality of your core.
+      p
+        | By the end of this chapter, you should be able to:
+      ol
+        li
+          | Explain the role of the fundamental components of a basic CPU microarchitecture.
+        li
+          | Be experience expressing digital logic using TL-Verilog.
+        li
+          | Develop an appreciation for the debug process within Makerchip, including:
+          ol
+            li
+              | the interpretation of messages in the logs
+            li
+              | use of visual debug to understand the overall behavior of your logic
+            li
+              | use of the waveform viewer to understand detailed behavior
+            li
+              | tracing faulty behavior from symptom to cause
+        li
+          | Instantiate pre-existing Verilog and TL-Verilog components.
+      
+    call tutorial_subsection("CPU Labs Setup", "cpu-labs-setup")
+    .collapse#cpu-labs-setup
+      
+      call tutorial_subsubsection("Visualization of RISC-V CPU Simulation", "visualization-of-risc-v-cpu-simulation")
+      .collapse#visualization-of-risc-v-cpu-simulation
+        
+        p
+          | This video explains visualization of your CPU simulation that you will utilize throughout this course.
+        
+        call video("Visualization Video", "https://github.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/raw/main/videos/BuildingRISCV_RISCVVIZ.mp4")
+        
+        call tutorial_subsubsubsection("Transcription", "viz-transcription")
+        .collapse#viz-transcription
+          
+          ol
+            li Alright. So, in the remainder of this course, you'll be implementing your CPU core
+            li And this is the visualization that you'll have available for doing that.
+            li And what we're looking at here is, in green here, is the instruction memory. This is where your program is stored.
+            li So, the instruction memory is holding on to these binary values that are interpreted as instructions that your machine is going to execute.
+            li These instructions will be loaded into your CPU core.
+            li So, here we're loading an ADD immediate instruction into our CPU core that's going to produce a value in the register x12.
+            li And we can see that value has been written here.
+            li So this ADD instruction is adding 0 [zero] from x0 [x zero] to an immediate value provided by the instruction itself, of 10 [ten].
+            li You can see that value here in the instruction in binary form, and it's shown here in the Decode logic as a decimal 10.
+            li So, we add 10 to 0, we produce a value of 10 in register x12, and we write that into the register file.
+            li So, the register file [RF] is holding on to values that our CPU core operates on.
+            li If we continue to step, we do another ADD immediate instruction that's writing to x13,
+            li and this one's doing 0 [zero] plus 1 [one]. produces a 1 [one],
+            li and now we have an ADD instruction again, 1 [one] plus 0 [zero] is 1 [one],
+            li and what this program is actually doing, this is the program that you're going to use to initially develop your CPU core and then, after you develop the core, to run this program in chapter four.
+            li In chapter five, you'll complete your RISC-V core and execute all instructions.
+            li This program is adding values from one to nine, it's summing the values from one to nine,
+            li and the first time through, we're processing the value of 1 [one]. I believe that's in register 14, is our running summation, and register 13 here is keeping track of our... actually, I'm not sure, let me check.
+            li Yeah, that's right: register 13 is our loop counter.
+            li So, we've just executed a branch. I'm going to step backward here to the branch.
+            li The branch instruction is taking us back up to the beginning of our loop.
+            li And each iteration of our loop is summing the next value in the sequence.
+            li So, if I continue executing these instructions, you'll see that the value in x14, register 14, is holding on to this sum. So it's currently adding values one plus two.
+            li Now it's going to do plus three to get six, and if I step three more times,
+            li plus four to get 10, and then 15,
+            li and then 21, and so on.
+            li So, we're continuing to iterate in this loop until we've summed all values up to 10. Our 12 is holding on to the value of 10, the constant value of 10, so that we can do I guess 9 iterations of our loop.
+            li And the branch instruction compares our loop count with that value of 10.
+            li Once we reach 10, the branch less than will no longer branch, it will fall through.
+            li So, if I continue to step, we will now fall through the branch meaning continue execution sequentially and complete our program.
+            li So, that's the program you're going to start with and we'll talk about all the aspects of the CPU core
+            li the instruction memory, the instruction decoder, the register file, in more detail as you implement them.
+            li After you implement this subset CPU core that executes this program, you will implement all of the instructions that you'll do in the course
+            li and running a different test program that executes each instruction.
+            li And at this stage, you've also added the the DMem, the data memory, which we can see now here,
+            li and we're executing this program, which is next going to execute a store instruction, which is going to write a value to the memory, and then the load which is going to read that value from the memory.
+            li So this is the framework that you're going to be working with, the visualization, certainly as you're developing your CPU core,
+            li also this diagram, logic diagram, is going to become increasingly complete,
+            li and you'll see, of course, more and more signals in the waveform.
+            li Alright. So next, we'll talk about the setup that you're going to start with to get you on your way.
+        
+      call tutorial_subsubsection("Starting-point code", "starting-point-code")
+      .collapse#starting-point-code
+        
+        p
+          | This video will familiarize you with starting-point code that you will be instructed to use later, before you begin
+          | coding your CPU.
+        
+        call video("Starting-point Code Video", "https://github.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/raw/main/videos/BuildingRISCV_StartingCode.mp4")
+        
+        call tutorial_subsubsubsection("Transcription", "starting-point-code-transcription")
+        .collapse#starting-point-code-transcription
+          
+          ol
+            li Alright. So here we are in the course GitHub repository that you're already familiar with,
+            li and I'm going to take you down to the starting point code. So this is the code that you'll use to get started with the RISC-V labs exercises.
+            li And I'm going to Control click on this link to open it in its own tab, and I just want to quickly walk through the code that we're providing for you.
+            li Really, the only thing that you need to know here is where to write your code for the lab exercises.
+            li That's here. But it's nice to have a little context on what you're given.
+            li So just to walk through what's here, this is structured like any TL Verilog file inside Makerchip. It starts off with a version line that specifies the TL Verilog language version of the file. This is 1d.
+            li And it specifies that we want to use a macro preprocessor called m4.
+            li So, m4 is processing macros such as this one that... this one is grabbing some library content; it's actually grabbing some macro definitions that we're going to use elsewhere.
+            li So, we grab some of the content that we're providing; that's providing you with the visualization capabilities, it's providing you with some macros that you'll instantiate for the register file that are down here at the bottom for the register file and the data memory.
+            li So, these are macro instantiations. And this is the macro instantiation of the visualization.
+            li So these two lines up here are grabbing those definitions.
+            li Next is the program that is going to exist in your instruction memory that you're going to be executing in simulation.
+            li And this is what you saw in the previous video; so, the same program summing numbers from actually one to nine, not one to ten, and let's see...
+            li so basically, through macro pre-processing, we're turning these human-readable instructions into binary that your CPU core is processing.
+            li Then we have the module definition that the Makerchip platform expects to see.
+            li So this again is a m4 macro instantiation which looking in the NAV TLV, we can see the expansion of that macro.
+            li So, we're seeing that that expands to a module definition.
+            li That's expected by the Makerchip platform. And the Makerchip platform provides through that interface the clock and the reset to control your logic, it's also giving you a cycle count.
+            li And you are able to pass back to the platform a passed and/or a failed signal.
+            li And we're doing so here.
+            li So here we're telling the platform we're never going to report passed,
+            li and we're just going to report fail, always after a fixed number of cycles, and that number of cycles is defined up here to be 50.
+            li So after 50 cycles, we're always going to report failure.
+            li And as your core gets sufficiently capable, we will add some logic here to define the passed condition and the failed condition.
+            li But for most of your coding, you're not going to rely on what's reported in the log. We can see in the log here that we're reporting failure.
+            li We're not going to rely on that. Your logic is very dynamic and you'll just use the visualization to understand that each piece of logic that you add is properly reflected in the behavior that you're able to visualize.
+            li Alright. So that's where you start. And in the next video I'll introduce you to some reference solutions that we're also making available to you to help you if you get stuck.
+        
+      call tutorial_subsubsection("Showcasing your work", "showcasing-your-work")
+      .collapse#showcasing-your-work
+        
+        p
+          | Now that you are preparing to create something more substantial, it’s worth considering a few options for how you will develop, save, and showcase your design (all of which are optional).
+        p
+          | Consider capturing your work in GitHub (or another Git hosting platform).
+          | If you are or will be job hunting, your GitHub profile often speaks more
+          | strongly to a potential employer than your resume. GitHub is also a great
+          | place to snapshot your code as you develop it to be sure you don’t lose
+          | your work. You can create a fresh repository for your work, or fork the
+          | course repository. You can edit files directly via GitHub’s web interface
+          | and paste your code from Makerchip, all within your browser, or you can
+          | clone your repository on your local system and paste your code into a
+          | text editor.
+        p
+          | We also have a convenient option for working with local files on your
+          | own desktop, whether in a git repository or not. You can launch Makerchip
+          | from your desktop to work with a local TL-Verilog source file. Makerchip
+          | runs in your browser but autosaves back to your desktop.
+        p
+          | Only if you’d like to try this workflow, first get the starting point
+          | code locally by cloning the course GitHub repository.
+        p
+          code git clone https://github.com/stevehoover/LF-Building-a-RISC-V-CPU-Core.git
+        p
+          | (and enter your credentials)
+        p
+          | Then install the Makerchip app:
+        p
+          code pip3 install makerchip-app
+      
+      call tutorial_subsubsection("Opening the Starting-Point Code", "opening-the-starting-point-code")
+      .collapse#opening-the-starting-point-code
+        
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | Now, open the starting-point code template.
+        
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | Only if you are using Makerchip app to edit code on your local computer, first copy the code from `LF-Building-a-RISC-V-CPU-Core/risc-v_shell.tlv` to wherever you would like to edit it, then:
+            p
+              code makerchip <path>/risc-v_shell.tlv
+        
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | Otherwise,
+            p
+              button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core/master/risc-v_shell.tlv\")")
+                | Load Starting-point Code
+        
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | Save the code once it loads.
+        
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | Simulation should run. The LOG should report “Simulation FAILED!!!”
+              | (and will until this chapter is successfully completed). VIZ should
+              | show the test program and signals that have not yet been implemented.
+              | (Mouse-wheel-down or use the “-” button to bring these fully into
+              | view.)
+
+        p
+          | Whether you are using the Makerchip app or not, after each lab, quickly
+          | check that your work has been properly autosaved to the cloud or to your
+          | local system by checking the status bar within Makerchip.
+
+        p
+          | Generally, if you get off track and need to get back to a stable version
+          | of your code, 
+          b Ctrl-Z
+          |  will do the trick, but it might also be wise to save snapshots (or git commits) on occasion.
+
+    call tutorial_subsection("CPU Microarchitecture and Implementation Plan", "cpu-microarchitecture-and-implementation-plan")
+    .collapse#cpu-microarchitecture-and-implementation-plan
+
+      p
+        | CPUs come in many flavors, from small microcontrollers, optimized for small
+        | area and low power, to desktop and server processors, optimized for performance. Within
+        | several hours, you’ll construct a CPU core that could be appropriate as a microcontroller.
+        | In contrast, a desktop or server CPU chip might be built by a team of hundreds of seasoned
+        | engineers over a period of several years.
+
+      p
+        | Our CPU will fully execute one instruction with each new clock cycle. Doing all of this work
+        | within a single clock cycle is only possible if the clock is running relatively slowly, which
+        | is our assumption.
+
+      p
+        | We’ll start by implementing enough of the CPU to execute our test program. As you add each new
+        | piece of functionality, you will see in the VIZ pane the behavior you implemented, with more
+        | and more of the test program executing correctly until it is successfully summing numbers from
+        | one to nine. Then we’ll go back to implement support for the bulk of the RV32I instruction set.
+
+      p
+        | Let’s look at the components of our CPU, following the flow of an instruction through the logic.
+        | This is also roughly the order in which we will implement the logic.
+
+        
+      .mc-tutorial-figure
+        img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/CPU.png")
+        .mc-figure-caption
+          span
+            i RISC-V CPU Block Diagram
+
+      p
+        ol
+          li
+            b PC Logic
+            | : This logic is responsible for the program counter (PC). The PC identifies the instruction
+            | our CPU will execute next. Most instructions execute sequentially, meaning the default behavior
+            | of the PC is to increment to the following instruction each clock cycle. Branch and jump
+            | instructions, however, are non-sequential. They specify a target instruction to execute next,
+            | and the PC logic must update the PC accordingly.
+          li
+            b Fetch
+            | : The instruction memory (IMem) holds the instructions to execute. To read the IMem, or
+            | “fetch”, we simply pull out the instruction pointed to by the PC.
+          li
+            b Decode Logic
+            | : Now that we have an instruction to execute, we must interpret, or decode, it. We must
+            | break it into fields based on its type. These fields would tell us which registers to read,
+            | which operation to perform, etc.
+          li
+            b Register File Read
+            | : The register file is a small local storage of values the program is actively working with.
+            | We decoded the instruction to determine which registers we need to operate on. Now, we need to
+            | read those registers from the register file.
+          li
+            b Arithmetic Logic Unit (ALU)
+            | : Now that we have the register values, it’s time to operate on them. This is the job of the ALU.
+            | It will add, subtract, multiply, shift, etc, based on the operation specified in the instruction.
+          li
+            b Register File Write
+            | : Now the result value from the ALU can be written back to the destination register specified
+            | in the instruction.
+          li
+            b DMem
+            | : Our test program executes entirely out of the register file and does not require a data memory
+            | (DMem). But no CPU is complete without one. The DMem is written to by store instructions and read
+            | from by load instructions.
+      p
+        | In this course, we are focused on the CPU core only. We are ignoring all of the logic that would be necessary
+        | to interface with the surrounding system, such as input/output (I/O) controllers, interrupt logic, system timers, etc.
+      p
+        | Notably, we are making simplifying assumptions about memory. A general-purpose CPU would typically have a large
+        | memory holding both instructions and data. At any reasonable clock speed, it would take many clock cycles to access
+        | memory. Caches would be used to hold recently-accessed memory data close to the CPU core. We are ignoring all of
+        | these sources of complexity. We are choosing to implement separate, and very small, instruction and data memories.
+        | It is typical to implement separate, single-cycle instruction and data caches, and our IMem and DMem are not unlike
+        | such caches.
+    
+    call tutorial_subsection("PC Logic", "pc-logic")
+    .collapse#pc-logic
+      
+      .mc-tutorial-figure
+        img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/rv_pc.png")
+        .mc-figure-caption
+          span
+            i Implementing PC logic
+      
+      p
+        | Initially we’ll implement only sequential fetching, so the PC update will be, for now,
+        | simply a counter. Note that:
+      ul
+        li
+          | The PC is a byte address, meaning it references the first byte of an instruction in the IMem.
+          | Instructions are 4 bytes long, so, although the PC increment is depicted as “+1” (instruction),
+          | the actual increment must be by 4 (bytes). The lowest two PC bits must always be zero in normal
+          | operation.
+        li
+          | Instruction fetching should start from address zero, so the first 
+          code $pc
+          |  value with 
+          code $reset
+          |  deasserted should be zero, as is implemented in the logic diagram below.
+        li
+          | Unlike our earlier counter circuit, for readability, we use unique names for 
+          code $pc
+          |  and 
+          code $next_pc
+          | , by assigning 
+          code $pc
+          |  to the previous 
+          code $next_pc
+          | .
+      
+      .mc-tutorial-figure
+        img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/pc_inc.png")
+        .mc-figure-caption
+          span
+            i Initial PC logic
+
+      .mc-tutorial-step
+        .mc-step-body
+          p
+            | Implement the circuit above (replacing the “YOUR CODE HERE” comment), and confirm in VIZ and WAVEFORM that the PC is now starting at zero and incrementing as it should.       
+      
+      p
+        | Remember, you can find reference solutions for all RISC-V labs in the course GitHub repository.
+    
+    call tutorial_subsection("Instruction Memory", "instruction-memory")
+    .collapse#instruction-memory
+
+      .mc-tutorial-figure
+        img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/rv_imem.png")
+        .mc-figure-caption
+          span
+            i Implementing instruction memory
+
+      p
+        | We will implement our IMem by instantiating a Verilog macro. This macro accepts a byte address
+        | as input, and produces the 32-bit read data as output. The macro can be instantiated, for
+        | example, as:
+      p
+        code `READONLY_MEM($addr, $$read_data[31:0])
+      p
+        | Verilog macro instantiation is preceded by a back-tick (not to be confused with a single
+        | quote).
+      p
+        | In expressions like this that do not syntactically differentiate assigned signals from
+        | consumed signals, it is necessary to identify assigned signals using a 
+        code $$
+        |  prefix. And, as always, an assigned signal declares its bit range. Thus 
+        code $$read_data[31:0]
+        |  is used above.
+      p
+        | This macro is simplified in several ways versus what you would typically see for an array macro:
+      ul
+        li
+          | There is no way to write to our array. The program specified in the template is magically populated 
+          | into this array for you.
+        li
+          | Typically an array would have a read enable input as well. This read enable would indicate, each
+          | cycle, whether to perform a read. Our array will always read, and we are not concerned with the
+          | power savings a read enable could offer.
+        li
+          | Typically, a memory structure like our IMem would be implemented using a physical structure called
+          | static random access memory, or SRAM. The address would be provided in one clock cycle, and the data
+          | would be read out in the next cycle. Our entire CPU, however, will execute within a single clock cycle.
+          | Our array provides its output data on the same clock cycle as the input address. Our macro would result
+          | in an implementation using flip-flops that would be far less optimal than SRAM.
+
+      .mc-tutorial-figure
+        img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/fetch.png")
+        .mc-figure-caption
+          span
+            i Instruction memory hookup
+      
+      p
+        | Implement instruction fetch by instantiating IMem with proper connectivity:
+      
+      .mc-tutorial-step
+        .mc-step-body
+          p
+            | Instantiate the 
+            code `READONLY_MEM
+            |  macro after your PC logic, providing 
+            code $pc
+            |  as the address and 
+            code $$instr[31:0]
+            |  as the output. Be sure to align this with other statements always using three spaces of indentation.
+        
+      .mc-tutorial-step
+        .mc-step-body
+          p
+            | Be sure that: the LOG indicates the dangling 
+            code $instr
+            |  output, the DIAGRAM looks right, and VIZ shows instructions being read from the IMem. If anything looks wrong, debug using WAVEFORM, and verify that 
+            code $instr
+            |  no longer appears in the VIZ “To Be Implemented” signals.
+    
+    call tutorial_subsection("Decode Logic", "decode-logic")
+    .collapse#decode-logic
+
+      call tutorial_subsubsection("Instruction Type Decode Logic", "instruction-type-decode-logic")
+      .collapse#instruction-type-decode-logic
+
+        .mc-tutorial-figure
+          img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/rv_dec.png")
+          .mc-figure-caption
+            span
+              i Implementing decode logic
+
+        p
+          | Now that we have an instruction, let’s figure out what it is. Remember, RISC-V defines
+          | various instruction types that define the layout of the fields of the instruction,
+          | according to this table from the 
+          a(href="https://riscv.org/technical/specifications/") RISC-V specifications
+          | :
+        
+        .mc-tutorial-figure
+          img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/RISC-V_instruction_formats.png")
+          .mc-figure-caption
+            span
+              i Base instruction formats showing instruction fields for each instruction type
+        p
+          | Before we can interpret the instruction, we must know its type. This is determined by its
+          | opcode, in 
+          code $instr[6:0]
+          | . In fact, 
+          code $instr[1:0]
+          |  must be 
+          code 2'b11
+          |  for valid RV32I instructions. We will assume all instructions to be valid, so we can simply
+          | ignore these two bits. The ISA defines the instruction type to be determined as follows.
+        .mc-tutorial-figure
+          img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/instr_type_table.png")
+          .mc-figure-caption
+            span
+              i Instruction types from opcode[6:2] (instr[6:2])
+        
+        p
+          | You'll assign a boolean signal for each instruction type that indicates whether the
+          | instruction is of that type. For example, we could decode U-type as:
+        p
+          code
+            | $is_u_instr = $instr[6:2] == 5'b00101 ||
+            |               $instr[6:2] == 5'b01101;
+        
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | Observe how the binary values in this expression correspond to the two U-type boxes in the table.
+        
+        p
+          | SystemVerilog gives us an operator that makes this comparison a little simpler:
+        p
+          code
+            | $is_u_instr = $instr[6:2] ==? 5'b0x101;
+        p
+          | The 
+          code ==?
+          |  operator above allows some bits to be excluded from the comparison by specifying them as
+          | “x” (referred to as don’t-care).
+        
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | Add this assignment statement to your code and write the remaining 5 statements for
+              | I, R, S, B, and J instruction types. (Gray cells can be ignored as these are not
+              | used in RV32I.)
+        
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | Compile and simulate. Review LOGs. The VIZ “Instr. Decode” box should indicate the
+              | instruction type now. Debug as needed using the WAVEFORM.
+        
+      call tutorial_subsubsection("Instruction Field Decode Logic", "instruction-field-decode-logic")
+      .collapse#instruction-field-decode-logic
+
+        p
+          | Now, based on the instruction type, we can extract the instruction fields. Most fields always
+          | come from the same bits regardless of the instruction type, but only have meaning for certain
+          | instruction types. The imm field, an “immediate” value embedded in the instruction itself, is
+          | the exception. It is constructed from different bits depending on the instruction type.
+        
+        .mc-tutorial-figure
+          img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/RISC-V_instruction_formats.png")
+          .mc-figure-caption
+            span
+              i Base instruction formats showing instruction fields for each instruction type (repeated for easy reference)
+        
+        p
+          | Let’s start with the simpler, non-immediate fields: 
+          code $funct3
+          | , 
+          code $rs1
+          | , 
+          code $rs2
+          | , 
+          code $rd
+          | , 
+          code $opcode
+          | . We will not use 
+          code $funct7
+          | , so you can skip this field.
+        
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | Extract these fields, for example: 
+              code $rs2[4:0] = $instr[24:20];
+        
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | Compile/simulate, check LOG (with warnings for these new dangling signals), and debug.
+              | As you add these signals, they should be removed from the “To Be Implemented” list in
+              | VIZ.
+          
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | Determine when these fields are valid (excluding 
+              code $opcode
+              | , which is always valid). For example:
+            p
+              code
+                | $rs2_valid = $is_r_instr || $is_s_instr || $is_b_instr;
+        
+        p
+          | Provide 
+          code $imm_valid
+          |  as well, asserting for all types but R, even though we haven’t determined 
+          code $imm
+          |  yet.
+        
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | Compile/simulate, check LOG (now rather lengthy) and debug. Your “To Be Implemented”
+              | signals list should be getting shorter.
+        
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | All this clutter in our LOG is getting annoying. Suppress these warnings using the following:
+            p
+              code
+                | BOGUS_USE($rd $rd_valid $rs1 $rs1_valid ...)
+        
+        p
+          | This produces no logic, but looks like a signal consumption, so warnings are suppressed.
+          | Note that there are no commas between signals. Also note that if you extend this expression
+          | to a second line, this second line must be indented with spaces relative to the first. This
+          | line could be removed after signals are used, though some of these signals will only be used
+          | for VIZ and will remain unconsumed by your logic.
+        
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | Compile/simulate and confirm that the LOG is now clean. You should now see register
+              | indices in VIZ (in the blue portion of instruction decode). Confirm that they seem
+              | correct, and debug if necessary.
+        
+        p
+          | The immediate value is a bit more complicated. It is composed of bits from different fields
+          | depending on the type.
+        
+        .mc-tutorial-figure
+          img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/imm.png")
+          .mc-figure-caption
+            span
+              i Formation of the immediate value based on instruction type
+        
+        p
+          | The immediate value for I-type instructions, for example is formed from 21 copies of
+          | instruction bit 31, followed by 
+          code inst[30:20]
+          |  (which is broken into three fields above for consistency with other formats).
+        p
+          | The immediate field can be formed, based on this table using a logic expression like the following.
+          | It uses a combination of bit extraction (e.g. 
+          code $instr[30:20]
+          | ), bit replication (e.g. 
+          code {21{…}}
+          | ), and bit concatenation (e.g. 
+          code {…, …}
+          | ):
+        p
+          code
+            | $imm[31:0] = $is_i_instr ? {  {21{$instr[31]}},  $instr[30:20]  } :
+            |              $is_s_instr ? {...} :
+            |              ...
+            |                            32'b0;  // Default
+        
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | Complete the above logic expression for 
+              code $imm
+              | .
+        
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | Verify in WAVEFORM and VIZ that the value of 
+              code $imm
+              |  corresponds to the instructions in the test program. This will test your understanding
+              | of binary, decimal and hexadecimal. For example, the 
+              code ADDI, x12, x10, 1010
+              |  instruction shows the immediate value in binary, VIZ should represent the value in
+              | decimal as 
+              code i[10]
+              | , and WAVEFORM should show a hexadecimal 
+              code a
+              | .
+        
+      call tutorial_subsubsection("Decode Logic: Instruction", "decode-logic-instruction")
+      .collapse#decode-logic-instruction
+
+        p
+          | Now we need to determine the specific instruction. This is determined from the opcode, instr[30],
+          | and funct3 fields as follows. Note that instr[30] is 
+          code $funct7[5]
+          |  for R-type, or 
+          code $imm[10]
+          |  for I-type. Though labeled “funct7[5]” in the table below, a label of 
+          code $instr[30]
+          |  would be more appropriate:
+        
+        .mc-tutorial-figure
+          img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/decode.png")
+          .mc-figure-caption
+            span
+              i Instruction decode table, with needed instructions circled
+        
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | For convenience, concatenate the relevant fields into a single bit vector signal, as:
+            p
+              code $dec_bits[10:0] = {$instr[30],$funct3,$opcode};
+        
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | For each of the instructions circled in red (we’ll come back and do the rest later),
+              | determine if 
+              code $dec_bits
+              |  identifies this instruction. For example:
+            p
+              code
+                | $is_beq = $dec_bits ==? 11'bx_000_1100011;
+        p
+          | Note that Verilog syntax permits underscores in immediate constants like the 11-bit binary
+          | immediate value above. They have no semantic meaning but are useful to visually delimit
+          | fields. Also note, we’re using “x” as a don’t-care for the instr[30] bit, which is not used
+          | by BEQ.
+        
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | Compile and simulate. Again, there will be many warnings for these unused signals. It is
+              | worthwhile to again use 
+              code BOGUS_USE
+              |  to keep the LOG clean.
+        
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | Confirm that VIZ is now displaying the correct instruction mnemonics in the blue section
+              | of “Instr. Decode”. Debug as needed.
+
+    call tutorial_subsection("Register File Read", "register-file-read")
+    .collapse#register-file-read
+
+      .mc-tutorial-figure
+        img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/rv_rf.png")
+        .mc-figure-caption
+          span
+            i Implementing register file read
+      
+      p
+        | Like our mini IMem, the register file is a pretty typical array structure, so we can find a library
+        | component for it. This time, rather than using a Verilog module or macro as we did for IMem, we will
+        | use a TL-Verilog array definition, expanded by the M4 macro preprocessor.
+      p
+        | Near the bottom of your code, and commented out, you’ll find the following example instantiation of
+        | a register file (RF) macro:
+      p
+        code
+          | //m4+rf(32, 32, $reset, $wr_en, $wr_index[4:0], $wr_data[31:0], $rd_en1, $rd_index1[4:0], $rd_data1, $rd_en2, $rd_index2[4:0], $rd_data2)
+      p
+        | This would instantiate a 32-entry, 32-bit-wide register file connected to the given input and output
+        | signals, as depicted below. Each of the two read ports requires an index to read from and an enable
+        | signal that must assert when a read is required, and it produces read data as output (on the same
+        | cycle).
+      
+      .mc-tutorial-figure
+        img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/rf.png")
+        .mc-figure-caption
+          span
+            i The provided register file instantiation (before you modify it)
+      
+      p
+        | For example, to read register 5 (x5) and register 8 (x8), 
+        code $rd_en1
+        |  and 
+        code $rd_en2
+        |  would both be asserted, and 
+        code $rd_index1
+        |  and 
+        code $rd_index2
+        |  would be driven with 5 and 8.
+      p
+        | A few things to note:
+      ul
+        li
+          | For this macro, output signal arguments are signal names. Inputs are expressions.
+        li
+          | We are using “rd” as an abbreviation for read, which is easily confused with the destination
+          | register to be written by an instruction which is also referred to in RISC-V as “rd”.
+      p
+        | You will modify the macro arguments related to register read to properly read instructions’ source
+        | register values.
+      
+      .mc-tutorial-step
+        .mc-step-body
+          p
+            | Uncomment the rf instantiation. (Noting that M4 macros are an experimental construct, this macro
+            | instantiation must remain on a (very long) single line. Also, keep it where it is, near the bottom
+            | of the file so it’s expansion does not clutter NAV-TLV.)
+      .mc-tutorial-step
+        .mc-step-body
+          p
+            | Though you have not connected the macro properly yet, compile and simulate this, and feel free to
+            | explore the results with dangling signals. You’ll see in NAV-TLV the expansion of this macro. Don’t
+            | worry about the code; it uses syntax we haven’t introduced, but you will see warnings/errors
+            | highlighted over the dangling input/output signals. As you connect this in the following steps, these
+            | warnings will be eliminated. You’ll see messages in the LOG as well, and there will be disconnects in
+            | the DIAGRAM. You’ll see the register file in VIZ as well, though its behavior will be random until its
+            | inputs are properly connected.
+      p
+        | Your instruction decode logic provides the signals needed for register file read. It determines, based
+        | on the instruction type, whether source registers are needed. It extracts the rs1 and rs2 fields which
+        | provide the indices for these registers if valid.
+      .mc-tutorial-step
+        .mc-step-body
+          p
+            | Modify the appropriate RF macro arguments to connect the decode output signals to the register file
+            | read input signals to read the correct registers when they are needed.
+      .mc-tutorial-step
+        .mc-step-body
+          p
+            | Connect the output read data to new signals named 
+            code $src1_value
+            |  and 
+            code $src2_value
+            |  by replacing the appropriate macro arguments with these new signal names. (Bit ranges are not
+            | needed as they are explicit within the macro definition.)
+      .mc-tutorial-step
+        .mc-step-body
+          p
+            | Compile/simulate. Observe that the register value in each entry of the register file is equal to
+            | the entry index. A more typical choice would have been to initialize all values to zero. We’ve
+            | provided non-zero initial values to simplify the next step.
+      .mc-tutorial-step
+        .mc-step-body
+          p
+            | Confirm proper operation in VIZ by observing the source register being read from the RF. Save your
+            | work outside of Makerchip.
+    
+    call tutorial_subsection("Arithmetic Logic Unit", "arithmetic-logic-unit")
+    .collapse#arithmetic-logic-unit
+
+      .mc-tutorial-figure
+        img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/rv_alu.png")
+        .mc-figure-caption
+          span
+            i Implementing the arithmetic logic unit
+      
+      p
+        | Now, you have source values to operate on, so let’s create the ALU. The ALU is much like our initial
+        | calculator circuit. It computes, for each possible instruction, the result that it would produce. It
+        | then selects, based on the actual instruction, which of those results is the correct one.
+      p
+        | At this point, we are only going to implement support for the instructions in our test program. Since
+        | branch instructions do not produce a result value, we only need to support ADDI (which adds the immediate
+        | value to source register 1) and ADD (which adds the two source register values).
+      .mc-tutorial-note
+        .mc-note-body
+          p
+            | There is an error in the diagram. The immediate value is used in place of 
+            b op2 (src2)
+            | , not
+            b op1 (src1)
+            | .
+      .mc-tutorial-step
+        .mc-step-body
+          p
+            | Use a structure like the following to assign the ALU 
+            code $result
+            |  in a single assignment expression for ADDI and ADD instructions:
+          p
+            code
+              | $result[31:0] =
+              |     $is_addi ? $src1_value + $imm :
+              |     ...
+              |             32'b0;
+      .mc-tutorial-step
+        .mc-step-body
+          p
+            | Compile/simulate. You should now see computed results in the VIZ “Instr. Decode” box (though incorrect
+            | values write back to the register file).
+    
+    call tutorial_subsection("Register File Write", "register-file-write")
+    .collapse#register-file-write
+
+      p
+        code $result
+        |  needs to be written back to the destination register (rd) in the register file (if the instruction has a
+        | destination register).
+      .mc-tutorial-step
+        .mc-step-body
+          p
+            | Update the instantiation of the register file macro to connect the register file’s write inputs to
+            | perform this write-back for instructions that have a valid destination register.
+      .mc-tutorial-step
+        .mc-step-body
+          p
+            | Compile/simulate. Check LOG. And confirm using VIZ that the destination register is being written to
+            | the register file.
+      p
+        | In RISC-V, 
+        code x0
+        |  (at register file index 0) is “always-zero”. One way to implement this behavior is to
+        | avoid writing 
+        code x0
+        | .
+      .mc-tutorial-step
+        .mc-step-body
+          p
+            | Currently, our test program doesn’t write 
+            code x0
+            | , so we have no way to test this change. Add an instruction after the branch that writes a non-zero
+            | value to 
+            code x0
+            | , and watch it write in VIZ.
+      .mc-tutorial-step
+        .mc-step-body
+          p
+            | Modify your logic to deassert the register file write enable input if the destination register is 0.
+            | Compile/simulate, debug, and confirm in VIZ that the new instruction no longer writes. Delete the added
+            | test instruction if you like, it won’t matter.
+    
+    call tutorial_subsection("Branch Logic", "branch-logic")
+    .collapse#branch-logic
+
+      .mc-tutorial-figure
+        img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/rv_br.png")
+        .mc-figure-caption
+          span
+            i Implementing branch logic
+      
+      p
+        | The last piece of the puzzle to get your test program executing properly is to implement branch instructions.
+        | Our test program uses BLT to repeat the loop body if the next incrementing value to accumulate is less than
+        | ten. And it uses BGE to loop indefinitely at the end of the test program. We’ll go ahead and implement all
+        | the conditional branch instructions now.
+      p
+        | A conditional branch instruction will branch to a target PC if its condition is true. Conditions are a comparison
+        | of the two source register values. Implementing conditional branch instructions will require:
+      ul
+        li
+          | Determining whether the instruction is a branch that is taken (
+          code $taken_br
+          | ).
+        li
+          | Computing the branch target (
+          code $br_tgt_pc
+          | ).
+        li
+          | Updating the PC (
+          code $pc
+          | ) accordingly.
+      .mc-tutorial-figure
+        img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/branch_logic.png")
+        .mc-figure-caption
+          span
+            i Branch logic in greater detail
+      p
+        | Let’s start with the branch condition (
+        code $taken_br
+        | ). Each conditional branch instruction has a different condition expression based on the two source register
+        | values (
+        code $src1_value
+        |  and 
+        code $src2_value
+        | , represented as 
+        code x1
+        |  and 
+        code x2
+        |  below).
+      p
+        b Table : Condition expressions for each conditional branch instruction
+        table
+          tr
+            th Instruction
+            th Meaning
+            th Condition Expression
+          tr
+            td
+              code BEQ
+            td Branch if equal
+            td
+              code x1 == x2
+          tr
+            td
+              code BNE
+            td Branch if not equal
+            td
+              code x1 != x2
+          tr
+            td
+              code BLT
+            td Branch if less than
+            td
+              code (x1 < x2) ^ (x1[31] != x
+          tr
+            td
+              code BGE
+            td Branch if greater than or equal
+            td
+              code (x1 >= x2) ^ (x1[31] != x2[31])
+          tr
+            td
+              code BLTU
+            td Branch if less than, unsigned
+            td
+              code x1 < x2
+          tr
+            td
+              code BGEU
+            td Branch if greater than or equal, unsigned
+            td
+              code x1 >= x2
+      p
+        | Similar to the structure of the ALU, you’ll determine whether a branch is to be taken by selecting the
+        | appropriate comparison result.
+      .mc-tutorial-figure
+        img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/taken_br.png")
+        .mc-figure-caption
+          span
+            i Branch taken logic diagram
+      .mc-tutorial-step
+        .mc-step-body
+          p
+            | Code an expression for 
+            code $taken_br
+            | . Structure the expression using the ternary operator, similar to what you did for the ALU. For each
+            | branch instruction, determine the value based on the Conditional Expression for that instruction listed
+            | in the table above. Assign 
+            code 0
+            |  for non-branch instructions using the default case of the ternary operator.
+      p
+        | We also need to know the target PC of the branch instruction. The target PC is given in the immediate field
+        | as a relative byte offset from the current PC. So, the target PC is the PC of the branch plus its immediate
+        | value.
+      .mc-tutorial-step
+        .mc-step-body
+          p
+            | Code an expression for 
+            code $br_tgt_pc[31:0] = …
+      .mc-tutorial-step
+        .mc-step-body
+          p
+            | If the instruction is a taken branch, its next PC should be the branch target PC. Update the existing
+            | 
+            code $next_pc
+            |  expression to reflect this.
+      .mc-tutorial-step
+        .mc-step-body
+          p
+            | Compile/simulate and debug. Once all is correct, your program will be looping. It should stop looping
+            | once it has produced the sum of values 1..9 (45). The final ADDI subtracts 44 from this and should
+            | therefore produce a value of 1 in x30. Then the final BGE should loop indefinitely to itself.
+      p
+        | Now that our test program seems to be working, let’s add some automated checking. We can tell the Makerchip
+        | platform that our test passed or failed by assigning the provided Verilog output signals passed and failed.
+        | In 
+        code \TLV
+        |  context, Verilog signals are referenced with a preceding “*”.
+      p
+        | We’ll give you a little check that the program’s PC repeats, and that x30 contains a value of 1.
+      .mc-tutorial-step
+        .mc-step-body
+          p
+            | Enable this check by replacing the line 
+            code *passed = 1'b0;
+            |  with 
+            code m4+tb()
+      .mc-tutorial-step
+        .mc-step-body
+          p
+            | Feel free to find the resulting macro expansion defining 
+            code *passed
+            |  in NAV-TLV. Check LOG for “Simulation PASSED!!!” message. CONGRATULATIONS!!! Save your work outside of
+            | Makerchip.
+    call tutorial_quiz("Knowledge Check", "ch4-knowledge-check")
+    .collapse.mc-quiz#ch4-knowledge-check
+      
+      p
+        | Answer the following questions to check your understanding of the material in this chapter.
+      
+      ol
+        li
+          .mc-question
+            | Which CPU component determines which computation is to be performed by each instruction?
+          ol.mc-answers
+            li.mc-wrong-answer PC logic
+            li.mc-correct-answer Decode logic
+            li.mc-wrong-answer Register file
+            li.mc-wrong-answer ALU
+          .mc-question
+            | On what cycle does VIZ first  display “Passed !!!” in green?
+          ol.mc-answers
+            li.mc-correct-answer 32
+            li.mc-wrong-answer 40
+            li.mc-wrong-answer 53
+            li.mc-wrong-answer 63
+          .mc-question
+            | Which of the instructions below is a valid RISC-V instruction to skip the next instruction if x3 is equal to zero?
+          ol.mc-code-answer
+            li.mc-wrong-answer BEZ x3, 8
+            li.mc-wrong-answer BRI x3, 0, 8
+            li.mc-wrong-answer BAT x3, 8
+            li.mc-correct-answer BEQ x3, x0, 8
+          .mc-question
+            | Which value(s) is/are written to the register file?
+          ol.mc-code-answer
+            li.mc-wrong-answer $src1_value/$src2_value
+            li.mc-wrong-answer $instr
+            li.mc-correct-answer $result
+            li.mc-wrong-answer $imm
+  
+  call tutorial_section("Chapter 5: Completing Your RISC-V CPU", "chapter-5-completing-your-risc-v-cpu")
+  .collapse#chapter-5-completing-your-risc-v-cpu
+    
+    call tutorial_subsection("Overview", "chapter-5-overview")
+    .collapse#chapter-5-overview
+
+      p
+        | Now that our test program is executing properly, let’s go back and complete the logic for the remaining instructions.
+      p
+        | This chapter serves to:
+      ul
+        li
+          | Reenforce the concepts from prior chapters
+        li
+          | Complete your understanding of the base RISC-V ISA
+    
+    call tutorial_subsection("Test Program", "test-program")
+    .collapse#test-program
+
+      p
+        | We’ll provide you with a new test program that tests each instruction in the RV32-I instruction set.
+      .mc-tutorial-step
+        .mc-step-body
+          p
+            | In place of the test program used in the previous chapter (everything delimited by 
+            code //---------------
+            |  comments), instantiate this macro (properly indented): 
+            code m4_test_prog()
+            |  and compile/simulate.
+      p
+        | Since this new program comes from an included macro, you can no longer see it or edit it in the source code, nor
+        | will it be visible in NAV-TLV, but it should be visible now in VIZ.
+      p
+        | For the remaining exercises, it will be easier to debug in hexadecimal. The 
+        code m4_test_prog()
+        |  macro configures VIZ to now display register values in hexadecimal. If you are not yet comfortable with
+        | hexadecimal, this will be good practice. Remember, each hexadecimal digit represents four binary digits.
+      p
+        | This test program executes each instruction once, each producing a result in a unique register starting from 
+        | x5 and increasing from there. For each, it XORs the result with a value that will produce a 1 if it was correct.
+        | If all instructions are working, registers x5-x27 will contain 1 when the test completes (and x28-x30 are written
+        | with 1 as well). You can use VIZ to determine which instructions produced incorrect values and debug the issues.
+        | Of course, you haven’t implemented most instructions yet, so most registers will not currently be written with 1s.
+      p
+        | We’ll continue to use the same 
+        code m4+tb()
+        |  test bench. It will report “Passed” once the program terminates properly, but this test bench does not check
+        | that the register values are 1. You must check this in VIZ.
+    
+    call tutorial_subsection("Decode Logic", "completing-decode-logic")
+    .collapse#completing-decode-logic
+
+      p
+        | Previously, you implemented decode logic for the instructions circled in red.
+      .mc-tutorial-figure
+        img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/decode.png")
+        .mc-figure-caption
+          span
+            i Instruction decode table
+      p
+        | With the exception of load and store instructions (LB, LH, LW, LBU, LHU, SB, SH, SW), complete the decode logic
+        | for the remaining non-circled instructions above (
+        code $is_<instr> = …
+        | ). Remember, you can use “x” for don’t-care bits.
+      .mc-tutorial-step
+        .mc-step-body
+          p
+            | Our implementation will treat all loads the same and all stores the same, so assign 
+            code $is_load
+            |  based on opcode only. 
+            code $is_s_instr
+            |  already identifies stores, so we do not need any additional decode logic for stores.
+      .mc-tutorial-step
+        .mc-step-body
+          p
+            | Compile, and note that VIZ instruction decode now shows instruction mnemonics. Note that the LOG will be
+            | full of warnings for all of these unused signals, but we’ll clean these up next 
+      .mc-tutorial-note
+        .mc-note-body
+          p
+            | As your design gets larger, it is possible, though unlikely, that the DIAGRAM may fail to generate properly.
+            | This may be an inconvenience, but is not necessarily an issue with your design.
+    
+    call tutorial_subsection("Arithmetic Logic Unit", "completing-alu")
+    .collapse#completing-alu
+
+      p
+        | Now we will add support in the ALU for the remaining instructions. We do this by extending the assignment statement
+        | for 
+        code $result
+        | . Since there will be an expression for almost every instruction, there’s a lot of code to write here. We’ll
+        | provide the expressions, but we’ll ask you to do the typing yourself so you have a chance to reflect on each
+        | instruction. If you’d like more information about these instructions, the 
+        a(href="https://inst.eecs.berkeley.edu//~cs61c/fa17/img/riscvcard.pdf") RISC-V green card
+        |  is a useful reference, or you can reference the 
+        a(href="https://riscv.org/technical/specifications/") RISC-V Unprivileged ISA Specification
+        | .
+      p
+        | The existing expressions for ADD and ADDI are pretty simple. Most of the other instructions have simple expressions
+        | as well, but a few are more complex. A few have common subexpressions, so let’s first create assignments for these
+        | subexpressions.
+      .mc-tutorial-figure
+        img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/alu_subexprs.png")
+        .mc-figure-caption
+          span
+            i Subexpressions needed by the ALU
+      .mc-tutorial-step
+        .mc-step-body
+          p
+            | Enter the assignment statements above before the existing assignment of 
+            code $result
+            | . Think about these expressions as you type them.
+      .mc-tutorial-step
+        .mc-step-body
+          p
+            | Compile/simulate and debug any errors in LOG.
+      p
+        | Now, to implement the complete ALU. We provide you with the expressions, some of which use the subexpressions you
+        | just implemented.
+      .mc-tutorial-figure
+        img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/alu_exprs.png")
+        .mc-figure-caption
+          span
+            i Result value TL-Verilog expressions for the ALU for each instruction
+      .mc-tutorial-step
+        .mc-step-body
+          p
+            | Extend the expression for 
+            code $result
+            |  to complete the ALU to support the remaining instructions.
+      .mc-tutorial-step
+        .mc-step-body
+          p
+            | Compile/simulate, resolve any unexpected issues in the LOG. 
+            code $is_<instr>
+            |  signals should no longer be unused.
+      .mc-tutorial-step
+        .mc-step-body
+          p
+            | If any of these new instructions are not resulting in register values of 1 in VIZ, debug them. To be specific,
+            | at the end of simulation, register values should be 1 except 
+            code x0-4
+            | , 
+            code x27
+            | , and 
+            code x31
+            | . Save your work outside of Makerchip.
+    
+    call tutorial_subsection("Jump Logic", "jump-logic")
+    .collapse#jump-logic
+
+      .mc-tutorial-figure
+        img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/rv_jump.png")
+        .mc-figure-caption
+          span
+            i Implementing jump logic
+      p
+        | The ISA, in addition to conditional branches, also supports jump instructions (which some other ISAs refer to as
+        | “unconditional branches”). RISC-V has two forms of jump instructions:
+      ul
+        li
+          | 
+          b JAL
+          | : Jump and link. Jumps to PC + IMM  (like branches, so this target is 
+          code $br_tgt_pc
+          | , already assigned)
+        li
+          | 
+          b JALR
+          | : Jump and link register. Jumps to SRC1 + IMM.
+      p
+        | “And link” refers to the fact that these instructions capture their original PC + 4 in a destination register, as
+        | you already coded in the ALU. (The link register is particularly useful for jumps that are used to implement function
+        | calls, which must return to the link address after function execution.)
+      .mc-tutorial-step
+        .mc-step-body
+          p
+            | Compute 
+            code $jalr_tgt_pc[31:0]
+            |  (SRC1 + IMM).
+      .mc-tutorial-step
+        .mc-step-body
+          p
+            | Update the PC logic to select the correct 
+            code $next_pc
+            |  for JAL (
+            code $br_tgt_pc
+            | ) and JALR (
+            code $jalr_tgt_pc
+            | ). In the test program JAL and JALR instructions should jump to the next subsequent instruction (as if not
+            | jumping at all), with the exception of the final JAL which should jump to itself. Assuming x30 is also properly
+            | set to 1, this final JAL will result in the test reporting “Passed” in LOG and VIZ (though loads and stores are
+            | not working yet). Verify this behavior in VIZ.
+    
+    call tutorial_subsection("Load, Store, and Data Memory", "load-store-and-data-memory")
+    .collapse#load-store-and-data-memory
+
+      call tutorial_subsubsection("Addressing Memory", "addressing-memory")
+      .collapse#addressing-memory
+
+        p
+          | So far, all of our instructions are operating on register values. What good is a CPU if it has no memory? Let’s
+          | add some. But first, let’s prepare the load and store instructions that will read from and write to this memory.
+        p
+          | Both load and store instructions require an address from which to read, or to which to write. As with the IMem,
+          | this is a byte-address. Loads and stores can read/write single bytes, half-words (2 bytes), or words (4 bytes/32
+          | bits).
+        .mc-tutorial-figure
+          img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/word_half_byte.png")
+          .mc-figure-caption
+            span
+              i Implementing jump logic
+        p
+          | We will, however, avoid this nuance and implement all load/store instructions to operate on words, assuming that
+          | the lowest two address bits are zero. In other words, we are assuming word loads/stores with naturally-aligned
+          | addresses.
+        p
+          | The address for loads/stores is computed based on the value from a source register and an offset value (often zero)
+          | provided as the immediate.
+        p
+          code addr = rs1 + imm
+      call tutorial_subsubsection("Loads", "loads")
+      .collapse#loads
+        
+        p
+          | A load instruction (LW,LH,LB,LHU,LBU) takes the form:
+        p
+          code
+            | LOAD rd, imm(rs1)
+        p
+          | It uses I-type instruction format:
+        .mc-tutorial-figure
+          img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/itype_imm.png")
+          .mc-figure-caption
+            span
+              i I-type instruction format
+        p
+          | It writes its destination register with a value read from the specified address of memory, which we can denote as:
+        p
+          code rd <= DMem[addr]
+          |  (where, addr = rs1 + imm)
+      
+      call tutorial_subsubsection("Stores", "stores")
+      .collapse#stores
+
+        p
+          | A store instruction (SW,SH,SB) takes the form:
+        p
+          code
+            | STORE rs2, imm(rs1)
+        p
+          | It has its own S-type instruction format:
+        .mc-tutorial-figure
+          img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/itype_imm.png")
+          .mc-figure-caption
+            span
+              i I-type instruction format
+        p
+          | It writes the specified address of memory with value from the rs2 source register:
+        p
+          code DMem[addr] <= rs2
+          |  (where, addr = rs1 + imm)
+      
+      call tutorial_subsubsection("Address Logic", "address-logic")
+      .collapse#address-logic
+
+        p
+          | The address computation, 
+          code rs1 + imm
+          | , is the same computation performed by ADDI. Since load/store instructions do not otherwise require the ALU,
+          | we will utilize the ALU for this computation.
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | For loads/stores (
+              code $is_load
+              | /
+              code $is_s_instr
+              | ), compute 
+              code $result
+              |  as the address (
+              code rs1 + imm
+              | ), as with the ADDI instruction. (This change will not be visible in VIZ, yet.)
+      
+      call tutorial_subsubsection("Data Memory", "data-memory")
+      .collapse#data-memory
+
+        .mc-tutorial-figure
+          img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/rv_dmem.png")
+          .mc-figure-caption
+            span
+              i Implementing data memory
+        p
+          | To keep our simulations zippy, we’ll instantiate a very small data memory--the same size as our register file.
+        p
+          | Unlike our register file, which is capable of reading two values each cycle and, on the same cycle, writing a value,
+          | our memory needs only to read one value or write one value each cycle to process a load or a store instruction. Similar
+          | to our register file, our DMem is word-granular. Recall that we are supporting only word loads/stores with naturally-aligned
+          | memory addresses (so the lower two bits zero are assumed to be zero).
+        p
+          | Based on discussion above:
+        ul
+          li
+            | write is enabled for stores (
+            code $is_s_instr
+            | )
+          li
+            | read is enabled for loads (
+            code $is_load
+            | )
+          li
+            | the ALU result (
+            code $result
+            | ) provides the read/write address; this is a byte address, while our memory is indexed by 32-bit words
+          li
+            code rs2
+            |  (
+            code $src2_value
+            | ) provides the write data
+          li
+            | the only output of the DMem is the load data (which we’ll call 
+            code $ld_data
+            | )
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | Similar to what we did for the register file, there is a commented macro instantiation for 
+              code m4+dmem(32, 32, $reset, $addr[4:0], $wr_en, $wr_data[31:0], $rd_en, $rd_data)
+              | . Uncomment it.
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | Provide proper macro arguments to connect the correct input and output signals. Be sure to extract the appropriate
+              | bits of the byte address to drive the DMem’s word address. Since the memory has a single read port, fewer arguments
+              | are needed for the DMem than for the RF.
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | Compile/simulate, and debug compilation errors.
+        p
+          | The load data (
+          code $ld_data
+          | ) coming from DMem must be written to the register file. A new multiplexer is needed to select 
+          code $ld_data
+          |  for load instructions, as depicted in the figure.
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | Add this new multiplexer to write 
+              code $ld_data
+              | , rather than 
+              code $result
+              | , to the register file when 
+              code $is_load
+              |  asserts.
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | Debug compilation errors. Your LOG should be clean at this point (no errors or warnings).
+        p
+          | The test program, toward the end, does a store and a load of the hexadecimal value 
+          code 32'h15
+          | .
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | Examine the store (SW) and load (LW) instructions in VIZ. Confirm that the value 
+              code ‘h15
+              |  is stored to memory location 2 and loaded into register x27.
+        .mc-tutorial-step
+          .mc-step-body
+            p
+              | Confirm that 
+              code x5-x30
+              |  are all 1 at the end of a passing simulation.
+        p
+          b That’s it! You’ve got a working RISC-V core! And, you’ve completed this course!!!
+        p
+          | Be sure to save all of your hard work.
+        p
+          | Expect a follow-on course, where you will be able to pipeline your RISC-V core so that it can be implemented with a
+          | higher clock speed.
+        p
+          | Other possible follow-on activities include:
+        ul
+          li
+            | Exploring more about RISC-V at riscv.org.
+          li
+            | Continuing to explore Makerchip to dig deeper into TL-Verilog and its ecosystem.
+          li
+            | Exploring other course offerings from the Linux Foundation.
+          li
+            | Revisit the course repository, which may be updated with recent opportunities.
+
+    call tutorial_quiz("Knowledge Check", "ch5-knowledge-check")
+    .collapse.mc-quiz#ch5-knowledge-check
+      
+      p
+        | Answer the following questions to check your understanding of the material in this chapter.
+      
+      ol
+        li
+          .mc-question
+            | For jump instructions, the immediate value specifies:
+          ol.mc-answers
+            li.mc-wrong-answer a condition
+            li.mc-wrong-answer a DMem address
+            li.mc-correct-answer a PC offset
+            li.mc-wrong-answer jump instructions have no immediate value
+          .mc-question
+            | For load and store instructions, the immediate value specifies:
+          ol.mc-answers
+            li.mc-wrong-answer a result value
+            li.mc-wrong-answer a PC offset
+            li.mc-correct-answer an address offset
+            li.mc-wrong-answer loads and stores have no immediate value
+          .mc-question
+            | The read enable input to the DMem is driven by which signal:
+          ol.mc-code-answer
+            li.mc-wrong-answer $br_tgt_pc
+            li.mc-wrong-answer $src2_valid
+            li.mc-correct-answer $is_load
+            li.mc-wrong-answer $is_s_instr
+
+  call tutorial_section("Final Exam", "final-exam")
+  .collapse.mc-quiz#final-exam
+
+    p
+      | Answer the following questions to check your understanding of the material in this course.
+    
+    ol
+      li
+        .mc-question
+          | In TL-Verilog, the value of a signal 
+          code $foo
+          |  from the previous cycle can be accessed using:
+        ol.mc-code-answer
+          li.mc-correct-answer >>1$foo
+          li.mc-wrong-answer prev($foo)
+          li.mc-wrong-answer $foo--
+          li.mc-wrong-answer FLOP($foo)
+      li
+        .mc-question
+          | Which one of the following RISC-V features did you implement:
+        ol.mc-answers
+          li.mc-wrong-answer byte-granular memory access
+          li.mc-wrong-answer control and status registers
+          li.mc-wrong-answer exception handling
+          li.mc-correct-answer conditional branches
+      li
+        .mc-question
+          | Digital logic involving a clock signal and a reset signal is referred to as:
+        ol.mc-answers
+          li.mc-wrong-answer logic gates
+          li.mc-wrong-answer combinational logic
+          li.mc-wrong-answer asynchronous logic
+          li.mc-correct-answer sequential logic
+      li
+        .mc-question
+          | The TL-Verilog expression, 
+          code $foo = 1'b0 ? 1'b1 : $bar;
+          |  evaluates to:
+        ol.mc-answers
+          li.mc-wrong-answer a single-bit zero value
+          li.mc-wrong-answer a single-bit one value
+          li.mc-correct-answer.mc-code-answer $bar
+          li.mc-wrong-answer not enough information to answer
+      li
+        .mc-question
+          | The correct order in which a CPU processes an arithmetic instruction is:
+        ol.mc-answers
+          li.mc-correct-answer fetch, decode, register read, ALU, register write
+          li.mc-wrong-answer fetch, decode, register read, register write, ALU
+          li.mc-wrong-answer decode, fetch, register read, ALU, register write
+          li.mc-wrong-answer decode, fetch, register read, register write, ALU
+      li
+        .mc-question
+          | Which of the following instruction fields exists for every instruction type:
+        ol.mc-answers
+          li.mc-wrong-answer funct
+          li.mc-wrong-answer rd
+          li.mc-wrong-answer imm
+          li.mc-correct-answer opcode
+      li
+        .mc-question
+          | What logic function
+          | code is created by this TL-Verilog expression 
+          code $val[7:0] = $reset ? 8'b0 : >>1$val + 1;
+        ol.mc-answers
+          li.mc-correct-answer A counter
+          li.mc-wrong-answer A multiplexer
+          li.mc-wrong-answer An adder
+          li.mc-wrong-answer A shift register
+      li
+        .mc-question
+          | For which two of the following instructions can the next instruction be something other than PC + 4:
+        ol.mc-code-answer
+          li.mc-correct-answer BLT
+          li.mc-correct-answer JAL
+          li.mc-wrong-answer AUIPC
+          li.mc-wrong-answer LW
+      li
+        .mc-question
+          | For which two of the following instructions is the ALU used to produce the instruction’s register result value?
+        ol.mc-code-answer
+          li.mc-correct-answer ADD
+          li.mc-correct-answer ADDI
+          li.mc-wrong-answer BLT
+          li.mc-wrong-answer LW
+      li
+        .mc-question
+          | In this course, you learned about:
+        ol.mc-answers
+          li.mc-wrong-answer RISC-V ISA
+          li.mc-wrong-answer digital logic
+          li.mc-wrong-answer Makerchip
+          li.mc-wrong-answer basic TL-Verilog syntax
+          li.mc-wrong-answer basic CPU microarchitecture
+          li.mc-correct-answer all of the above

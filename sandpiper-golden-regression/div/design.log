@@ -1,0 +1,14 @@
+INFORM(0) (PROD_INFO):
+	SandPiper(TM)
+	(DEV) Run as: "java -jar sandpiper.jar --noversion --webContent  --debugSigs --compiler=modelsim -p default --outdir=run/gen/div -i run/gen/div/design.m4out.tlv -o design.sv
+	For help, including product info, run with -h.
+
+INFORM(0) (LICENSE):
+	Licensed to "Redwood EDA, LLC" as: Full Edition.
+
+INFORM(0) (FILES):
+	Reading "run/gen/div/design.m4out.tlv"
+	to produce:
+		Translated HDL File: "run/gen/div/design.sv"
+		Generated HDL File: "run/gen/div/design_gen.sv"
+

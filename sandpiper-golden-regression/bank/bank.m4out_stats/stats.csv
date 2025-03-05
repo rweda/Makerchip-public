@@ -1,0 +1,6 @@
+,Unknown,Untouched,Logic,Declarations,Staging,Structure,Validity,Instrumentation,Comments,Whitespace,Total Meaningful Chars,Total Chars
+TL-Verilog,0,287,935,0,10,46,28,0,1527,968,1306,3801
+bank_gen.sv,0,0,0,877,1552,154,561,0,988,569,3144,4701
+bank.sv,0,287,1255,0,0,46,0,0,1723,986,1588,4297
+SystemVerilog Total,0,287,1255,877,1552,200,561,0,2711,1555,4732,8998
+Color,#505050,#305050,purple,blue,#509050,#1090c0,#E04010,#a07090,#707070,#7090a0,,
