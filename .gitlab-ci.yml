@@ -2,8 +2,7 @@
 image: node:lts
 pages:
   script:
-    - mkdir -p public
-    - cp -r public .
+    - echo "Deploying GitLab Pages"
   artifacts:
     paths:
       # The folder that contains the files to be exposed at the Page URL
