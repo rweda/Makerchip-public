@@ -1,0 +1,9 @@
+pages:
+  script:
+    - mkdir -p public
+    - cp -r public .
+  artifacts:
+    paths:
+      - public
+  only:
+    - main
