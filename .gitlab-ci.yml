@@ -1,9 +1,14 @@
+# The Docker image that will be used to build your app
+image: node:lts
 pages:
   script:
     - mkdir -p public
     - cp -r public .
   artifacts:
     paths:
+      # The folder that contains the files to be exposed at the Page URL
       - public
-  only:
-    - main
+  rules:
+    # This ensures that only pushes to the default branch will trigger
+    # a pages deploy
+    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
