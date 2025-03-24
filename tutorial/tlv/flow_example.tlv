@@ -30,8 +30,8 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-m4_include_url(['https:/']['/raw.githubusercontent.com/stevehoover/tlv_flow_lib/5a8c0387be80b2deccfcd1506299b36049e0663e/fundamentals_lib.tlv'])
-m4_include_url(['https:/']['/raw.githubusercontent.com/stevehoover/tlv_flow_lib/5a8c0387be80b2deccfcd1506299b36049e0663e/pipeflow_lib.tlv'])
+m4_include_url(['https://raw.githubusercontent.com/TL-X-org/tlv_lib/3543cfd9d7ef9ae3b1e5750614583959a672084d/fundamentals_lib.tlv'])
+m4_include_url(['https://raw.githubusercontent.com/TL-X-org/tlv_flow_lib/cdd15e24e546a2fdefba59a2a6026642f3c1b0a6/pipeflow_lib.tlv'])
 m4_makerchip_module()
 
 m4_define_hier(M4_RING_STOP, 4, 0)
@@ -44,17 +44,17 @@ m4_define_hier(M4_RING_STOP, 4, 0)
    
    /M4_RING_STOP_HIER
       m4+stall_pipeline(/ring_stop, |stall, 0, 2, /trans)
-      m4+simple_bypass_fifo_v2(/ring_stop, |stall2, @1, |bp0, @1, 4, 100, /trans)
+      m4+simple_bypass_fifo_v2(/ring_stop, |stall2, @1, |bp0, @1, 5, 100, /trans)
       m4+bp_pipeline(/ring_stop, |bp, 0, 2, /trans)
       |bp2
          @1
             $local = /trans$dest == #ring_stop;
       m4+opportunistic_flow(/ring_stop, |bp2, @1, |bypass, @1, $local, |ring_in, @1, /trans)
-   m4+simple_ring(/ring_stop, |ring_in, @1, |ring_out, @1, /top<>0$reset, |rg, /trans)
+   m4+simple_ring_v4(/ring_stop, |ring_in, @1, |ring_out, @1, /top<>0$reset, |rg, /trans)
    
    /ring_stop[*]
       m4+arb2(/ring_stop, |ring_out, @4, |bypass, @1, |arb_out, @1, /trans)
-      m4+simple_bypass_fifo_v2(/ring_stop, |arb_out, @1, |fifo2_out, @1, 4, 100, /trans)
+      m4+simple_bypass_fifo_v2(/ring_stop, |arb_out, @1, |fifo2_out, @1, 5, 100, /trans)
    
    
    //--------------
