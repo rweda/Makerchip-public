@@ -313,7 +313,7 @@ m4_makerchip_module
                   /reg[$dest_reg]<<1$$Value[11:0] = $rslt;
             
             
-   // Assert these to end simulation (before Makerchip cycle limit).
+   // Assert these to end simulation (before the cycle limit).
 !  *passed = ! *reset && *cyc_cnt > 1000 || |fetch/instr>>3$Pc == 12'hfff;
 !  *failed = ! *reset && ! |fetch/instr>>3$reset && |fetch/instr>>3$illegal;
 \SV

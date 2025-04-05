@@ -58,7 +58,7 @@ to the right (less-significant).
             @1
                `BOGUS_USE($id $sum)
 
-   // Assert these to end simulation (before Makerchip cycle limit).
+   // Assert these to end simulation (before the cycle limit).
    *passed = *cyc_cnt > 300;
    *failed = 1'b0;
 \SV

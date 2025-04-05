@@ -11,7 +11,7 @@
          @6
             $err3 = $err2 | $div_by_zero;
 
-   // Assert these to end simulation (before Makerchip cycle limit).
+   // Assert these to end simulation (before the cycle limit).
    *passed = *cyc_cnt > 40;
    *failed = 1'b0;
 

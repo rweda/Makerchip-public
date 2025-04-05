@@ -1,11 +1,11 @@
 .mc-auto-pane-contents.mc-markdown
   a(name="top")
   :markdown
-    # Intro to Makerchip
+    # Intro to #{appConfig.product}
     (~15 min)
     
-    In this tutorial, you will become familiar with the features of the
-    Makerchip Integrated Development Environment (IDE).
+    In this tutorial, you will become familiar with the features of
+    the #{appConfig.trademarkedProductAdjective} Integrated Development Environment (IDE).
     
     ## Table of Contents
   ul.mc-toc
@@ -28,21 +28,21 @@
   :markdown
     ## Introduction
     
-    Makerchip gives you a place to create any digital sequential logic you can dream
+    The #{appConfig.product} IDE gives you a place to create any digital sequential logic you can dream
     up faster than you ever thought possible, all within your browser. The breakthrough in productivity is twofold:
     
       - a tight integration of design, simulation, and debug capabilities
       - support for Transaction-Level Verilog (TL-Verilog), in addition to Verilog and synthesizable SystemVerilog
     
-    If you already know Verilog, SystemVerilog, or TL-Verilog, you’ll be able to use Makerchip immediately.
+    If you already know Verilog, SystemVerilog, or TL-Verilog, you’ll be able to use #{appConfig.product} immediately.
     The environment is intuitive, and this tutorial will step you through it. The remaining tutorials
-    provide an introduction to TL-Verilog and it's integration with Makerchip. Knowledge
+    provide an introduction to TL-Verilog and it's integration with #{appConfig.product}. Knowledge
     of Verilog/SystemVerilog is not required. Even if you
     are already comfortable with Verilog/SystemVerilog, take the time to learn TL-Verilog. You'll be glad you did.
     To follow the tutorials, you should already be familiar with the basic concepts of
     synchronous digital logic design.
     
-    Note that Makerchip requires a modern browser and works best in Google Chrome.
+    Note that #{appConfig.product} requires a modern browser and works best in Google Chrome.
     
     Throughout these tutorials, you'll see buttons like the following, which load code
     into the Editor and compile and simulate it. The Editor contents are replaced,
@@ -176,7 +176,7 @@
   :markdown
     ## Tools
     What’s running under the hood?  When you encounter a perplexing error in the log it’s
-    good to know what tool is reporting it. Makerchip utilizes the following client- and server-side tools.
+    good to know what tool is reporting it. #{appConfig.product} utilizes the following client- and server-side tools.
   ul
     li
       bold Editor
@@ -201,38 +201,33 @@
       | .
     li
       bold Waveform viewer
-      | : The waveform pane is a custom viewer specifically for Makerchip that
+      | : The waveform pane is a custom viewer specifically for #{appConfig.product} that
       | is aware of TL-Verilog constructs.
     
-    You can find a diagram of the build flow in “Makerchip Docs”
+    You can find a diagram of the build flow in the "IDE"/“Help” menu.
     under the “Help” menu.
     
   a(name="projects")
   :markdown
     ## Projects
-    The Makerchip IDE currently works on a single project at a time, and the project is defined
-    by a single source file. If you are working in your own project your changes will save periodically.
+    The #{appConfig.product} IDE currently works on a single project at a time, and the project is defined
+    by a single source file. You can save your project to a local file (on browsers which permit it) and/or
+    to the cloud. Projects on the cloud are not permanent but can be easily shared by sharing a project URL.
+    Your changes will auto-save (assuming you own the project). When you share with others,
+    they can "clone" your project to make changes of their own.
+    
     Assuming you have not yet created a project, you'll see "unsaved" in the upper right, and next to
-    that a button to create a project.
+    that separate buttons to save your project to the cloud or to a local file. Corresponding options
+    exist also in the "Project" menu.
   .mc-tutorial-step
     .mc-step-body
       p
-        | Save your workspace as a new project using the button in upper right (or via the "Project" menu).
-  :markdown
-    The project now has a unique URL which you can bookmark to return to your work.
-  .mc-tutorial-step
-    .mc-step-body
-      p
-        | Create a bookmark folder for future Makerchip projects, and bookmark this
-        | project with a name you'll recognize.
-  :markdown
-    Edits can only be made to your project from your computer, but you can share a project URL
-    with someone else, and they can see your work and clone your project to make edits.
+        | Save your project and bookmark the new project URL if saved to the cloud.
   a(name="structure")
   :markdown
     ## TL-Verilog File Structure
     The file may be a Verilog, SystemVerilog, or TL-Verilog file defining a module called `top`
-    with the arguments expected by Makerchip. Note, however, that Makerchip's navigation and
+    with the arguments expected by #{appConfig.product}. Note, however, that #{appConfig.product}'s navigation and
     debug features are built around TL-Verilog constructs. No diagram will be generated for
     Verilog and SystemVerilog files.
   p
@@ -251,7 +246,7 @@
     | enters SystemVerilog context.
     | This example was converted from SystemVerilog and
     | contains SystemVerilog type declarations. The module interface is always provided as
-    | SystemVerilog code. Makerchip expects a module called
+    | SystemVerilog code. #{appConfig.product} expects a module called
     <code> top
     | to be defined with parameters for
     <code> clk
@@ -277,5 +272,5 @@
   :markdown
     ## Wrap-Up
     
-    You now know your way around Makerchip!  Subsequent tutorials will walk you through the features
+    You now know your way around #{appConfig.product}!  Subsequent tutorials will walk you through the features
     of TL-Verilog, from combinational logic through transaction flows.

@@ -57,7 +57,7 @@
             $Error <= *reset ? 0 : $Error || ($mm_full != $mm);
             
             
-            // Assert these to end simulation (before Makerchip cycle limit).
+            // Assert these to end simulation (before the cycle limit).
             *passed = *cyc_cnt > 40;
             *failed = $Error;
  

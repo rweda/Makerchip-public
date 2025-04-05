@@ -3,7 +3,7 @@
   h1
     | Examples
   p
-    | Here are some sample TL-Verilog (and Verilog/SystemVerilog) Makerchip project examples.
+    | Here are some sample TL-Verilog (and Verilog/SystemVerilog) project examples.
     | Many come with visualizations in the VIZ tab. These are marked with "(VIZ)".
   h2
     | Table of Contents
@@ -85,11 +85,11 @@
   h3 Bare-Bones Templates
 
   p
-    | The template code provided in Makerchip by default, and simple Verilog templates. While Verilog code works in Makerchip, note
-    | several Makerchip features are specific to TL-Verilog, and some tabs will show a red X after compilation of Verilog code.
+    | The template code provided in #{appConfig.product} by default, and simple Verilog templates. While Verilog code works in #{appConfig.product}, note
+    | several #{appConfig.product} features are specific to TL-Verilog, and some tabs will show a red X after compilation of Verilog code.
     | This is expected behavior.
   button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/module/IDE/default.tlv\")")
-    | Makerchip Default Template
+    | #{appConfig.product} Default Template
   button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/template.sv\")")
     | Pure Verilog Template
   button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/sv_template.tlv\")")
@@ -100,7 +100,7 @@
   h3 SystemVerilog Testbench
 
   p
-    | To keep things simple, most Makerchip examples include testbench content (stimulus and checking) within the logic of the example.
+    | To keep things simple, most examples include testbench content (stimulus and checking) within the logic of the example.
     | In real-world usage, TL-Verilog would define hardware logic within a module, and an outer testbench module would instantiate this module
     | to test it. This example illustrates this.
   button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/sv_tb_example.tlv\")")
@@ -184,7 +184,7 @@
   button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/pythagorean_example.tlv\")")
     | Pythagorean Theorem (VIZ)
   p
-    | You can use plain old Verilog in Makerchip if you really want to. (Some tabs will show a red X after compilation of Verilog code.)
+    | You can use plain old Verilog in #{appConfig.product} if you really want to. (Some tabs will show a red X after compilation of Verilog code.)
   button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/verilog_pyth_example.tlv\")")
     | Pythagorean Theorem Pipeline in Verilog
   a(name="mul")
@@ -227,7 +227,7 @@
 
   h4 SERV
   p
-    | These examples illustrate how to import SystemVerilog designs from external repositories and built them in Makerchip.
+    | These examples illustrate how to import SystemVerilog designs from external repositories and built them in #{appConfig.product}.
   p
     | Olof Kindgren's
     <a>(href="https://github.com/olofk/serv", target="_blank") SERV core
@@ -458,7 +458,7 @@
   p
     | Visit the
     <a>(href="https://github.com/stevehoover/1st-CLaaS", target="_blank") 1st CLaaS repository
-    | to learn how you can deploy your Makerchip designs in the cloud.
+    | to learn how you can deploy your #{appConfig.product} designs in the cloud.
   
 
   h2 Reference

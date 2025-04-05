@@ -465,7 +465,7 @@ m4_makerchip_module
                                $RETAIN;
 
          
-   // Assert these to end simulation (before Makerchip cycle limit).
+   // Assert these to end simulation (before the cycle limit).
 !  *passed = ! *reset && |fetch/instr>>5$Pc == 12'hfff;
 !  *failed = ! *reset && (*cyc_cnt > 1000 || (! |fetch/instr>>3$reset && |fetch/instr>>6$valid_illegal));
 \SV

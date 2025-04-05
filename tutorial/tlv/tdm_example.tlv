@@ -45,7 +45,7 @@
          $error = $reset ? 0 : >>1$error || ($valid && ($packet_in != $packet_out));
    
    
-         // Assert these to end simulation (before Makerchip cycle limit).
+         // Assert these to end simulation (before the cycle limit).
          *passed = *cyc_cnt > 40;
          *failed = *cyc_cnt > 30 && $valid && $error;
 

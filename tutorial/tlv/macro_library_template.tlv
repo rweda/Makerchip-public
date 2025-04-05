@@ -5,7 +5,8 @@
    */
 
 \m5
-   / A starting template/example for developing a TL-Verilog library file.
+   / A starting template/example for developing a TL-Verilog library file
+   / for use in the Makerchip IDE.
    /
    / This file contains:
    /   o a description of its use from a Verilog/SystemVerilog project

@@ -215,7 +215,7 @@
       )
    
    
-   // Assert these to end simulation (before Makerchip cycle limit).
+   // Assert these to end simulation (before the cycle limit).
    *passed = *cyc_cnt > 40;
    *failed = 1'b0;
          

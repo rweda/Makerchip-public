@@ -44,7 +44,7 @@ m4_include_url(['https://raw.githubusercontent.com/stevehoover/tlv_flow_lib/221c
    m4+array1r1w(/top, /entry, |wr, @0, $wr_en, $entry, |rd, @1, $rd_en, $entry, $ANY, /trans)
 
 
-   // Assert these to end simulation (before Makerchip cycle limit).
+   // Assert these to end simulation (before the cycle limit).
    *passed = *cyc_cnt > 50;
    *failed = 1'b0;
 

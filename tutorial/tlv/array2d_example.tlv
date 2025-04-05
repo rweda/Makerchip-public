@@ -144,7 +144,7 @@ m4_include_url(['https://raw.githubusercontent.com/stevehoover/tlv_flow_lib/aa1f
                    | /mismatch$data2);
       
       
-   // Assert these to end simulation (before Makerchip cycle limit).
+   // Assert these to end simulation (before the cycle limit).
    *passed = *cyc_cnt > 50;
    *failed = *cyc_cnt > 4 && |rd>>2$error;
 

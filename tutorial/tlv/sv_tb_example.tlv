@@ -2,14 +2,14 @@
 \SV
    // <Your permissive open-source license here>
 
-   // A starting template/example for developing a Verilog/SystemVerilog/TL-Verilog module within Makerchip, using a
+   // A starting template/example for developing a Verilog/SystemVerilog/TL-Verilog module, using a
    // Verilog testbench.
    //
-   // The testbench is defined within a Verilog module that uses Makerchip's required standard interfaces to control simulation.
+   // The testbench is defined within a Verilog module that uses the IDE's required standard interfaces to control simulation.
    // It instantiates the design under test (DUT) module.
    //
    // Note:
-   //   Currently, TL-Verilog can be used to define the logic within a single module in each file, and Makerchip is limited
+   //   Currently, TL-Verilog can be used to define the logic within a single module in each file, and the IDE is limited
    //   to a single source file. So it is not possible to use TL-Verilog for both testbench and design under test (DUT).
    //   Here, we use TL-Verilog for the DUT. To use TL-Verilog for both testbench and DUT, consider developing a TL-Verilog
    //   library file (or check with Redwood EDA, LLC regarding recent developments).
@@ -28,7 +28,7 @@
    // Note that Verilator (compiler/simulator) only supports synthesizable SystemVerilog.
 
    // Testbench.
-   m4_makerchip_module   // Compile within Makerchip to see expanded module definition.
+   m4_makerchip_module   // Compile to see expanded module definition in NAV-TLV.
       logic run;          // Assert to start the series.
       logic [31:0] val;   // The value from the Fibonacci Series.
 
