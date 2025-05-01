@@ -14,12 +14,11 @@
 //
 
 // For |default$lfsr.
-logic [LFSR_WIDTH-1:0] DEFAULT_lfsr_a1,
-                       DEFAULT_lfsr_a2;
+logic [LFSR_WIDTH-1:0] DEFAULT_lfsr_a0,
+                       DEFAULT_lfsr_a1;
 
 // For |default$reset.
-logic DEFAULT_reset_a0,
-      DEFAULT_reset_a1;
+logic DEFAULT_reset_a0;
 
 
 
@@ -29,10 +28,7 @@ logic DEFAULT_reset_a0,
    //
 
       // Staging of $lfsr.
-      always_ff @(posedge clk) DEFAULT_lfsr_a2[LFSR_WIDTH-1:0] <= DEFAULT_lfsr_a1[LFSR_WIDTH-1:0];
-
-      // Staging of $reset.
-      always_ff @(posedge clk) DEFAULT_reset_a1 <= DEFAULT_reset_a0;
+      always_ff @(posedge clk) DEFAULT_lfsr_a1[LFSR_WIDTH-1:0] <= DEFAULT_lfsr_a0[LFSR_WIDTH-1:0];
 
 
 
@@ -50,8 +46,8 @@ logic DEFAULT_reset_a0,
       // Scope: |default
       //
       if (1) begin : \|default 
-         logic [LFSR_WIDTH-1:0] \@1$lfsr ;
-         assign \@1$lfsr = DEFAULT_lfsr_a1;
+         logic [LFSR_WIDTH-1:0] \@0$lfsr ;
+         assign \@0$lfsr = DEFAULT_lfsr_a0;
          logic  \@0$reset ;
          assign \@0$reset = DEFAULT_reset_a0;
       end

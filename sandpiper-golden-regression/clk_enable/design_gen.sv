@@ -312,6 +312,8 @@ logic [7:0] PIPE2_Copy_eight_a3;
          // Scope: /copy
          //
          if (1) begin : \/copy 
+            logic  \@0$ANY ;
+            assign \@0$ANY  = 1'b1;
             logic [7:0] \@2$Five ;
             assign \@2$Five = PIPE2_Copy_Five_a2;
             logic [7:0] \@2$Four ;

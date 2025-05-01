@@ -17,12 +17,11 @@
 //
 
 // For |default$lfsr.
-wire [LFSR_WIDTH-1:0] DEFAULT_lfsr_a1;
-reg  [LFSR_WIDTH-1:0] DEFAULT_lfsr_a2;
+wire [LFSR_WIDTH-1:0] DEFAULT_lfsr_a0;
+reg  [LFSR_WIDTH-1:0] DEFAULT_lfsr_a1;
 
 // For |default$reset.
 wire DEFAULT_reset_a0;
-reg  DEFAULT_reset_a1;
 
 
 
@@ -32,10 +31,7 @@ reg  DEFAULT_reset_a1;
    //
    generate if (1) begin : L1gen_DEFAULT
       // Staging of $lfsr.
-      always @(posedge clk) DEFAULT_lfsr_a2[LFSR_WIDTH-1:0] <= DEFAULT_lfsr_a1[LFSR_WIDTH-1:0];
-
-      // Staging of $reset.
-      always @(posedge clk) DEFAULT_reset_a1 <= DEFAULT_reset_a0;
+      always @(posedge clk) DEFAULT_lfsr_a1[LFSR_WIDTH-1:0] <= DEFAULT_lfsr_a0[LFSR_WIDTH-1:0];
 
    end endgenerate
 
@@ -55,8 +51,8 @@ generate
       // Scope: |default
       //
       if (1) begin : \|default 
-         wire [LFSR_WIDTH-1:0] \@1$lfsr ;
-         assign \@1$lfsr = DEFAULT_lfsr_a1;
+         wire [LFSR_WIDTH-1:0] \@0$lfsr ;
+         assign \@0$lfsr = DEFAULT_lfsr_a0;
          wire  \@0$reset ;
          assign \@0$reset = DEFAULT_reset_a0;
       end

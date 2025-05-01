@@ -1,4 +1,4 @@
-\TLV_version 1b: tl-x.org
+\TLV_version [\source run/gen/running_avg/pseudo_rand.tlv] 1d: tl-x.org
 \SV
 /*
 Copyright (c) 2014, Steven F. Hoover
@@ -59,9 +59,8 @@ bit [256:0] SEED = 257'h0_7163e168_713d5431_6684e132_5cd84848_f3048b46_76874654_
    |default
       @0
          $reset = reset;
+         $lfsr[LFSR_WIDTH-1:0] = $reset ? *SEED : {>>1$lfsr[LFSR_WIDTH-2:0], 1'b0} ^ ({LFSR_WIDTH{>>1$lfsr[LFSR_WIDTH-1]}} & *LFSR_POLY);
       @1
-         $lfsr[LFSR_WIDTH-1:0] = $reset ? *SEED : {$lfsr#+1[LFSR_WIDTH-2:0], 1'b0} ^ ({LFSR_WIDTH{$lfsr#+1[LFSR_WIDTH-1]}} & *LFSR_POLY);
-      @2
          *rand_vect = $lfsr[WIDTH-1:0];
 
 \SV

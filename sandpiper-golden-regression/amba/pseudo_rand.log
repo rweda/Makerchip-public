@@ -1,6 +1,6 @@
 INFORM(0) (PROD_INFO):
 	SandPiper(TM)
-	(DEV) Run as: "java -jar sandpiper.jar --noversion --webContent  --debugSigs --nav --graphTrans --compiler=modelsim -p default --outdir=run/gen/amba -i run/gen/amba/pseudo_rand.m4out.tlv -o pseudo_rand.sv
+	(DEV) Run as: "java -jar sandpiper.jar --noversion --webContent  --debugSigs --compiler=modelsim -p default --outdir=run/gen/amba -i run/gen/amba/pseudo_rand.m4out.tlv -o pseudo_rand.sv
 	For help, including product info, run with -h.
 
 INFORM(0) (LICENSE):
@@ -11,14 +11,4 @@ INFORM(0) (FILES):
 	to produce:
 		Translated HDL File: "run/gen/amba/pseudo_rand.sv"
 		Generated HDL File: "run/gen/amba/pseudo_rand_gen.sv"
-		Transaction Flow Graph (Dot) File: "run/gen/amba/pseudo_rand.m4out_trans.dot"
-		Navigation Environment: "run/gen/amba/pseudo_rand.m4out_nav.html"
-
-INFORM(0) (VERSION): File 'run/gen/amba/pseudo_rand.m4out.tlv' Line 1 (char 14)
-	+-------------vv--------------------------
-	>\TLV_version 1b: tl-x.org
-	+-------------^^--------------------------
-	This version of SandPiper can read this TL-X Version (1b),
-	but your version and license support TL-X 1d.
-	To up-rev this file to TL-X 1d use "--scrub".
 

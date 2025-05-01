@@ -29,7 +29,7 @@
                   "children": [
                      {
                         "type": "VIZ_ALPHA",
-                        "src": "\n                  Some viz content w/ escapes: \\ \"  \" ' .'\n                  // And comments w/ escapes: \\ \"  \" '' .'\n                  And some more./* >bad|ref$sig1 '>bad|ref$sig2'\n                  end */\n                  And some more content  this.sigRef(`>core[${this.scopes[\"core\"].index}]>inst[${this.scopes[\"inst\"].index}]|pipe2$out`, 12) " }
+                        "src": "\n                  Some viz content w/ escapes: \\ \"  \" ' .'\n                  // And comments w/ escapes: \\ \"  \" '' .'\n                  And some more./* >bad|ref$sig1 '>bad|ref$sig2'\n                  end */\n                  And some more content  this.sigRef(`>core[${this.getIndex(\"core\")}]>inst[${this.getIndex(\"inst\")}]|pipe2$out`, 12) " }
                   ]
                },
                {

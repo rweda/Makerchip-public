@@ -12,11 +12,3 @@ INFORM(0) (FILES):
 		Translated HDL File: "run/gen/grid_network/pseudo_rand.sv"
 		Generated HDL File: "run/gen/grid_network/pseudo_rand_gen.sv"
 
-INFORM(0) (VERSION): File 'run/gen/grid_network/pseudo_rand.m4out.tlv' Line 1 (char 14)
-	+-------------vv--------------------------
-	>\TLV_version 1b: tl-x.org
-	+-------------^^--------------------------
-	This version of SandPiper can read this TL-X Version (1b),
-	but your version and license support TL-X 1d.
-	To up-rev this file to TL-X 1d use "--scrub".
-

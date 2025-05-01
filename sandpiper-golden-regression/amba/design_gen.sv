@@ -259,6 +259,8 @@ generate
             // Scope: >return_transfer
             //
             if (1) begin : \>return_transfer 
+               logic  \@1$ANY ;
+               assign \@1$ANY  = 1'b1;
                logic [31:0] \@1$hrdata ;
                assign \@1$hrdata = BUS_Master_ReturnTransfer_hrdata_a1;
                logic  \@1$hreadyout ;
@@ -296,6 +298,8 @@ generate
          // Scope: >mux
          //
          if (1) begin : \>mux 
+            logic  \@1$ANY ;
+            assign \@1$ANY  = 1'b1;
             logic [31:0] \@1$hrdata ;
             assign \@1$hrdata = BUS_Mux_hrdata_a1;
             logic  \@1$hreadyout ;
@@ -331,6 +335,8 @@ generate
             // Scope: >transfer
             //
             if (1) begin : \>transfer 
+               logic  \@0$ANY ;
+               assign \@0$ANY  = 1'b1;
                logic [7:2] \@0$haddr ;
                assign \@0$haddr = BUS_Slave_Transfer_haddr_a0[slave];
                logic [31:0] \@1$hrdata ;

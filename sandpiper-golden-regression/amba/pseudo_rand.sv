@@ -1,4 +1,4 @@
-`line 2 "pseudo_rand.m4out.tlv" 0
+`line 2 "pseudo_rand.tlv" 0
 
 /*
 Copyright (c) 2014, Steven F. Hoover
@@ -59,10 +59,9 @@ bit [256:0] SEED = 257'h0_7163e168_713d5431_6684e132_5cd84848_f3048b46_76874654_
    //_|default
       //_@0
          assign DEFAULT_reset_a0 = reset;
+         assign DEFAULT_lfsr_a0[LFSR_WIDTH-1:0] = DEFAULT_reset_a0 ? SEED : {DEFAULT_lfsr_a1[LFSR_WIDTH-2:0], 1'b0} ^ ({LFSR_WIDTH{DEFAULT_lfsr_a1[LFSR_WIDTH-1]}} & LFSR_POLY);
       //_@1
-         assign DEFAULT_lfsr_a1[LFSR_WIDTH-1:0] = DEFAULT_reset_a1 ? SEED : {DEFAULT_lfsr_a2[LFSR_WIDTH-2:0], 1'b0} ^ ({LFSR_WIDTH{DEFAULT_lfsr_a2[LFSR_WIDTH-1]}} & LFSR_POLY);
-      //_@2
-         assign rand_vect = DEFAULT_lfsr_a2[WIDTH-1:0];
+         assign rand_vect = DEFAULT_lfsr_a1[WIDTH-1:0];
 
 //_\SV
 

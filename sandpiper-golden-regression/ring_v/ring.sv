@@ -554,6 +554,8 @@ generate
          // Scope: |fo
          //
          if (1) begin : \|fo 
+            wire  \//?$trans_valid@0$ANY ;
+            assign \//?$trans_valid@0$ANY  = 1'b1;
             wire  \//@0$blocked ;
             assign \//@0$blocked = Stop_FO_blocked_a0[stop];
             wire [7:0] \//?$trans_valid@0$data ;
@@ -580,6 +582,8 @@ generate
                // Scope: >accum
                //
                if (1) begin : \>accum 
+                  wire  \////@0$ANY ;
+                  assign \////@0$ANY  = 1'b1;
                   wire [7:0] \////@0$data ;
                   assign \////@0$data = Stop_FO_Entry_Accum_data_a0[stop][entry];
                   wire [RING_STOPS_WIDTH-1:0] \////@0$dest ;
@@ -592,6 +596,8 @@ generate
                // Scope: >read_masked
                //
                if (1) begin : \>read_masked 
+                  wire  \////@0$ANY ;
+                  assign \////@0$ANY  = 1'b1;
                   wire [7:0] \////@0$data ;
                   assign \////@0$data = Stop_FO_Entry_ReadMasked_data_a0[stop][entry];
                   wire [RING_STOPS_WIDTH-1:0] \////@0$dest ;
@@ -605,6 +611,8 @@ generate
             // Scope: >fifo_head
             //
             if (1) begin : \>fifo_head 
+               wire  \///?$trans_avail@0$ANY ;
+               assign \///?$trans_avail@0$ANY  = 1'b1;
                wire [7:0] \///?$trans_avail@0$data ;
                assign \///?$trans_avail@0$data = Stop_FO_FifoHead_data_a0[stop];
                wire [RING_STOPS_WIDTH-1:0] \///?$trans_avail@0$dest ;
@@ -619,6 +627,8 @@ generate
             // Scope: >head
             //
             if (1) begin : \>head 
+               wire  \///?$trans_avail@0$ANY ;
+               assign \///?$trans_avail@0$ANY  = 1'b1;
                wire [7:0] \///?$trans_avail@0$data ;
                assign \///?$trans_avail@0$data = Stop_FO_Head_data_a0[stop];
                wire [RING_STOPS_WIDTH-1:0] \///?$trans_avail@0$dest ;
@@ -673,6 +683,8 @@ generate
             // Scope: >entry[(6)-1:0]
             //
             for (entry = 0; entry <= (6)-1; entry=entry+1) begin : \>entry 
+               wire  \///@1$ANY ;
+               assign \///@1$ANY  = 1'b1;
                wire  \///@1$State ;
                assign \///@1$State = Stop_INPIPE_Entry_State_a1[stop][entry];
                wire [7:0] \///@1$data ;
@@ -706,6 +718,8 @@ generate
          // Scope: |outpipe
          //
          if (1) begin : \|outpipe 
+            wire  \//?$trans_valid@1$ANY ;
+            assign \//?$trans_valid@1$ANY  = 1'b1;
             wire  \//@0$blocked ;
             assign \//@0$blocked = Stop_OUTPIPE_blocked_a0[stop];
             wire [7:0] \//?$trans_valid@1$data ;
@@ -722,6 +736,8 @@ generate
          // Scope: |rg
          //
          if (1) begin : \|rg 
+            wire  \//?$valid@1$ANY ;
+            assign \//?$valid@1$ANY  = 1'b1;
             wire [7:0] \//?$valid@1$data ;
             assign \//?$valid@1$data = Stop_RG_data_a1[stop];
             wire [RING_STOPS_WIDTH-1:0] \//@0$dest ;
