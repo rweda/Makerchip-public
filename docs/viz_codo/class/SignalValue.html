@@ -1,0 +1,1597 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset='UTF-8'>
+  <title>Classes for Redwood EDA, LLC&#39;s Visual Debug Feature</title>
+  <script src='../javascript/application.js'></script>
+  <script src='../javascript/search.js'></script>
+  <link rel='stylesheet' href='../stylesheets/application.css' type='text/css'>
+</head>
+  <body>
+    <div id='base' data-path='../'></div>
+<div id='header'>
+  <div id='menu'>
+    <a href='../extra/public/README.md.html' title='VIZ Classes'>
+      VIZ Classes
+    </a>
+    &raquo;
+    <a href='../alphabetical_index.html' title='Index'>
+      Index
+    </a>
+    &raquo;
+    <span class='title'>SignalValue</span>
+  </div>
+</div>
+    <div id='content'>
+      <h1>
+        Class:
+        SignalValue
+      </h1>
+      <table class='box'>
+        <tr>
+          <td>Defined in:</td>
+          <td>..&#47;doc&#47;cleaned_coffee_public&#47;SignalValue.coffee</td>
+        </tr>
+      </table>
+      <h2>Overview</h2>
+      <div class='docstring'>
+  <p>This class is used to access the values of signals in a (currently VCD format) trace. It represents a
+signal at a cycle.</p><p>This class provides methods for:</p><ul>
+<li>transitioning to different cycles</li>
+<li>getting the value of the signal at the current cycle in various formats (<code>as*</code> methods)</li>
+</ul><p>Redwood EDA, LLC&#39;s Visual Debug feature supports special syntax for accessing TL-Verilog
+&quot;pipesignal&quot; values (e.g. <code>&#39;$sig&#39;</code>) that produces a <a href='../class/SignalValue.html'>SignalValue</a> object. TL-Verilog models are
+&quot;timing abstract&quot;, and Visual Debug visualizations should be timing abstract as well, to the
+extent possible. To construct timing-abstract visualizations, it is important to consider
+the following:</p><ul>
+<li>Cycle numbers must be used only in a relative sense and not between different signals. The
+current cycle number depends on the pipestage in which the signal was assigned and is thus not timing
+abstract.</li>
+<li>The beginning and end of the trace require careful consideration, as they also reflect absolute time
+and are not timing abstract. Traces may not contain the data one would wish to represent at the end
+of the trace, and it may be valuable to illustrate this visually.</li>
+</ul><p>Though &quot;cycle&quot; values can be phase-granular (i.e. cycle x.5), the circuit is generally assumed to be
+flip-flop-base (no latches) and synchronous to a single clock.</p><p>The term &quot;transition&quot; refers to a value or validity change from one cycle to the next (regardless of
+glitches)</p>
+</div>
+<div class='tags'>
+</div>
+      <h2>Property Summary</h2>
+      <dl class='properties'>
+        <dt id='v-property'>
+          <span class='signature'>
+            (Number)
+            <b>
+              v
+            </b>
+          </span>
+        </dt>
+        <dd class='desc'>
+          v (read-only) A short-hand version of <code>asInt()</code>. Unlike <code>asInt()</code>, this throws a <code>SignalValue.TypeError</code> for signals of type <code>real</code> and <code>string</code> (as defined in the VCD file). 
+        </dd>
+      </dl>
+      <h2>Instance Method Summary</h2>
+      <ul class='summary'>
+  <li>
+    <span class='signature'>
+      <a href='#getValueStr-dynamic'>
+        #
+(String)
+<b>getValueStr</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Get the value string at current time. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#isValid-dynamic'>
+        #
+(void)
+<b>isValid</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Is this signal valid (according to when conditions) at the current time. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#offEnd-dynamic'>
+        #
+(Boolean)
+<b>offEnd</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Indicates whether the current cycle is off the end of the trace. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#offBeginning-dynamic'>
+        #
+(Boolean)
+<b>offBeginning</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Indicates whether the current cycle is off the beginning of the trace. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#inTrace-dynamic'>
+        #
+(Boolean)
+<b>inTrace</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Indicates whether the current cycle is within the bounds of this trace. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#getTransitionCycle-dynamic'>
+        #
+(Number)
+<b>getTransitionCycle</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Gets the cycle at which this signal transitioned to its current value. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#getNextTransitionValueStr-dynamic'>
+        #
+(String, undefined)
+<b>getNextTransitionValueStr</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Gets the next value string (as in the VCD file) of this signal after its next transition. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#getNextTransitionCycle-dynamic'>
+        #
+(Number)
+<b>getNextTransitionCycle</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Gets the cycle of the next transition of this signal. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#getPrevTransitionValueStr-dynamic'>
+        #
+(String, undefined)
+<b>getPrevTransitionValueStr</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Gets the value string (as in VCD) of this signal before it transitioned to its current value/validity. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#isPrevTransitionValid-dynamic'>
+        #
+(Boolean, undefined)
+<b>isPrevTransitionValid</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Gets the validity of this signal before it transitioned to its current value/validity. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#isNextTransitionValid-dynamic'>
+        #
+(Boolean, undefined)
+<b>isNextTransitionValid</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Gets the validity of this signal after its next transition. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#getCycle-dynamic'>
+        #
+(Number)
+<b>getCycle</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Gets the current cycle of this <a href='../class/SignalValue.html'>SignalValue</a>. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#stepTransition-dynamic'>
+        #
+(SignalValue)
+<b>stepTransition</b><span>(steps = 1)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Step forward (positive) or backward (negative) the given number of transitions (value changes). 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#goTo-dynamic'>
+        #
+(SignalValue)
+<b>goTo</b><span>(cyc)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Go to the given cycle. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#goToSimStart-dynamic'>
+        #
+(SignalValue)
+<b>goToSimStart</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Go to the beginning of the trace. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#goToSimEnd-dynamic'>
+        #
+(SignalValue)
+<b>goToSimEnd</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Go to the beginning of the trace. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#step-dynamic'>
+        #
+(SignalValue)
+<b>step</b><span>(cyc = 1)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Increment the current cycle by the given amount (positive or negative). 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#forwardToValue-dynamic'>
+        #
+(boolean)
+<b>forwardToValue</b><span>(val)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Step forward at least one cycle until the signal&#39;s value asInt is the given value or the end of the trace is reached (stopping offEnd).
+
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#backToValue-dynamic'>
+        #
+(boolean)
+<b>backToValue</b><span>(val)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Step backward at least one cycle until the signal&#39;s <code>asInt()</code> value is the given value or the beginning of the trace is reached (stopping with <code>offBeginning() == true</code>).
+
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#asBinaryStr-dynamic'>
+        #
+(String)
+<b>asBinaryStr</b><span>(def)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Get the signal value as a binary string with leading zeros. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#asHexStr-dynamic'>
+        #
+(String)
+<b>asHexStr</b><span>(leadingZeroStr = &quot;0&quot;, def = void 0)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Get the signal value as a string of hexadecimal digits, w/ X for digits with all non-0/1 bits and x for digits with any non 0/1 bits.
+
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#asIntStr-dynamic'>
+        #
+(String)
+<b>asIntStr</b><span>(leadingZeroStr = &quot;&quot;, signed = false, def = void 0)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Get the signal value as a decimal string. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#asString-dynamic'>
+        #
+(String)
+<b>asString</b><span>(def)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Get the signal value interpreted as a SystemVerilog string type. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#asBool-dynamic'>
+        #
+(Boolean)
+<b>asBool</b><span>(def)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Get the signal value as a boolean, or null if dont-care or not a single bit. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#asInt-dynamic'>
+        #
+(Number)
+<b>asInt</b><span>(def)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Get the signal value as an integer Number. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#asSignedInt-dynamic'>
+        #
+(Number)
+<b>asSignedInt</b><span>(def)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Get the signal value as a signed integer Number, interpreted the bits as a two&#39;s complement signed number. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#asBigInt-dynamic'>
+        #
+(BigInt)
+<b>asBigInt</b><span>(def)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Get the signal value as a JavaScript BigInt. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#asReal-dynamic'>
+        #
+(Number)
+<b>asReal</b><span>(def)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Get the 64-bit signal interpreted as an SV &quot;real&quot; signal. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#asRealFixed-dynamic'>
+        #
+(Number)
+<b>asRealFixed</b><span>(places, def)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Get the 64-bit signal interpreted as an SV &quot;real&quot;, rounded to a fixed decimal place.
+
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#toString-dynamic'>
+        #
+(String)
+<b>toString</b><span>(space = 1000)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Return the string representation of the signal (as represented in the waveform viewer). 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#valueOf-dynamic'>
+        #
+(Number)
+<b>valueOf</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Return the numeric value of the signal. 
+    </span>
+  </li>
+</ul>
+      <h2>Instance Method Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='getValueStr-dynamic'>
+      #
+(String)
+<b>getValueStr</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Get the value string at current time.</p>
+</div>
+<div class='tags'>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>String</tt>
+      )
+      &mdash;
+      <span class='desc'>value string </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='isValid-dynamic'>
+      #
+(void)
+<b>isValid</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Is this signal valid (according to when conditions) at the current time.</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='offEnd-dynamic'>
+      #
+(Boolean)
+<b>offEnd</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Indicates whether the current cycle is off the end of the trace.</p><p><em>Warning</em>: This method is not timing-abstract.</p>
+</div>
+<div class='tags'>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>Boolean</tt>
+      )
+      &mdash;
+      <span class='desc'><code>true</code> if current cycle is off the end of the trace. </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='offBeginning-dynamic'>
+      #
+(Boolean)
+<b>offBeginning</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Indicates whether the current cycle is off the beginning of the trace.</p><p><em>Warning</em>: This method is not timing-abstract.</p>
+</div>
+<div class='tags'>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>Boolean</tt>
+      )
+      &mdash;
+      <span class='desc'><code>true</code> if current cycle is off the beginning of the trace. </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='inTrace-dynamic'>
+      #
+(Boolean)
+<b>inTrace</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Indicates whether the current cycle is within the bounds of this trace.</p><p><em>Warning</em>: This method is not timing-abstract.</p>
+</div>
+<div class='tags'>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>Boolean</tt>
+      )
+      &mdash;
+      <span class='desc'>true if current cycle is within (inclusive) the bounds of this trace. </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='getTransitionCycle-dynamic'>
+      #
+(Number)
+<b>getTransitionCycle</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Gets the cycle at which this signal transitioned to its current value.</p><p>Note: This method is not timing-abstract at the beginning of the trace. (Reset may create predictability.)</p>
+</div>
+<div class='tags'>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>Number</tt>
+      )
+      &mdash;
+      <span class='desc'>the previous transition cycle </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='getNextTransitionValueStr-dynamic'>
+      #
+(String, undefined)
+<b>getNextTransitionValueStr</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Gets the next value string (as in the VCD file) of this signal after its next transition.</p><p>Note: This method is not timing-abstract at the end of the trace.</p>
+</div>
+<div class='tags'>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>String, undefined</tt>
+      )
+      &mdash;
+      <span class='desc'>the next value </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='getNextTransitionCycle-dynamic'>
+      #
+(Number)
+<b>getNextTransitionCycle</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Gets the cycle of the next transition of this signal.</p><p>Note: This method is not timing-abstract at the end of the trace.</p>
+</div>
+<div class='tags'>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>Number</tt>
+      )
+      &mdash;
+      <span class='desc'>the cycle of the next transition </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='getPrevTransitionValueStr-dynamic'>
+      #
+(String, undefined)
+<b>getPrevTransitionValueStr</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Gets the value string (as in VCD) of this signal before it transitioned to its current value/validity.</p><p>Note: This method is not timing-abstract at the beginning of the trace. (Reset may create predictability.)</p>
+</div>
+<div class='tags'>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>String, undefined</tt>
+      )
+      &mdash;
+      <span class='desc'>the previous value string </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='isPrevTransitionValid-dynamic'>
+      #
+(Boolean, undefined)
+<b>isPrevTransitionValid</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Gets the validity of this signal before it transitioned to its current value/validity.</p><p>Note: This method is not timing-abstract at the beginning of the trace. (Reset may create predictability.)</p>
+</div>
+<div class='tags'>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>Boolean, undefined</tt>
+      )
+      &mdash;
+      <span class='desc'>the previous validity </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='isNextTransitionValid-dynamic'>
+      #
+(Boolean, undefined)
+<b>isNextTransitionValid</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Gets the validity of this signal after its next transition.</p><p>Note: This method is not timing-abstract at the end of the trace.</p>
+</div>
+<div class='tags'>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>Boolean, undefined</tt>
+      )
+      &mdash;
+      <span class='desc'>the next validity </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='getCycle-dynamic'>
+      #
+(Number)
+<b>getCycle</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Gets the current cycle of this <a href='../class/SignalValue.html'>SignalValue</a>.</p><p><em>Warning</em>: This method is not timing-abstract.</p>
+</div>
+<div class='tags'>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>Number</tt>
+      )
+      &mdash;
+      <span class='desc'>the current cycle of this <a href='../class/SignalValue.html'>SignalValue</a> </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='stepTransition-dynamic'>
+      #
+(SignalValue)
+<b>stepTransition</b><span>(steps = 1)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Step forward (positive) or backward (negative) the given number of transitions (value changes).
+A step of 0 steps &lt;= 0 cycles to the transition resulting in the current value.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>steps</span>
+      <span class='type'>
+        (
+          <tt>int</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>the number of transitions to step </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt><a href='../class/SignalValue.html'>SignalValue</a></tt>
+      )
+      &mdash;
+      <span class='desc'>this <a href='../class/SignalValue.html'>SignalValue</a> (for chaining) </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='goTo-dynamic'>
+      #
+(SignalValue)
+<b>goTo</b><span>(cyc)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Go to the given cycle.</p><p><em>Warning</em>: This method is not timing-abstract.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>cyc</span>
+      <span class='type'>
+        (
+          <tt>int</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>the cycle to go to. </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt><a href='../class/SignalValue.html'>SignalValue</a></tt>
+      )
+      &mdash;
+      <span class='desc'>this object (for chaining) </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='goToSimStart-dynamic'>
+      #
+(SignalValue)
+<b>goToSimStart</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Go to the beginning of the trace.</p><p><em>Warning</em>: This method is not timing-abstract.</p>
+</div>
+<div class='tags'>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt><a href='../class/SignalValue.html'>SignalValue</a></tt>
+      )
+      &mdash;
+      <span class='desc'>this object (for chaining) </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='goToSimEnd-dynamic'>
+      #
+(SignalValue)
+<b>goToSimEnd</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Go to the beginning of the trace.</p><p><em>Warning</em>: This method is not timing-abstract.</p>
+</div>
+<div class='tags'>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt><a href='../class/SignalValue.html'>SignalValue</a></tt>
+      )
+      &mdash;
+      <span class='desc'>this object (for chaining) </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='step-dynamic'>
+      #
+(SignalValue)
+<b>step</b><span>(cyc = 1)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Increment the current cycle by the given amount (positive or negative).</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>cyc</span>
+      <span class='type'>
+        (
+          <tt>int</tt>
+        )
+      </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt><a href='../class/SignalValue.html'>SignalValue</a></tt>
+      )
+      &mdash;
+      <span class='desc'>this object (for chaining) </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='forwardToValue-dynamic'>
+      #
+(boolean)
+<b>forwardToValue</b><span>(val)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Step forward at least one cycle until the signal&#39;s value asInt is the given value
+or the end of the trace is reached (stopping offEnd).</p><p>Note: This method is not timing-abstract at the end of the trace.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>val</span>
+      <span class='type'>
+        (
+          <tt>int</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>the signal value to step to </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>boolean</tt>
+      )
+      &mdash;
+      <span class='desc'>true on success </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='backToValue-dynamic'>
+      #
+(boolean)
+<b>backToValue</b><span>(val)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Step backward at least one cycle until the signal&#39;s <code>asInt()</code> value is the given value
+or the beginning of the trace is reached (stopping with <code>offBeginning() == true</code>).</p><p>Note: This method is not timing-abstract at the beginning of the trace.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>val</span>
+      <span class='type'>
+        (
+          <tt>int</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>the signal value to step to </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>boolean</tt>
+      )
+      &mdash;
+      <span class='desc'>true on success </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='asBinaryStr-dynamic'>
+      #
+(String)
+<b>asBinaryStr</b><span>(def)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Get the signal value as a binary string with leading zeros.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>def</span>
+      <span class='type'>
+        (
+          <tt>Any</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>the value to return if outside the bounds of the trace; <code>undefined</code> by default </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>String</tt>
+      )
+      &mdash;
+      <span class='desc'>the signal value as a string of binary bits, of def. </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='asHexStr-dynamic'>
+      #
+(String)
+<b>asHexStr</b><span>(leadingZeroStr = &quot;0&quot;, def = void 0)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Get the signal value as a string of hexadecimal digits, w/ X for digits with all non-0/1 bits and x for
+digits with any non 0/1 bits.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>leadingZeroStr</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>the string to include for each leading zero, such as (&quot;0&quot;, &quot; &quot;, or &quot;&quot;). </span>
+    </li>
+    <li>
+      <span class='name'>def</span>
+      <span class='type'>
+        (
+          <tt>Any</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>the value to return if outside the bounds of the trace; undefined by default </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>String</tt>
+      )
+      &mdash;
+      <span class='desc'>the hexadecimal string </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='asIntStr-dynamic'>
+      #
+(String)
+<b>asIntStr</b><span>(leadingZeroStr = &quot;&quot;, signed = false, def = void 0)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Get the signal value as a decimal string.</p><ul>
+<li>Handles very large values safely.</li>
+<li>Handles signed/unsigned interpretation.</li>
+</ul>
+
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>leadingZeroStr</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>the padding character (e.g. &quot; &quot; or &quot;0&quot;) for fixed-width output or &quot;&quot; for no padding; &quot; &quot; is used to pad the sign character for positive signed values; default: &quot;&quot;. </span>
+    </li>
+    <li>
+      <span class='name'>signed</span>
+      <span class='type'>
+        (
+          <tt>Boolean</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>whether to treat the leading bit as sign bit (two&#39;s complement); default: false. </span>
+    </li>
+    <li>
+      <span class='name'>def</span>
+      <span class='type'>
+        (
+          <tt>Any</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>the value to return if outside the bounds of the trace or if the value contains x/z; default: undefined </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>String</tt>
+      )
+      &mdash;
+      <span class='desc'>the decimal string representing the signal value or def </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='asString-dynamic'>
+      #
+(String)
+<b>asString</b><span>(def)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Get the signal value interpreted as a SystemVerilog string type.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>def</span>
+      <span class='type'>
+        (
+          <tt>Any</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>the value to return if outside the bounds of the trace; undefined by default </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>String</tt>
+      )
+      &mdash;
+      <span class='desc'>the value of the signal interpreted as a SystemVerilog string. </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='asBool-dynamic'>
+      #
+(Boolean)
+<b>asBool</b><span>(def)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Get the signal value as a boolean, or null if dont-care or not a single bit.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>def</span>
+      <span class='type'>
+        (
+          <tt>Any</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>the value to return if outside the bounds of the trace or if the value contains x/z; undefined by default </span>
+    </li>
+  </ul>
+  <h3>Throws:</h3>
+  <ul class='throw'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt><a href='../class/SignalValue/TypeError.html'>SignalValue.TypeError</a></tt>
+      )
+      &mdash;
+      <span class='desc'>if the signal is not a single bit </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>Boolean</tt>
+      )
+      &mdash;
+      <span class='desc'>the signal value as a boolean or def </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='asInt-dynamic'>
+      #
+(Number)
+<b>asInt</b><span>(def)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Get the signal value as an integer Number.</p><ul>
+<li>Returns NaN if value contains x/z.</li>
+<li>Throws error if width &gt; 53 bits.</li>
+</ul>
+
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>def</span>
+      <span class='type'>
+        (
+          <tt>Any</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>default value if not in trace </span>
+    </li>
+  </ul>
+  <h3>Throws:</h3>
+  <ul class='throw'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt><a href='../class/SignalValue/TypeError.html'>SignalValue.TypeError</a></tt>
+      )
+      &mdash;
+      <span class='desc'>if the signal is wider than 53 bits </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>Number</tt>
+      )
+      &mdash;
+      <span class='desc'>the integer value </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='asSignedInt-dynamic'>
+      #
+(Number)
+<b>asSignedInt</b><span>(def)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Get the signal value as a signed integer Number, interpreted the bits as a two&#39;s complement signed number.</p><ul>
+<li>Returns NaN if value contains x/z.</li>
+<li>Throws error if width &gt; 53 bits.</li>
+</ul>
+
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>def</span>
+      <span class='type'>
+        (
+          <tt>Any</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>default value if not in trace </span>
+    </li>
+  </ul>
+  <h3>Throws:</h3>
+  <ul class='throw'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt><a href='../class/SignalValue/TypeError.html'>SignalValue.TypeError</a></tt>
+      )
+      &mdash;
+      <span class='desc'>if the signal is wider than 53 bits </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>Number</tt>
+      )
+      &mdash;
+      <span class='desc'>the signed integer value </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='asBigInt-dynamic'>
+      #
+(BigInt)
+<b>asBigInt</b><span>(def)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Get the signal value as a JavaScript BigInt.</p><ul>
+<li>Returns NaN if value contains x/z.</li>
+</ul>
+
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>def</span>
+      <span class='type'>
+        (
+          <tt>Any</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>default value if not in trace </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>BigInt</tt>
+      )
+      &mdash;
+      <span class='desc'>the integer value </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='asReal-dynamic'>
+      #
+(Number)
+<b>asReal</b><span>(def)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Get the 64-bit signal interpreted as an SV &quot;real&quot; signal.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>def</span>
+      <span class='type'>
+        (
+          <tt>Any</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>the value to return if outside the bounds of the trace; undefined by default </span>
+    </li>
+  </ul>
+  <h3>Throws:</h3>
+  <ul class='throw'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt><a href='../class/SignalValue/TypeError.html'>SignalValue.TypeError</a></tt>
+      )
+      &mdash;
+      <span class='desc'>if the signal is not 64 bits </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>Number</tt>
+      )
+      &mdash;
+      <span class='desc'>the value of the signal interpreted as an IEEE 64-bit floating-point value or NaN if the value contains x/z. </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='asRealFixed-dynamic'>
+      #
+(Number)
+<b>asRealFixed</b><span>(places, def)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Get the 64-bit signal interpreted as an SV &quot;real&quot;, rounded to a fixed
+decimal place.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>places</span>
+      <span class='type'>
+        (
+          <tt>int</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>the number of decimal places </span>
+    </li>
+    <li>
+      <span class='name'>def</span>
+      <span class='type'>
+        (
+          <tt>Any</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>the value to return if outside the bounds of the trace; undefined by default </span>
+    </li>
+  </ul>
+  <h3>Throws:</h3>
+  <ul class='throw'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt><a href='../class/SignalValue/TypeError.html'>SignalValue.TypeError</a></tt>
+      )
+      &mdash;
+      <span class='desc'>if the signal is not 64 bits </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>Number</tt>
+      )
+      &mdash;
+      <span class='desc'>the value of the signal interpreted as an IEEE 64-bit floating-point value, rounded to a fixed number of digits </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='toString-dynamic'>
+      #
+(String)
+<b>toString</b><span>(space = 1000)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Return the string representation of the signal (as represented in the waveform viewer).</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>space</span>
+      <span class='type'>
+        (
+          <tt>int</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>(opt) the available width within which to represent the value text. </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>String</tt>
+      )
+      &mdash;
+      <span class='desc'>the string representation of the signal value </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='valueOf-dynamic'>
+      #
+(Number)
+<b>valueOf</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Return the numeric value of the signal.</p><ul>
+<li>For real signals: float.</li>
+<li>For integer signals: Number (or NaN if x/z).</li>
+</ul>
+
+</div>
+<div class='tags'>
+  <h3>Throws:</h3>
+  <ul class='throw'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt><a href='../class/SignalValue/TypeError.html'>SignalValue.TypeError</a></tt>
+      )
+      &mdash;
+      <span class='desc'>if the signal is a string type </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>Number</tt>
+      )
+      &mdash;
+      <span class='desc'>the numeric value of the signal </span>
+    </li>
+  </ul>
+</div>
+  </div>
+</div>
+    </div>
+    <div id='footer'>
+  By
+  <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
+    Codo
+  </a>
+  2.1.2
+  &#10034;
+  Press H to see the keyboard shortcuts
+  &#10034;
+  <a href='http://twitter.com/netzpirat' target='_parent'>@netzpirat</a>
+  &#10034;
+  <a href='http://twitter.com/_inossidabile' target='_parent'>@_inossidabile</a>
+</div>
+<iframe id='search_frame'></iframe>
+<div id='fuzzySearch'>
+  <input type='text'>
+  <ol></ol>
+</div>
+<div id='help'>
+  <p>
+    Quickly fuzzy find classes, mixins, methods, file:
+  </p>
+  <ul>
+    <li>
+      <span>T</span>
+      Open fuzzy finder dialog
+    </li>
+  </ul>
+  <p>
+    Control the navigation frame:
+  </p>
+  <ul>
+    <li>
+      <span>L</span>
+      Toggle list view
+    </li>
+    <li>
+      <span>C</span>
+      Show class list
+    </li>
+    <li>
+      <span>I</span>
+      Show mixin list
+    </li>
+    <li>
+      <span>F</span>
+      Show file list
+    </li>
+    <li>
+      <span>M</span>
+      Show method list
+    </li>
+    <li>
+      <span>E</span>
+      Show extras list
+    </li>
+  </ul>
+  <p>
+    You can focus and blur the search input:
+  </p>
+  <ul>
+    <li>
+      <span>S</span>
+      Focus search input
+    </li>
+    <li>
+      <span>Esc</span>
+      Blur search input
+    </li>
+  </ul>
+</div>
+  </body>
+</html>

@@ -2,7 +2,7 @@
   a(name="top")
   :markdown
     # Intro to #{appConfig.product}
-    (~15 min)
+    (~20 min)
     
     In this tutorial, you will become familiar with the features of
     the #{appConfig.trademarkedProductAdjective} Integrated Development Environment (IDE).
@@ -25,38 +25,44 @@
       | Wrap-Up
     
   a(name="intro")
-  :markdown
-    ## Introduction
-    
-    The #{appConfig.product} IDE gives you a place to create any digital sequential logic you can dream
-    up faster than you ever thought possible, all within your browser. The breakthrough in productivity is twofold:
-    
-      - a tight integration of design, simulation, and debug capabilities
-      - support for Transaction-Level Verilog (TL-Verilog), in addition to Verilog and synthesizable SystemVerilog
-    
-    If you already know Verilog, SystemVerilog, or TL-Verilog, you’ll be able to use #{appConfig.product} immediately.
-    The environment is intuitive, and this tutorial will step you through it. The remaining tutorials
-    provide an introduction to TL-Verilog and it's integration with #{appConfig.product}. Knowledge
-    of Verilog/SystemVerilog is not required. Even if you
-    are already comfortable with Verilog/SystemVerilog, take the time to learn TL-Verilog. You'll be glad you did.
-    To follow the tutorials, you should already be familiar with the basic concepts of
-    synchronous digital logic design.
-    
-    Note that #{appConfig.product} requires a modern browser and works best in Google Chrome.
-    
-    Throughout these tutorials, you'll see buttons like the following, which load code
-    into the Editor and compile and simulate it. The Editor contents are replaced,
-    but you can use Ctrl-Z (undo) in the Editor to restore your original contents.
+  h2 Introduction
+
+  p  
+    | The #{appConfig.product} IDE gives you a place to create any digital sequential logic you can dream
+    | up faster than you ever thought possible, all within your browser. The breakthrough in productivity is twofold:
+  ul
+    li a tight integration of design, simulation, and debug capabilities
+    li support for Transaction-Level Verilog (TL-Verilog), in addition to Verilog and synthesizable SystemVerilog
+  p  
+    | If you already know Verilog, SystemVerilog, or TL-Verilog, you’ll be able to use #{appConfig.product} immediately.
+    | The environment is intuitive, and this tutorial will step you through it. The remaining tutorials
+    | provide an introduction to TL-Verilog and it's integration with #{appConfig.product}. Knowledge
+    | of Verilog/SystemVerilog is not required. Even if you
+    | are already comfortable with Verilog/SystemVerilog, take the time to learn TL-Verilog. You'll be glad you did.
+    | To follow the tutorials, you should already be familiar with the basic concepts of
+    | synchronous digital logic design.
+  p
+    | Note that #{appConfig.product} requires a modern browser. Some browsers do not permit access
+    | to local files.
+  p
+    | Throughout these tutorials, you'll see buttons like the following, which load code
+    | into the Editor and compile and simulate it. The Editor contents are replaced,
+    | but you can use Ctrl-Z (undo) in the Editor to restore your original contents.
   button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/makerchip_tutorial.tlv\")") Click me now to load, compile, and simulate
-  :markdown
-    The button loaded a toy CPU example based on the MIPS architecture.
-    It’s just a design to interact with. The details of the design are not important in this tutorial.
+  p
+    | The button loaded a toy CPU example based on the MIPS architecture.
+    | It’s just a design to interact with. The details of the design are not important in this tutorial.
+
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | When you complete a step, like this one, click on it to mark it complete (temporarily).
 
   a(name="ide")
-  :markdown
-    ## IDE
-    The IDE contains multiple views (initially two), each containing panes, which can be moved between views by dragging
-    their tabs.
+  h2 IDE
+  p
+    | The IDE contains multiple views (initially two), each containing panes, which can be moved between views by dragging
+    | their tabs.
   .mc-tutorial-step
     .mc-step-body
       p
@@ -76,29 +82,40 @@
     .mc-step-body
       p
         | Resize the panes by dragging the splitter bars (between the panes).
-  :markdown
-    You have the following panes:
-    
-      - **Editor**: where you edit your Verilog/SystemVerilog/TL-Verilog code
-      - **Log**: compiler and simulator output log
-      - For design navigation:
-        - **Nav TLV**: a Navigable representation of the TL-Verilog source code
-        - **Diagram**: a circuit diagram generated from your TL-Verilog code
-      - For simulation debug:
-        - **Waveform**: a waveform of all signal values over time.
-        - **Viz**: a custom visual representation of the model state at a particular
-          simulation time, if provided in the model
+  p
+    | You have the following panes:
+  ul
+    li
+      b Editor
+      | : where you edit your Verilog/SystemVerilog/TL-Verilog code
+    li
+      b Log
+      | : compiler and simulator output log
+    li For debugging the design and simulations:
+      ul
+        li
+          b Nav TLV
+          | : a navigable representation of the TL-Verilog source code
+        li
+          b Diagram
+          | : a circuit diagram generated from your TL-Verilog code
+        li
+          b Waveform
+          | : a waveform of all signal values over time.
+        li
+          b Viz
+          | : a custom visual representation of the model state at a particular
+          | simulation time, if provided in the model
 
   a(name="features")
-  :markdown
-    ## Features
+  h2 Workflow
   .mc-tutorial-step
     .mc-step-body
       p
         | Re-compile and simulate your model from the "Editor" pane under the "E" dropdown menu.
         | (or Ctrl-Enter while editing).
-  :markdown
-    You'll see the following symbols in the tabs, indicating the status of the compilation/simulation.
+  p
+    | You'll see the following symbols in the tabs, indicating the status of the compilation/simulation.
   ul
     li
       i.fa.fa-circle(style="color: #2853ff; font-size: 8px; position: relative; top: -3px")
@@ -115,92 +132,127 @@
     li
       i.fa.fa-regular.fa-clock(style="color: #b00808")
       | : Timeout. Last compilation/simulation took too long and was terminated.
-  :markdown
-    After compilation, you can navigate the design you have created in the "Nav TLV" and "Diagram"
-    panes. You can debug simulation with the Waveform pane. Various TL-Verilog design elements of these
-    panes are selectable and will highlight across panes to help correlate design elements.
-    Use Ctrl-click to highlight multiple elements.
-    
-  :markdown
-    Let's step through each pane.
-    
-    ### Editor
-    All code is placed in a single file (which may include multiple modules).
-    This file provides the design as well as the testbench content for a single simulation run
-    (which may iterate through multiple tests).
-    
-    The Editor ("E") dropdown menu contains:
-    - **Compile/Sim**: Compile and simulate the design. This can also be invoked with Ctrl-Enter.
-    - **Show Verilog**: Shows the last compiled Verilog results in a new browser pane, along with some
-    statistics about your TL-Verilog and Verilog code.
+  p
+    | After compilation, always check the log. If compilation was successful,
+    | you can navigate the design you have created in the "Nav TLV" and "Diagram"
+    | panes. You can debug simulation with the Waveform pane. Various TL-Verilog design elements of these
+    | panes are selectable and will highlight across panes to help correlate design elements.
+    | Use Ctrl-click to highlight multiple elements.
+
+  a(name="features")
+  h2 The Panes
+
+  h3 Editor
+  p
+    | All code is placed in a single file (which may include multiple modules).
+    | This file provides the design as well as the testbench content for a single simulation run
+    | (which may iterate through multiple tests).
+  p
+    | The Editor ("E") dropdown menu contains:
+  ul
+    li
+      b Compile/Sim
+      | : Compile and simulate the design. This can also be invoked with Ctrl-Enter.
+    li
+      b Show Verilog
+      | : Shows the last compiled Verilog results in a new browser pane, along with some
+      | statistics about your TL-Verilog and Verilog code.
   .mc-tutorial-step
     .mc-step-body
       p
         | Try "Show Verilog" and correlate the Verilog with the statistics. (You may have to
         | disable your pop-up blocker to view it).
-  :markdown
-    ### Log
-    The log shows output from SandPiper, Verilator compilation, and Verilator simulation.
+  
+  h3 Log
+  p
+    | The log shows output from SandPiper, Verilator compilation, and Verilator simulation.
   .mc-tutorial-step
     .mc-step-body
       p
         | Look through the log output and figure out which output comes from which tool.
-  :markdown
-    ### Nav TLV
-    Shows your source code for navigation.
+  
+  h3 Nav TLV
+  p
+    | Shows your source code for navigation.
   .mc-tutorial-step
     .mc-step-body
       p
         | Glance through the MIPS example. Within the 
         <span>.tlv_ident_keyword1.mc-ident-font \TLV 
         | section, click design elements to see them highlight across panes.
-  :markdown
-    ### Diagram
-    Note the controls in the diagram. Click-and-drag will pan. Mouse wheel will zoom
-    in and out.
+  
+  h3 Diagram
+  p
+    | Note the controls in the diagram. Click-and-drag will pan. Mouse wheel will zoom
+    | in and out.
   .mc-tutorial-step
     .mc-step-body
       p
         | Zoom and pan in the Diagram. Click elements of the diagram to highlight across panes.
-  :markdown
-    ### Waveform Viewer
-    The waveform pane lists the signals (actually “pipesignals” as you’ll see in
-    the next tutorial) of your design in their hierarchy. Hierarchy levels can be collapsed and expanded.
-    (Signals cannot currently be reordered.)
+  
+  h3 Waveform Viewer
+  p
+    | The waveform pane lists the signals (actually “pipesignals” as you’ll see in
+    | the next tutorial) of your design in their hierarchy. Hierarchy levels can be collapsed and expanded.
+    | (Signals cannot currently be reordered.)
   .mc-tutorial-step
     .mc-step-body
       p
         | Explore the waveform. Collapse portions of the hierarchy by clicking the “-”. Click and
         | Ctrl-click signals.
+
+  a(name="features")
+  h2 Live Mode
+
+  p
+    | The Waveform pane and the VIZ pane (if in use) present simulation data. The Nav TLV and Diagram
+    | panes support a "live" mode. When enable (using the video camera icon) these are annotated with
+    | simulation data, representing the state of the model at a particular cycle. The VIZ pane
+    | is always a live view of the simulation state.
+  p
+    | Live panes are linked to a common simulation time, each with their own slider to control the
+    | time, and play/pause buttons. This time is also reflected in the Waveform pane as a white
+    | vertical line, or "cursor". This cursor can be dragged by its handle in the ruler area.
+  .mc-tutorial-note
+    .mc-note-body
+      p
+        | Some pipesignals are replicated multiple times in a design. These multiple values may not
+        | all be visible in the Nav TLV and Diagram panes.
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | Try live mode and controls in the Nav-TLV, Diagram, and VIZ panes as well as dragging
+        | the cursor in the Waveform pane.
+
   a(name="tools")
-  :markdown
-    ## Tools
-    What’s running under the hood?  When you encounter a perplexing error in the log it’s
-    good to know what tool is reporting it. #{appConfig.product} utilizes the following client- and server-side tools.
+  h2 Tools
+  p
+    | What’s running under the hood?  When you encounter a perplexing error in the log it’s
+    | good to know what tool is reporting it. #{appConfig.product} utilizes the following client- and server-side tools.
   ul
     li
-      bold Editor
+      b Editing
       | : The Editor is
       <a(href="https://codemirror.net/", target="_blank") CodeMirror
       | , an open source Web-based text editor with TL-Verilog support.
     li
-      bold Compilation
+      b Compilation
       | : TL-Verilog code is compiled first by Redwood EDA, LLC’s
       <a>(href="http://www.redwoodeda.com/software", target="_blank") SandPiper™
       | tool to turn any TL-Verilog constructs into SystemVerilog, then the open source
       <a>(href="https://www.veripool.org", target="_blank") Verilator
       | tool compiles the SystemVerilog into C++ for simulation.
     li
-      bold Simulation
+      b Simulation
       | : Simulation in Verilator generally runs faster than popular commercial simulators.
     li
-      bold Navigation
+      b Navigation
       | : "Diagram" and "Nav TLV" panes are produced by SandPiper with the help of an
       | open source tool called
       <a(href="http://www.graphviz.org", target="_blank") graphviz
       | .
     li
-      bold Waveform viewer
+      b Waveform viewing
       | : The waveform pane is a custom viewer specifically for #{appConfig.product} that
       | is aware of TL-Verilog constructs.
     
@@ -208,28 +260,35 @@
     under the “Help” menu.
     
   a(name="projects")
-  :markdown
-    ## Projects
-    The #{appConfig.product} IDE currently works on a single project at a time, and the project is defined
-    by a single source file. You can save your project to a local file (on browsers which permit it) and/or
-    to the cloud. Projects on the cloud are not permanent but can be easily shared by sharing a project URL.
-    Your changes will auto-save (assuming you own the project). When you share with others,
-    they can "clone" your project to make changes of their own.
-    
-    Assuming you have not yet created a project, you'll see "unsaved" in the upper right, and next to
-    that separate buttons to save your project to the cloud or to a local file. Corresponding options
-    exist also in the "Project" menu.
+  h2 Projects
+  p
+    | The #{appConfig.product} IDE currently works on a single project at a time, and the project is defined
+    | by a single source file. You can save your project to a local file (on browsers which permit it) and/or
+    | to the cloud. Projects on the cloud are not permanent but can be easily shared by sharing a project URL.
+    | Your changes will auto-save (assuming you own the project). When you share with others,
+    | they can "clone" your project to make changes of their own.
+  p
+    | Assuming you have not yet created a project, you'll see "unsaved" in the upper right, and next to
+    | that separate buttons to save your project to the cloud or to a local file. Corresponding options
+    | exist also in the "Project" menu.
+  .mc-tutorial-note
+    .mc-note-body
+      p
+        | Some pipesignals are replicated multiple times in the design. These multiple values may not
+        | be visible in the Nav TLV and Diagram panes.
   .mc-tutorial-step
     .mc-step-body
       p
         | Save your project and bookmark the new project URL if saved to the cloud.
+  
   a(name="structure")
-  :markdown
-    ## TL-Verilog File Structure
-    The file may be a Verilog, SystemVerilog, or TL-Verilog file defining a module called `top`
-    with the arguments expected by #{appConfig.product}. Note, however, that #{appConfig.product}'s navigation and
-    debug features are built around TL-Verilog constructs. No diagram will be generated for
-    Verilog and SystemVerilog files.
+  h2 TL-Verilog File Structure
+  p
+    | The file may be a Verilog, SystemVerilog, or TL-Verilog file defining a module called
+    code top
+    | with the arguments expected by #{appConfig.product}. Note, however, that #{appConfig.product}'s navigation and
+    | debug features are built around TL-Verilog constructs. No diagram will be generated for
+    | Verilog and SystemVerilog files.
   p
     | The first line of a TL-Verilog file, such as 
     <span>.tlv_ident_keyword1.mc-ident-font \m4_TLV_version 1d: tl-x.org 
@@ -269,8 +328,7 @@
     | context. This example also contains SystemVerilog helper module definitions.
     
   a(name="wrapup")
-  :markdown
-    ## Wrap-Up
-    
-    You now know your way around #{appConfig.product}!  Subsequent tutorials will walk you through the features
-    of TL-Verilog, from combinational logic through transaction flows.
+  h2 Wrap-Up
+  P
+    | You now know your way around #{appConfig.product}!  Subsequent tutorials will walk you through the features
+    | of TL-Verilog, from combinational logic through transaction flows.

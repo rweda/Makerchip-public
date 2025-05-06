@@ -37,6 +37,7 @@ to the right (less-significant).
                   $value[7:-2] = {1'b0, $rand_value, 2'b0};
                // The transaction ID.
                $id[15:0] = *cyc_cnt;
+               m4_rand($color, 23, 0)
             
             // Compute speculative $sum.
             /pred_trans
@@ -55,8 +56,8 @@ to the right (less-significant).
    |out_pipe
       /trans
          ?$valid
-            @1
-               `BOGUS_USE($id $sum)
+            @3
+               `BOGUS_USE($id $color $sum)
 
    // Assert these to end simulation (before the cycle limit).
    *passed = *cyc_cnt > 300;
