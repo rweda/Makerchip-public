@@ -329,6 +329,18 @@ glitches)</p>
   </li>
   <li>
     <span class='signature'>
+      <a href='#asColor-dynamic'>
+        #
+(String)
+<b>asColor</b><span>(def = void 0)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Get the signal value as a color string. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
       <a href='#asIntStr-dynamic'>
         #
 (String)
@@ -1043,6 +1055,54 @@ digits with any non 0/1 bits.</p>
       )
       &mdash;
       <span class='desc'>the hexadecimal string </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='asColor-dynamic'>
+      #
+(String)
+<b>asColor</b><span>(def = void 0)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Get the signal value as a color string.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>def</span>
+      <span class='type'>
+        (
+          <tt>Any</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>the value to return if outside the bounds of the trace; undefined by default </span>
+    </li>
+  </ul>
+  <h3>Throws:</h3>
+  <ul class='throw'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt><a href='../class/SignalValue/TypeError.html'>SignalValue.TypeError</a></tt>
+      )
+      &mdash;
+      <span class='desc'>if the signal is not 24, 32, 12, or 16 bits </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>String</tt>
+      )
+      &mdash;
+      <span class='desc'>the color string </span>
     </li>
   </ul>
 </div>
