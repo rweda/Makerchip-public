@@ -27,41 +27,42 @@ function video(title, url)
 //     ...
 // Or:
 //   call tutorial_section_expanded("Title", "id")
+//   // TODO: the "in" class is not needed with Bootstrap 5.
 //   div.collapse.show.in#id
 //     ...
 function tutorial_section_expanded(title, id)
   h2
-    button.btn.btn-link.mc-caret(type="button" data-toggle="collapse" data-target="##{id}" aria-expanded="true" aria-controls="#{id}")
+    button.btn.btn-link.mc-caret(type="button" data-bs-toggle="collapse" data-bs-toggle="collapse" data-toggle="collapse" data-bs-target="##{id}" data-target="##{id}" aria-expanded="true" aria-controls="#{id}")
       i.fa.fa-caret-right.mc-if-collapsed
       i.fa.fa-caret-down.mc-if-expanded
     = title
 function tutorial_section(title, id)
   h2
-    button.btn.btn-link.collapsed.mc-caret(type="button" data-toggle="collapse" data-target="##{id}" aria-expanded="false" aria-controls="#{id}")
+    button.btn.btn-link.collapsed.mc-caret(type="button" data-bs-toggle="collapse" data-bs-toggle="collapse" data-toggle="collapse" data-bs-target="##{id}" data-target="##{id}" aria-expanded="false" aria-controls="#{id}")
       i.fa.fa-caret-right.mc-if-collapsed
       i.fa.fa-caret-down.mc-if-expanded
     = title
 function tutorial_subsection(title, id)
   h3
-    button.btn.btn-link.collapsed.mc-caret(type="button" data-toggle="collapse" data-target="##{id}" aria-expanded="false" aria-controls="#{id}")
+    button.btn.btn-link.collapsed.mc-caret(type="button" data-bs-toggle="collapse" data-bs-toggle="collapse" data-toggle="collapse" data-bs-target="##{id}" data-target="##{id}" aria-expanded="false" aria-controls="#{id}")
       i.fa.fa-caret-right.mc-if-collapsed
       i.fa.fa-caret-down.mc-if-expanded
     = title
 function tutorial_subsubsection(title, id)
   h4
-    button.btn.btn-link.collapsed.mc-caret(type="button" data-toggle="collapse" data-target="##{id}" aria-expanded="false" aria-controls="#{id}")
+    button.btn.btn-link.collapsed.mc-caret(type="button" data-bs-toggle="collapse" data-bs-toggle="collapse" data-toggle="collapse" data-bs-target="##{id}" data-target="##{id}" aria-expanded="false" aria-controls="#{id}")
       i.fa.fa-caret-right.mc-if-collapsed
       i.fa.fa-caret-down.mc-if-expanded
     = title
 function tutorial_subsubsubsection(title, id)
   h5
-    button.btn.btn-link.collapsed.mc-caret(type="button" data-toggle="collapse" data-target="##{id}" aria-expanded="false" aria-controls="#{id}")
+    button.btn.btn-link.collapsed.mc-caret(type="button" data-bs-toggle="collapse" data-bs-toggle="collapse" data-toggle="collapse" data-bs-target="##{id}" data-target="##{id}" aria-expanded="false" aria-controls="#{id}")
       i.fa.fa-caret-right.mc-if-collapsed
       i.fa.fa-caret-down.mc-if-expanded
     = title
 function tutorial_quiz(title, id)
   h3
-    button.btn.btn-link.collapsed.mc-caret(type="button" data-toggle="collapse" data-target="##{id}" aria-expanded="false" aria-controls="#{id}")
+    button.btn.btn-link.collapsed.mc-caret(type="button" data-bs-toggle="collapse" data-bs-toggle="collapse" data-toggle="collapse" data-bs-target="##{id}" data-target="##{id}" aria-expanded="false" aria-controls="#{id}")
       i.fa.fa-caret-right.mc-if-collapsed
       i.fa.fa-caret-down.mc-if-expanded
     = title
