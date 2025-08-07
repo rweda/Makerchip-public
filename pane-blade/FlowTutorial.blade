@@ -208,6 +208,10 @@
     label(for="name")
       | Enter your full name: 
     input(type="text", id="name", name="name")
+    input(type="text", name="category", value="Completion", hidden=true)
+    textarea(name="details", style="display: none")
+      | For successful completion of:
+      | Redwood EDA, LLC’s online TL-Verilog Training Tutorials
     p
     p
       input.btn.mc-tutorial-btn(type="submit", value="Create Printable Certificate")
