@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# init - install pdftotext (Poppler utils) on Ubuntu/Debian
+
+set -e
+
+echo "Updating apt package list..."
+sudo apt update
+
+echo "Installing poppler-utils..."
+sudo apt install -y poppler-utils
+
+echo "pdftotext installation complete."
+pdftotext -v

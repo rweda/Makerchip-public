@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# build - convert ../docs/*.pdf to ./*.txt
+
+set -e
+
+# Resolve the directory containing this script
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Input PDF directory: ../docs relative to script
+PDF_DIR="$SCRIPT_DIR/../docs"
+
+# Output directory: current directory
+OUT_DIR="$SCRIPT_DIR"
+
+echo "Converting PDFs from: $PDF_DIR"
+echo "Outputting text files to: $OUT_DIR"
+
+shopt -s nullglob
+for pdf in "$PDF_DIR"/*.pdf; do
+    filename="$(basename "$pdf" .pdf)"
+    echo "Converting $filename.pdf..."
+    pdftotext "$pdf" "$OUT_DIR/$filename.txt"
+done
+
+echo "All PDFs converted to text."
