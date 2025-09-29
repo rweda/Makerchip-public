@@ -1,0 +1,335 @@
+.settings-container
+  .settings-header
+    h2
+      i.fa-solid.fa-gear
+      |  Sandpiper Settings
+    .settings-message(style="display: none;")
+
+  .settings-nav
+    .settings-tabs
+      .settings-tab.active(data-tab="general") General
+      .settings-tab(data-tab="multicore") Multi-Core
+      .settings-tab(data-tab="pipeline") Pipeline
+      .settings-tab(data-tab="components") Components
+      .settings-tab(data-tab="hazards") Hazards
+      .settings-tab(data-tab="memory") Memory
+      .settings-tab(data-tab="io") I/O
+      .settings-tab(data-tab="verilog") Verilog
+
+  .settings-content
+    .settings-panel.active#general-panel
+      .settings-section
+        h3 ISA
+        .radio-group
+          label.radio-label
+            input(type="radio" name="isa" value="risc-v" checked)
+            span.radio-custom
+            | RISC-V
+          label.radio-label
+            input(type="radio" name="isa" value="mips")
+            span.radio-custom
+            | MIPS
+
+      .settings-section
+        h3 Pipeline Depth
+        .radio-group
+          label.radio-label
+            input(type="radio" name="pipeline-depth" value="1-cyc")
+            span.radio-custom
+            | 1-cyc
+          label.radio-label
+            input(type="radio" name="pipeline-depth" value="2-cyc")
+            span.radio-custom
+            | 2-cyc
+          label.radio-label
+            input(type="radio" name="pipeline-depth" value="4-cyc" checked)
+            span.radio-custom
+            | 4-cyc
+          label.radio-label
+            input(type="radio" name="pipeline-depth" value="6-cyc")
+            span.radio-custom
+            | 6-cyc
+          label.radio-label
+            input(type="radio" name="pipeline-depth" value="custom")
+            span.radio-custom
+            | Custom Pipeline
+
+      .settings-section.isa-extensions(style="display: block;")
+        h3 ISA Extensions (RISC-V only)
+        .checkbox-group
+          label.checkbox-label
+            input(type="checkbox" name="isa-ext" value="E")
+            span.checkbox-custom
+            | E - RV32E Base Integer Instruction Set
+          label.checkbox-label
+            input(type="checkbox" name="isa-ext" value="M")
+            span.checkbox-custom
+            | M - Integer Multiplication and Division
+          label.checkbox-label
+            input(type="checkbox" name="isa-ext" value="F")
+            span.checkbox-custom
+            | F - Single-Precision Floating-Point
+          label.checkbox-label
+            input(type="checkbox" name="isa-ext" value="B")
+            span.checkbox-custom
+            | B - Bit Manipulation
+
+    .settings-panel#multicore-panel
+      .settings-section
+        h3 CPU Cores
+        .number-input-group
+          label CPU cores:
+          .number-input-wrapper
+            input(type="number" id="cpu-cores" min="1" max="16" value="1")
+            .number-controls
+              button.number-up ▲
+              button.number-down ▼
+
+      .settings-section.multicore-options(style="display: none;")
+        .settings-subsection
+          h4 VCs
+          .number-input-wrapper
+            input(type="number" id="vcs" min="2" max="8" value="2")
+            .number-controls
+              button.number-up ▲
+              button.number-down ▼
+          small Minimum: 3
+
+        .settings-subsection
+          h4 Priority levels
+          .number-input-wrapper
+            input(type="number" id="priority-levels" min="2" max="8" value="2")
+            .number-controls
+              button.number-up ▲
+              button.number-down ▼
+          small Minimum: 2
+
+        .settings-subsection
+          h4 Max Packet Size
+          .number-input-wrapper
+            input(type="number" id="max-packet-size" min="3" max="64" value="8")
+            .number-controls
+              button.number-up ▲
+              button.number-down ▼
+          small Minimum: 3
+
+    .settings-panel#pipeline-panel
+      .settings-section
+        h3 Pipeline Stage Configuration
+        .pipeline-stages
+          .stage-input
+            label Next PC Stage:
+            .number-input-wrapper
+              input(type="number" id="next-pc-stage" min="0" max="10" value="0")
+              .number-controls
+                button.number-up ▲
+                button.number-down ▼
+
+          .stage-input
+            label Fetch Stage:
+            .number-input-wrapper
+              input(type="number" id="fetch-stage" min="0" max="10" value="0")
+              .number-controls
+                button.number-up ▲
+                button.number-down ▼
+
+          .stage-input
+            label Decode Stage:
+            .number-input-wrapper
+              input(type="number" id="decode-stage" min="0" max="10" value="0")
+              .number-controls
+                button.number-up ▲
+                button.number-down ▼
+
+          .stage-input
+            label Branch Prediction Stage:
+            .number-input-wrapper
+              input(type="number" id="branch-pred-stage" min="0" max="10" value="0")
+              .number-controls
+                button.number-up ▲
+                button.number-down ▼
+
+          .stage-input
+            label Register Read Stage:
+            .number-input-wrapper
+              input(type="number" id="reg-read-stage" min="0" max="10" value="0")
+              .number-controls
+                button.number-up ▲
+                button.number-down ▼
+
+          .stage-input
+            label Execute Stage:
+            .number-input-wrapper
+              input(type="number" id="execute-stage" min="0" max="10" value="0")
+              .number-controls
+                button.number-up ▲
+                button.number-down ▼
+
+          .stage-input
+            label Result Stage:
+            .number-input-wrapper
+              input(type="number" id="result-stage" min="0" max="10" value="0")
+              .number-controls
+                button.number-up ▲
+                button.number-down ▼
+
+          .stage-input
+            label Register Write Stage:
+            .number-input-wrapper
+              input(type="number" id="reg-write-stage" min="0" max="10" value="0")
+              .number-controls
+                button.number-up ▲
+                button.number-down ▼
+
+          .stage-input
+            label Memory Write Stage:
+            .number-input-wrapper
+              input(type="number" id="mem-write-stage" min="0" max="10" value="0")
+              .number-controls
+                button.number-up ▲
+                button.number-down ▼
+
+          .stage-input
+            label LD Return Align:
+            .number-input-wrapper
+              input(type="number" id="ld-return-align" min="0" max="10" value="1")
+              .number-controls
+                button.number-up ▲
+                button.number-down ▼
+
+    .settings-panel#components-panel
+      .settings-section
+        h3 Branch Prediction
+        .radio-group
+          label.radio-label
+            input(type="radio" name="branch-prediction" value="fallthrough" checked)
+            span.radio-custom
+            | Fallthrough
+          label.radio-label
+            input(type="radio" name="branch-prediction" value="two_bit")
+            span.radio-custom
+            | Two Bit
+          label.radio-label
+            input(type="radio" name="branch-prediction" value="none")
+            span.radio-custom
+            | None
+
+    .settings-panel#hazards-panel
+      .settings-section
+        h3 Hazard Configuration
+        p Coming soon...
+
+    .settings-panel#memory-panel
+      .settings-section
+        h3 Memory Configuration
+        p Coming soon...
+
+    .settings-panel#io-panel
+      .settings-section
+        h3 I/O Configuration
+        p Coming soon...
+
+    .settings-panel#verilog-panel
+      .settings-section
+        h3 Verilog/SystemVerilog Formatting
+        .checkbox-group
+          label.checkbox-label
+            input(type="checkbox" name="verilog-formatting" value="--hdl verilog")
+            span.checkbox-custom
+            | Verilog (vs. SystemVerilog)
+          
+          label.checkbox-label
+            input(type="checkbox" name="verilog-formatting" value="--bestsv" checked)
+            span.checkbox-custom
+            | Optimize SystemVerilog code for readability (versus preserving line association with TL-Verilog source)
+          
+          label.checkbox-label
+            input(type="checkbox" name="verilog-formatting" value="--fmtNoSource" checked)
+            span.checkbox-custom
+            | Disable \source tags in TL-Verilog. (Note, this is not an option in Makerchip.)
+          
+          label.checkbox-label
+            input(type="checkbox" name="verilog-formatting" value="--noline" checked)
+            span.checkbox-custom
+            | Disable `line directive in SV output
+          
+          label.checkbox-label
+            input(type="checkbox" name="verilog-formatting" value="--clkAlways")
+            span.checkbox-custom
+            | Use the global/free-running clock for all flip-flops
+          
+          label.checkbox-label
+            input(type="checkbox" name="verilog-formatting" value="--clkEnable")
+            span.checkbox-custom
+            | Use enable flip-flops, not clock gating. (Good for FPGAs.)
+          
+          label.checkbox-label
+            input(type="checkbox" name="verilog-formatting" value="--clkStageAlways")
+            span.checkbox-custom
+            | Apply clock gating/enabling only to the first of a series of flip-flops
+          
+          label.checkbox-label
+            input(type="checkbox" name="verilog-formatting" value="--fmtDeclSingleton")
+            span.checkbox-custom
+            | Each HDL signal is declared in its own declaration statement
+          label.checkbox-label
+            input(type="checkbox" name="verilog-formatting" value="--fmtDeclUnifiedHier")
+            span.checkbox-custom
+            | Declare signals in a unified design hierarchy in the generated file
+          
+          label.checkbox-label
+            input(type="checkbox" name="verilog-formatting" value="--fmtEscapedNames")
+            span.checkbox-custom
+            | Use escaped HDL names that resemble TLV names as closely as possible
+          
+          label.checkbox-label
+            input(type="checkbox" name="verilog-formatting" value="--fmtFlatSignals")
+            span.checkbox-custom
+            | Declare signals at the top level scope in the generated file
+          
+          label.checkbox-label
+            input(type="checkbox" name="verilog-formatting" value="--fmtFullHdlHier")
+            span.checkbox-custom
+            | Provide HDL hierarchy for all scopes, including non-replicated scopes
+          
+          label.checkbox-label
+            input(type="checkbox" name="verilog-formatting" value="--fmtInlineInjection")
+            span.checkbox-custom
+            | Provide X-injection and state recirculation for assignments under 'when' conditions
+          
+          label.checkbox-label
+            input(type="checkbox" name="verilog-formatting" value="--fmtNoRespace")
+            span.checkbox-custom
+            | Preserve whitespace in HDL expressions as is
+          
+          label.checkbox-label
+            input(type="checkbox" name="verilog-formatting" value="--fmtPackAll")
+            span.checkbox-custom
+            | Generate HDL signals as packed at all levels of hierarchy
+          
+          label.checkbox-label
+            input(type="checkbox" name="verilog-formatting" value="--fmtPackBooleans")
+            span.checkbox-custom
+            | Pack an additional level of hierarchy for boolean HDL signals
+          
+          label.checkbox-label
+            input(type="checkbox" name="verilog-formatting" value="--fmtStripUniquifiers")
+            span.checkbox-custom
+            | Eliminate the use of uniquifiers in HDL names where possible
+          
+          label.checkbox-label
+            input(type="checkbox" name="verilog-formatting" value="--fmtUseGenerate")
+            span.checkbox-custom
+            | Use the generate/endgenerate keywords that are optional in SystemVerilog
+          
+          label.checkbox-label
+            input(type="checkbox" name="verilog-formatting" value="--directiveComments")
+            span.checkbox-custom
+            | Allow output line comments after `line and `include directives
+          
+          label.checkbox-label
+            input(type="checkbox" name="verilog-formatting" value="--inlineGen")
+            span.checkbox-custom
+            | Produce the generated code in an inline code block    
+            | within the translated code, rather than in a        
+            | separate file.
