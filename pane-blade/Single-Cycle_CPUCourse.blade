@@ -1,14 +1,13 @@
 include "pane_lib.blade"
 
-.mc-auto-pane-contents#riscv-course
+.mc-auto-pane-contents.mc-markdown#riscv-course
   a(name="top")
   
   h1
     | Building a RISC-V CPU Core
     
   call tutorial_section_expanded("Course Description", "course-description")
-  // TODO: .in isn't needed by Bootstrap 5.
-  .collapse.show.in#course-description
+  .collapse.show#course-description
     p
       i
         | Create a CPU with modern open-source circuit design tools, methodologies, and microarchitecture online.
