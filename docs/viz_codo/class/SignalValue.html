@@ -420,7 +420,7 @@ glitches)</p>
       </a>
     </span>
     <span class='desc'>
-      Get the 64-bit signal interpreted as an SV &quot;real&quot; signal. 
+      Get the signal interpreted as an SV &quot;real&quot; or &quot;shortreal&quot; signal based on width. 
     </span>
   </li>
   <li>
@@ -1405,7 +1405,7 @@ digits with any non 0/1 bits.</p>
       <br>
     </p>
     <div class='docstring'>
-  <p>Get the 64-bit signal interpreted as an SV &quot;real&quot; signal.</p>
+  <p>Get the signal interpreted as an SV &quot;real&quot; or &quot;shortreal&quot; signal based on width.</p>
 </div>
 <div class='tags'>
   <h3>Parameters:</h3>
@@ -1429,7 +1429,7 @@ digits with any non 0/1 bits.</p>
         <tt><a href='../class/SignalValue/TypeError.html'>SignalValue.TypeError</a></tt>
       )
       &mdash;
-      <span class='desc'>if the signal is not 64 bits </span>
+      <span class='desc'>if the signal width is not 32 or 64 bits </span>
     </li>
   </ul>
   <h3>Returns:</h3>
@@ -1440,7 +1440,7 @@ digits with any non 0/1 bits.</p>
         <tt>Number</tt>
       )
       &mdash;
-      <span class='desc'>the value of the signal interpreted as an IEEE 64-bit floating-point value or NaN if the value contains x/z. </span>
+      <span class='desc'>the value of the signal interpreted as an IEEE floating-point value or NaN if the value contains x/z. </span>
     </li>
   </ul>
 </div>

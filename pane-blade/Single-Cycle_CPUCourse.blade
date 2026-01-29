@@ -1,14 +1,13 @@
 include "pane_lib.blade"
 
-.mc-auto-pane-contents#riscv-course
+.mc-auto-pane-contents.mc-markdown#riscv-course
   a(name="top")
   
   h1
     | Building a RISC-V CPU Core
     
-  call tutorial_section_expanded("Course Description", "course-description")
-  // TODO: .in isn't needed by Bootstrap 5.
-  .collapse.show.in#course-description
+  call tutorial_section_expanded("Course Description and Resources", "course-description")
+  .collapse.show#course-description
     p
       i
         | Create a CPU with modern open-source circuit design tools, methodologies, and microarchitecture online.
@@ -20,6 +19,12 @@ include "pane_lib.blade"
       | fundamental skills for a career in logic design, and you’ll position yourself on the forefront
       | by learning to use the emerging Transaction-Level Verilog language extension (even if you don’t
       | already know Verilog).
+    p
+      | You'll be introduced along the way to these reference solutions. You don't need them now, but you can
+      | find them here whenever you need them
+    button.btn.mc-tutorial-btn(type="button" onclick="window.open('/sandbox?code_url=https%3A%2F%2Fraw.githubusercontent.com%2Fstevehoover%2FLF-Building-a-RISC-V-CPU-Core%2Frefs%2Fheads%2Fmain%2Frisc-v_solutions.tlv')")
+      | Open Reference Solutions
+      <i.fa.fa-up-right-from-square
 
 
   call tutorial_section("Welcome!", "welcome")
@@ -212,7 +217,7 @@ include "pane_lib.blade"
         | Your challenge is simply to reproduce the screenshot below (or close to it).
 
       .mc-tutorial-figure
-        img.mc-figure-body(width="512" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/Makerchip_IDE.png")
+        img.mc-figure-body(width="512" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/Makerchip_IDE.png" alt="A screenshot of the Makerchip IDE with four panes showing: NAV-TLV, LOG, DIAGRAM, and WAVEFORM. The circuit is a pipelined Pythagorean theorem implementation with pipesignal $bb_sq highlighted.")
         .mc-figure-caption
           span
             i Makerchip Screenshot
@@ -271,7 +276,7 @@ include "pane_lib.blade"
       ol
         li
           .mc-question
-            | Compilation errors can be seen in Makerchip (as of the video recording) in which two tabs (select all that apply):
+            | Compilation errors can be seen in Makerchip (as of the video recording) in which two tabs (select two):
           ol.mc-answers
             li.mc-wrong-answer
               | EDITOR
@@ -285,7 +290,7 @@ include "pane_lib.blade"
               | WAVEFORM
           
           .mc-question
-            | Signals can be selected and highlighted by clicking on them in which tabs (as of the video recording) (select all that apply):
+            | Signals can be selected and highlighted by clicking on them in which three tabs (as of the video recording) (select three):
           ol.mc-answers
             li.mc-wrong-answer
               | EDITOR
@@ -358,7 +363,7 @@ include "pane_lib.blade"
         p
           b Table: Logic Gates
           .mc-tutorial-figure
-            img.mc-figure-body(width="512" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/Logic_Gates.png")
+            img.mc-figure-body(width="512" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/Logic_Gates.png" alt="A table showing basic logic gates, their symbols, and truth tables.")
         p
           | Note:
         ul
@@ -384,7 +389,7 @@ include "pane_lib.blade"
           | of connecting gates with wires.
 
         .mc-tutorial-figure
-          img.mc-figure-body(width="400" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/full_adder1.png")
+          img.mc-figure-body(width="400" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/full_adder1.png" alt="A circuit diagram of a full adder composed of logic gates." )
           .mc-figure-caption
             span
               i Full adder circuit
@@ -394,7 +399,7 @@ include "pane_lib.blade"
           | from the circuit.
 
         .mc-tutorial-figure
-          img.mc-figure-body(width="400" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/full_adder2.png")
+          img.mc-figure-body(width="400" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/full_adder2.png" alt="A circuit diagram of a full adder with input values shown on the left, output values shown on the right, and intermediate wires labeled with their values." )
           .mc-figure-caption
             span
               i Example of boolean value propagation through gates
@@ -523,7 +528,7 @@ include "pane_lib.blade"
         p
           b Table: Boolean Logic Syntaxes
             .mc-tutorial-figure
-              img.mc-figure-body(width="512" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/Boolean_logic.png")
+              img.mc-figure-body(width="512" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/Boolean_logic.png" alt="A table showing boolean logic operators in different notations, labeled: Op, Bool Arith, Bool Calc, Verilog, Gate.")
         p
           | You can use parentheses to group expressions to form more complex logic functions. If a statement
           | is extended to multiple lines, these lines must have greater indentation than the first line.
@@ -612,7 +617,7 @@ include "pane_lib.blade"
             p
               | As you did with the inverter, try other single-gate logic expressions.
         .mc-tutorial-figure
-          img.mc-figure-body(width="600" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/tlv_full_adder.png")
+          img.mc-figure-body(width="600" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/tlv_full_adder.png" alt="A circuit diagram of a full adder composed of logic gates, with signal names labeled, including inputs $in1, $in2, and $carry_in, outputs $out and $carry_out, and intermediates $xor, $and1, and $and2." )
           .mc-figure-caption
             span
               i Full adder circuit for reference
@@ -846,7 +851,7 @@ include "pane_lib.blade"
               | adder”.
           
           .mc-tutorial-figure
-            img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/ripple-carry-adder.png")
+            img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/ripple-carry-adder.png" alt="A circuit diagram of a ripple-carry adder composed of three full adders." )
             .mc-figure-caption
               span
                 i Ripple-carry adder circuit composed of full adders
@@ -876,7 +881,7 @@ include "pane_lib.blade"
             p
               code $out[7:0] = $in1[6:0] + $in2[6:0];
             p
-              button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/adder.tlv\")")
+              button.btn.mc-tutorial-btn(type="button" onclick="event.stopPropagation(); ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/adder.tlv\")")
                 | Load Adder Expression
 
         .mc-tutorial-note
@@ -925,7 +930,7 @@ include "pane_lib.blade"
           code $in1
           | ).
         .mc-tutorial-figure
-          img.mc-figure-body(width="200" src="#{basePath}/public/tutorial/images/mux2.png")
+          img.mc-figure-body(width="200" src="#{basePath}/public/tutorial/images/mux2.png" alt="A circuit diagram of a two-way single-bit multiplexer with one-bit select having boolean inputs $in1, $in2, and $sel, and output $out." )
           .mc-figure-caption
             span
               i A two-way single-bit multiplexer with one-bit select
@@ -946,7 +951,7 @@ include "pane_lib.blade"
         p
           | The MUX depicted above can be constructed from basic logic gates as below.
         .mc-tutorial-figure
-          img.mc-figure-body(width="300" src="#{basePath}/public/tutorial/images/mux2_gates.png")
+          img.mc-figure-body(width="300" src="#{basePath}/public/tutorial/images/mux2_gates.png" alt="A circuit diagram of a two-way single-bit multiplexer implemented with logic gates, including AND, OR, and NOT gates having boolean inputs $in1, $in2, and $sel, and output $out." )
           .mc-figure-caption
             span
               i Gate-level implementation of a multiplexer
@@ -995,7 +1000,7 @@ include "pane_lib.blade"
           code $sel[3:0]
           | .
         .mc-tutorial-figure
-          img.mc-figure-body(width="250" src="#{basePath}/public/tutorial/images/decoded_mux4.png")
+          img.mc-figure-body(width="250" src="#{basePath}/public/tutorial/images/decoded_mux4.png" alt="A circuit diagram of a four-way multiplexer with four one-hot select bits $sel[3:0], data inputs $in0, $in1, $in2, and $in3, and output $out." )
           .mc-figure-caption
             span
               i A four-input multiplexer
@@ -1008,7 +1013,7 @@ include "pane_lib.blade"
         p
           | This four-way decoded-select MUX could be implemented as a chain of two-input MUXes, as shown below.
         .mc-tutorial-figure
-          img.mc-figure-body(width="300" src="#{basePath}/public/tutorial/images/decoded_chained_mux4.png")
+          img.mc-figure-body(width="300" src="#{basePath}/public/tutorial/images/decoded_chained_mux4.png" alt="A circuit diagram of a four-way multiplexer implemented as a chain of two-way multiplexers, with four one-hot select bits $sel[3:0], data inputs $in0, $in1, $in2, and $in3, and output $out." )
           .mc-figure-caption
             span
               i A four-input multiplexer, implemented as a chain of two-input multiplexers
@@ -1073,7 +1078,7 @@ include "pane_lib.blade"
           | *, or / on two input values.
           
         .mc-tutorial-figure
-          img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/Calculator_Lab_image.png")
+          img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/Calculator_Lab_image.png" alt="A circuit diagram of a combinational calculator circuit with two 32-bit inputs $val1 and $val2, four arithmetic operation blocks (add, subtract, multiply, divide) with 32-bit outputs $sum, $diff, $prod, and $quot, a 4-way multiplexer with 2-bit select $op[1:0], and a 32-bit output $out." )
           .mc-figure-caption
             span
               i Combinational calculator circuit
@@ -1518,7 +1523,7 @@ include "pane_lib.blade"
           | Sequential logic introduces a clock signal.
         
         .mc-tutorial-figure
-          img.mc-figure-body(width="400" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/Clock_waveform.png")
+          img.mc-figure-body(width="400" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/Clock_waveform.png" alt="A waveform diagram showing a clock signal that alternates between low and high states at regular intervals." )
           .mc-figure-caption
             span
               i Clock waveform
@@ -1531,7 +1536,7 @@ include "pane_lib.blade"
           | edge of their clock input.
         
         .mc-tutorial-figure
-          img.mc-figure-body(width="200" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/A_flip-flop.png")
+          img.mc-figure-body(width="200" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/A_flip-flop.png" alt="A diagram of a D-type flip-flop with a data input labeled 'next state', a clock input `clk`, and an output labeled 'state'. An arrow indicates that on the rising edge of the clock, the value at D is transferred to Q." )
           .mc-figure-caption
             span
               i A flip-flop
@@ -1552,7 +1557,7 @@ include "pane_lib.blade"
           | numbers: 1, 1, 2, 3, 5, 8, 13, … This circuit will perpetually compute the next number in the sequence:
         
         .mc-tutorial-figure
-          img.mc-figure-body(width="400" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/Fibonacci_circuit_incomplete.png")
+          img.mc-figure-body(width="400" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/Fibonacci_circuit_incomplete.png" alt="A circuit diagram of a Fibonacci sequence circuit with an adder producing `$num` with a current value of 5 chained two two flip-flops producing 3 and 2, which connect back to the adder inputs.")
           .mc-figure-caption
             span
               i Fibonacci circuit (incomplete)
@@ -1562,7 +1567,7 @@ include "pane_lib.blade"
           | producing this waveform.
         
         .mc-tutorial-figure
-          img.mc-figure-body(width="400" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/Fibonacci_waveform_incomplete.png")
+          img.mc-figure-body(width="350" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/Fibonacci_waveform_incomplete.png" alt="A waveform diagram showing a `clk` waveform and `@0$num` taking on values `01`, `02`, `03`, `05`, and `08' in successive cycles.")
           .mc-figure-caption
             span
               i Fibonacci sequence circuit waveforms
@@ -1587,7 +1592,7 @@ include "pane_lib.blade"
           | In our Fibonacci circuit, we only need to reset the first flip-flop.
         
         .mc-tutorial-figure
-          img.mc-figure-body(width="400" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/fib.png")
+          img.mc-figure-body(width="300" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/fib.png" alt="A circuit diagram of a Fibonacci sequence circuit with an adder producing `$num` chained two two flip-flop, which connect back to the adder inputs. The first flip-flop has a multiplexer before it that selects between `1` when `$reset` is high and the adder output when `$reset` is low." )
           .mc-figure-caption
             span
               i Fibonacci series circuit
@@ -1608,7 +1613,7 @@ include "pane_lib.blade"
           | clock cycle.
         
         .mc-tutorial-figure
-          img.mc-figure-body(width="400" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/Fibonacci_waveforms.png")
+          img.mc-figure-body(width="450" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/Fibonacci_waveforms.png" alt="Waveform diagrams showing the Fibonacci sequence circuit waveforms with `clk`, `reset`, and `@0$num` signals over time.")
           .mc-figure-caption
             span
               i Fibonacci sequence circuit waveforms
@@ -1650,7 +1655,7 @@ include "pane_lib.blade"
           | the need for flip-flops is implied.
         
         .mc-tutorial-figure
-          img.mc-figure-body(width="400" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/Fibonacci_circuit_labeled.png")
+          img.mc-figure-body(width="375" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/Fibonacci_circuit_labeled.png" alt="A circuit diagram of a Fibonacci sequence circuit with an adder producing `$num` chained two two flip-flop. The first flip-flop is labeled `>>1$out`, and the second flip-flop is labeled `>>2$out`." )
           .mc-figure-caption
             span
               i Fibonacci circuit labeled with staged signal references
@@ -1667,7 +1672,7 @@ include "pane_lib.blade"
           | A sequential circuit, containing flops and combinational logic can be viewed as follows.
         
         .mc-tutorial-figure
-          img.mc-figure-body(width="400" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/Generalized_sequential_circuit.png")
+          img.mc-figure-body(width="400" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/Generalized_sequential_circuit.png" alt="A generalized view of a sequential circuit with a combinational logic cloud taking in `state` and producing `next state`, which cyclicly produces `state` through a flip-flop triggered by the rising edge of `clk`." )
           .mc-figure-caption
             span
               i Generalized view of a sequential circuit
@@ -1684,7 +1689,7 @@ include "pane_lib.blade"
           | below.
         
         .mc-tutorial-figure
-          img.mc-figure-body(width="400" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/Counter_circuit.png")
+          img.mc-figure-body(width="325" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/Counter_circuit.png" alt="A counter circuit containing an adder with a constant 1 input, a multiplexer to reset to 0, producing `$cnt`, which feeds back to the adder input through a flip-flop." )
           .mc-figure-caption
             span
               i A counter circuit
@@ -1722,7 +1727,7 @@ include "pane_lib.blade"
               | $num[31:0] = $reset ? 1 : (>>1$num + >>2$num);
         
         .mc-tutorial-figure
-          img.mc-figure-body(width="400" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/Counter_lab_waveform.png")
+          img.mc-figure-body(width="475" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/Counter_lab_waveform.png" alt="Waveform diagrams showing the counter circuit waveforms with `clk`, `reset`, and `$cnt` signals over time.")
           .mc-figure-caption
             span
               i Correct waveform for counter circuit lab
@@ -1754,7 +1759,7 @@ include "pane_lib.blade"
           | ), and reset it to zero, we would have:
         
         .mc-tutorial-figure
-          img.mc-figure-body(width="400" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/Sequential_calculator_circuit.png")
+          img.mc-figure-body(width="450" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/Sequential_calculator_circuit.png" alt="A sequential 32-bit calculator circuit that computes from `$val1` and `val2` `$sum`, `$diff`, `$prod`, and `$quot` and selects one through a multiplexer as `$out` based on a 2-bit `$op`. `$out` recirculates to `$val1` through a flip-flop. A value of 0 is selected by the multiplexer on `$reset`. So inputs are `$val2`, `$op`, and `$reset`, and output is `$out`." )
           .mc-figure-caption
             span
               i Logic modifications for this lab to sequentialize the calculator circuit
@@ -1831,7 +1836,7 @@ include "pane_lib.blade"
             li.mc-wrong-answer 8'h40
         li
           .mc-question
-            | Sequential logic requires which of the following signals (or similar) (select all that apply):
+            | Sequential logic requires which of the following two signals (or similar) (select two):
           ol.mc-answers
             li.mc-correct-answer a clock
             li.mc-wrong-answer.mc-code-answer $next
@@ -1887,7 +1892,7 @@ include "pane_lib.blade"
         | understands the given ISA.
       
       .mc-tutorial-figure
-        img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/compilation1.png")
+        img.mc-figure-body(width="550" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/compilation1.png" alt="A diagram showing a human producing code which compiles to a binary file which an OS loads into memory, attached to a CPU.")
         .mc-figure-caption
           span
             i Software development and execution flow
@@ -1908,7 +1913,7 @@ include "pane_lib.blade"
         | debug your RISC-V design.
       
       .mc-tutorial-figure
-        img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/compilation2.png")
+        img.mc-figure-body(width="550" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/compilation2.png" alt="A diagram showing human-written code that compiles to binary code either directly or by way of assembly code. An OS loads the binary code into memory, attached to a CPU." )
         .mc-figure-caption
           span
             i Assembly code development and execution flows
@@ -1963,7 +1968,7 @@ include "pane_lib.blade"
         | R-type fields and provide an immediate value in the remaining bits.
         
       .mc-tutorial-figure
-        img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/RISC-V_instruction_formats.png")
+        img.mc-figure-body(width="550" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/RISC-V_instruction_formats.png" alt="A figure showing the base instruction formats of RISC-V, including R-type, I-type, S-type, B-type, U-type, and J-type formats, with fields such as opcode, funct3, funct7, rs1, rs2, rd, and fragmented immediate value fields.")
         .mc-figure-caption
           span
             i RISC-V base instruction formats (from the RISC-V specifications)
@@ -2106,7 +2111,6 @@ include "pane_lib.blade"
         p
           | This video will familiarize you with starting-point code that you will be instructed to use later, before you begin
           | coding your CPU.
-        
         call video("Starting-point Code Video", "https://github.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/raw/main/videos/BuildingRISCV_StartingCode.mp4")
         
         call tutorial_subsubsubsection("Transcription", "starting-point-code-transcription")
@@ -2141,37 +2145,38 @@ include "pane_lib.blade"
             li We're not going to rely on that. Your logic is very dynamic and you'll just use the visualization to understand that each piece of logic that you add is properly reflected in the behavior that you're able to visualize.
             li Alright. So that's where you start. And in the next video I'll introduce you to some reference solutions that we're also making available to you to help you if you get stuck.
         
-      call tutorial_subsubsection("Showcasing your work", "showcasing-your-work")
+      call tutorial_subsubsection("Development Workflow", "showcasing-your-work")
       .collapse#showcasing-your-work
         
         p
-          | Now that you are preparing to create something more substantial, it’s worth considering a few options for how you will develop, save, and showcase your design (all of which are optional).
+          | Now that you are preparing to create something more substantial, it’s
+          | worth considering a few options for how you will develop, save, and
+          | showcase your design.
         p
           | Consider capturing your work in GitHub (or another Git hosting platform).
           | If you are or will be job hunting, your GitHub profile often speaks more
           | strongly to a potential employer than your resume. GitHub is also a great
           | place to snapshot your code as you develop it to be sure you don’t lose
           | your work. You can create a fresh repository for your work, or fork the
-          | course repository. You can edit files directly via GitHub’s web interface
-          | and paste your code from Makerchip, all within your browser, or you can
-          | clone your repository on your local system and paste your code into a
-          | text editor.
+          <a(href="https://github.com/stevehoover/LF-Building-a-RISC-V-CPU-Core" target="_blank")
+            | course repository
+          | .
         p
-          | We also have a convenient option for working with local files on your
-          | own desktop, whether in a git repository or not. You can launch Makerchip
-          | from your desktop to work with a local TL-Verilog source file. Makerchip
-          | runs in your browser but autosaves back to your desktop.
+          | If you prefer to stay in your browser, you can copy your code
+          | from Makerchip and paste it into your repository via GitHub’s web interface.
+          | (From the main page of your forked repository, use the "+" icon to create a new file,
+          | or click into an existing file and use the pencil icon to edit, then paste
+          | your updated code from Makerchip.)
         p
-          | Only if you’d like to try this workflow, first get the starting point
-          | code locally by cloning the course GitHub repository.
+          | The preferred workflow, if you are comfortable with Git, is to clone your repository locally, and
+          | edit your local file in Makerchip. By opening a file from Makerchip's Project
+          | menu or using Save As, your work will autosave locally. You can use Git commands
+          | to commit your changes and push them to GitHub. Note that not all browsers support interactions
+          | with local files. Chrome and Edge do.
         p
-          code git clone https://github.com/stevehoover/LF-Building-a-RISC-V-CPU-Core.git
-        p
-          | (and enter your credentials)
-        p
-          | Then install the Makerchip app:
-        p
-          code pip3 install makerchip-app
+          | Also optional is to install Makerchip as a desktop app on your local computer.
+          | It still runs in your browser, just the same, but in its own window, and it launches
+          | from a desktop icon. Your browser's address bar should indicate an install option.
       
       call tutorial_subsubsection("Opening the Starting-Point Code", "opening-the-starting-point-code")
       .collapse#opening-the-starting-point-code
@@ -2179,27 +2184,19 @@ include "pane_lib.blade"
         .mc-tutorial-step
           .mc-step-body
             p
-              | Now, open the starting-point code template.
-        
-        .mc-tutorial-step
-          .mc-step-body
+              | Open the starting-point template.
             p
-              | Only if you are using Makerchip app to edit code on your local computer, first copy the code from `LF-Building-a-RISC-V-CPU-Core/risc-v_shell.tlv` to wherever you would like to edit it, then:
-            p
-              code makerchip <path>/risc-v_shell.tlv
-        
-        .mc-tutorial-step
-          .mc-step-body
+              | If you have a copy of the
+              <a>(href="https://github.com/stevehoover/LF-Building-a-RISC-V-CPU-Core/blob/main/risc-v_shell.tlv" target="_blank")
+                | starting-point code
+              | locally, open it in Makerchip from the Project menu.
             p
               | Otherwise,
             p
-              button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core/master/risc-v_shell.tlv\")")
+              button.btn.mc-tutorial-btn(type="button" onclick="event.stopPropagation(); ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core/main/risc-v_shell.tlv\")")
                 | Load Starting-point Code
-        
-        .mc-tutorial-step
-          .mc-step-body
             p
-              | Save the code once it loads.
+              | Then Save As from the Project menu.
         
         .mc-tutorial-step
           .mc-step-body
@@ -2209,18 +2206,15 @@ include "pane_lib.blade"
               | show the test program and signals that have not yet been implemented.
               | (Mouse-wheel-down or use the “-” button to bring these fully into
               | view.)
-
         p
-          | Whether you are using the Makerchip app or not, after each lab, quickly
-          | check that your work has been properly autosaved to the cloud or to your
-          | local system by checking the status bar within Makerchip.
-
+          | After each lab, quickly check that your work has been properly autosaved
+          | by checking the status bar within Makerchip.
         p
           | Generally, if you get off track and need to get back to a stable version
           | of your code, 
           b Ctrl-Z
-          |  will do the trick, but it might also be wise to save snapshots (or git commits) on occasion.
-
+          |  will do the trick, but it is also wise to save snapshots or Git commits on occasion.
+    
     call tutorial_subsection("CPU Microarchitecture and Implementation Plan", "cpu-microarchitecture-and-implementation-plan")
     .collapse#cpu-microarchitecture-and-implementation-plan
 
@@ -2230,25 +2224,22 @@ include "pane_lib.blade"
         | several hours, you’ll construct a CPU core that could be appropriate as a microcontroller.
         | In contrast, a desktop or server CPU chip might be built by a team of hundreds of seasoned
         | engineers over a period of several years.
-
       p
         | Our CPU will fully execute one instruction with each new clock cycle. Doing all of this work
         | within a single clock cycle is only possible if the clock is running relatively slowly, which
         | is our assumption.
-
       p
         | We’ll start by implementing enough of the CPU to execute our test program. As you add each new
         | piece of functionality, you will see in the VIZ pane the behavior you implemented, with more
         | and more of the test program executing correctly until it is successfully summing numbers from
         | one to nine. Then we’ll go back to implement support for the bulk of the RV32I instruction set.
-
       p
         | Let’s look at the components of our CPU, following the flow of an instruction through the logic.
         | This is also roughly the order in which we will implement the logic.
 
-        
+      
       .mc-tutorial-figure
-        img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/CPU.png")
+        img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/CPU.png" alt="A block diagram of a RISC-V CPU, showing the flow of instructions through blocks PC (mux) (1), IMem (2), Dec (3), RF (4), ALU (5), and DMEM (6), plus an RF write arrow (7), with logic for branch/jump target calculation and operand selection.")
         .mc-figure-caption
           span
             i RISC-V CPU Block Diagram
@@ -2304,7 +2295,7 @@ include "pane_lib.blade"
     .collapse#pc-logic
       
       .mc-tutorial-figure
-        img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/rv_pc.png")
+        img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/rv_pc.png" alt="A block diagram of the CPU, highlighting the program counter (PC) incrementing logic, including a PC mux feeding a flip-flop, then an incrementer feeding back to the PC mux." )
         .mc-figure-caption
           span
             i Implementing PC logic
@@ -2336,7 +2327,7 @@ include "pane_lib.blade"
           | .
       
       .mc-tutorial-figure
-        img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/pc_inc.png")
+        img.mc-figure-body(width="350" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/pc_inc.png" alt="A logic diagram showing the PC incrementer feeding back to the PC mux and flip-flop, with labels `$next_pc[31:0]` and `$pc[31:0] (= >>1$next_pc)`." )
         .mc-figure-caption
           span
             i Initial PC logic
@@ -2347,13 +2338,18 @@ include "pane_lib.blade"
             | Implement the circuit above (replacing the “YOUR CODE HERE” comment), and confirm in VIZ and WAVEFORM that the PC is now starting at zero and incrementing as it should.       
       
       p
-        | Remember, you can find reference solutions for all RISC-V labs in the course GitHub repository.
+        | Remember, reference solutions are available for all RISC-V labs in times of desperation,
+        | linked below and in the first section of this course.
+      button.btn.mc-tutorial-btn(type="button" onclick="window.open('/sandbox?code_url=https%3A%2F%2Fraw.githubusercontent.com%2Fstevehoover%2FLF-Building-a-RISC-V-CPU-Core%2Frefs%2Fheads%2Fmain%2Frisc-v_solutions.tlv')")
+        | Open Reference Solutions
+        <i.fa.fa-up-right-from-square
+    
     
     call tutorial_subsection("Instruction Memory", "instruction-memory")
     .collapse#instruction-memory
-
+      
       .mc-tutorial-figure
-        img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/rv_imem.png")
+        img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/rv_imem.png" alt="The CPU block diagram, highlighting that PC logic is complete and IMem is to be implemented next.")
         .mc-figure-caption
           span
             i Implementing instruction memory
@@ -2392,7 +2388,7 @@ include "pane_lib.blade"
           | in an implementation using flip-flops that would be far less optimal than SRAM.
 
       .mc-tutorial-figure
-        img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/fetch.png")
+        img.mc-figure-body(width="350" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/fetch.png", alt="A logic diagram showing the completed PC logic feeding into the IMem block to be implemented next, which outputs `$instr[31:0]`." )
         .mc-figure-caption
           span
             i Instruction memory hookup
@@ -2427,7 +2423,7 @@ include "pane_lib.blade"
       .collapse#instruction-type-decode-logic
 
         .mc-tutorial-figure
-          img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/rv_dec.png")
+          img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/rv_dec.png" alt="The CPU block diagram, highlighting that PC logic and IMem are complete and Dec is to be implemented next.")
           .mc-figure-caption
             span
               i Implementing decode logic
@@ -2440,7 +2436,7 @@ include "pane_lib.blade"
           | :
         
         .mc-tutorial-figure
-          img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/RISC-V_instruction_formats.png")
+          img.mc-figure-body(width="550" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/RISC-V_instruction_formats.png" alt="A figure showing the base instruction formats of RISC-V, including R-type, I-type, S-type, B-type, U-type, and J-type formats, with fields such as opcode, funct3, funct7, rs1, rs2, rd, and fragmented immediate value fields." )
           .mc-figure-caption
             span
               i Base instruction formats showing instruction fields for each instruction type
@@ -2455,7 +2451,7 @@ include "pane_lib.blade"
           |  for valid RV32I instructions. We will assume all instructions to be valid, so we can simply
           | ignore these two bits. The ISA defines the instruction type to be determined as follows.
         .mc-tutorial-figure
-          img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/instr_type_table.png")
+          img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/instr_type_table.png" alt="A figure showing the composition of immediate bit from the original instruction to form the immediate value for each RV32I instruction type, except R.")
           .mc-figure-caption
             span
               i Instruction types from opcode[6:2] (instr[6:2])
@@ -2507,7 +2503,7 @@ include "pane_lib.blade"
           | the exception. It is constructed from different bits depending on the instruction type.
         
         .mc-tutorial-figure
-          img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/RISC-V_instruction_formats.png")
+          img.mc-figure-body(width="550" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/RISC-V_instruction_formats.png" alt="A figure showing the base instruction formats of RISC-V, including R-type, I-type, S-type, B-type, U-type, and J-type formats, with fields such as opcode, funct3, funct7, rs1, rs2, rd, and fragmented immediate value fields.")
           .mc-figure-caption
             span
               i Base instruction formats showing instruction fields for each instruction type (repeated for easy reference)
@@ -2590,7 +2586,7 @@ include "pane_lib.blade"
           | depending on the type.
         
         .mc-tutorial-figure
-          img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/imm.png")
+          img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/imm.png" alt="A figure showing the composition of immediate bit from the original instruction to form the immediate value for each RV32I instruction type, except R." )
           .mc-figure-caption
             span
               i Formation of the immediate value based on instruction type
@@ -2652,7 +2648,7 @@ include "pane_lib.blade"
           |  would be more appropriate:
         
         .mc-tutorial-figure
-          img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/decode.png")
+          img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/decode.png" alt="A figure showing the instr[30]/funct7[5], funct3, and opcode values for the RV32I instruction set. Instructions B*, ADDI, and ADD are circled in red.")
           .mc-figure-caption
             span
               i Instruction decode table, with needed instructions circled
@@ -2698,7 +2694,7 @@ include "pane_lib.blade"
     .collapse#register-file-read
 
       .mc-tutorial-figure
-        img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/rv_rf.png")
+        img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/rv_rf.png" alt="The CPU block diagram, highlighting that PC logic, IMem, and Dec are complete and RF is to be implemented next.")
         .mc-figure-caption
           span
             i Implementing register file read
@@ -2720,7 +2716,7 @@ include "pane_lib.blade"
         | cycle).
       
       .mc-tutorial-figure
-        img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/rf.png")
+        img.mc-figure-body(width="400" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/rf.png" alt="A block diagram of the register file (RF) with inputs: $reset, $wr_en, $wr_index[4:0], $wr_data[31:0], $rd_en1, $rd_index1, $rd_en2, $rd_index2[4:0]; and outputs: $rd_data1 and $rd_data2.")
         .mc-figure-caption
           span
             i The provided register file instantiation (before you modify it)
@@ -2797,7 +2793,7 @@ include "pane_lib.blade"
     .collapse#arithmetic-logic-unit
 
       .mc-tutorial-figure
-        img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/rv_alu.png")
+        img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/rv_alu.png" alt="The CPU block diagram, highlighting that PC logic, IMem, Dec, and RF are complete and ALU is to be implemented next.")
         .mc-figure-caption
           span
             i Implementing the arithmetic logic unit
@@ -2880,7 +2876,7 @@ include "pane_lib.blade"
     .collapse#branch-logic
 
       .mc-tutorial-figure
-        img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/rv_br.png")
+        img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/rv_br.png" alt="The CPU block diagram, highlighting that PC logic, IMem, Dec, RF, and ALU are complete and branch address and redirect logic is to be implemented next.")
         .mc-figure-caption
           span
             i Implementing branch logic
@@ -2907,7 +2903,7 @@ include "pane_lib.blade"
           code $pc
           | ) accordingly.
       .mc-tutorial-figure
-        img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/branch_logic.png")
+        img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/branch_logic.png" alt="A logic diagram showing branch logic with branch target calculation, taken calculation, and PC redirect logic highlighted to be implemented next." )
         .mc-figure-caption
           span
             i Branch logic in greater detail
@@ -2971,7 +2967,7 @@ include "pane_lib.blade"
         | Similar to the structure of the ALU, you’ll determine whether a branch is to be taken by selecting the
         | appropriate comparison result.
       .mc-tutorial-figure
-        img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/taken_br.png")
+        img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/taken_br.png" alt="A logic diagram showing the branch taken logic diagram to be implemented next." alt="A logic diagram showing the branch taken logic diagram with ==, !=, <, >=, < u, and >= u comparisons of $src1_value and $src2_value selected for BEQ, BNE, BLT, BGE, BLTU, and BGEU respectively by $is_b*, resulting in $taken_br.")
         .mc-figure-caption
           span
             i Branch taken logic diagram
@@ -3121,7 +3117,7 @@ include "pane_lib.blade"
       p
         | Previously, you implemented decode logic for the instructions circled in red.
       .mc-tutorial-figure
-        img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/decode.png")
+        img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/decode.png" alt="A figure showing the instr[30]/funct7[5], funct3, and opcode values for the RV32I instruction set. Instructions B*, ADDI, and ADD are circled in red." )
         .mc-figure-caption
           span
             i Instruction decode table
@@ -3168,7 +3164,7 @@ include "pane_lib.blade"
         | as well, but a few are more complex. A few have common subexpressions, so let’s first create assignments for these
         | subexpressions.
       .mc-tutorial-figure
-        img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/alu_subexprs.png")
+        img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/alu_subexprs.png" alt="A table showing the subexpressions needed by the ALU for various RV32I instructions: $sltu_rslt[31:0] = {31'b0, $src1_value < $src2_value}; $sltiu_rslt[31:0] = {31'b0, $src1_value < $imm}; $sext_src1[63:0] = { {32{$src1_value[31]}}, $src1_value }; $sra_rslt[63:0] = $sext_src1 >> $src2_value[4:0]; $srai_rslt[63:0] = $sext_src1 >> $imm[4:0];.")
         .mc-figure-caption
           span
             i Subexpressions needed by the ALU
@@ -3186,7 +3182,7 @@ include "pane_lib.blade"
         | Now, to implement the complete ALU. We provide you with the expressions, some of which use the subexpressions you
         | just implemented.
       .mc-tutorial-figure
-        img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/alu_exprs.png")
+        img.mc-figure-body(width="475" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/alu_exprs.png" alt="A table showing the Result value TL-Verilog expressions for the ALU for each RV32I instruction: ANDI: $src1_value & $imm; ORI: $src1_value | $imm; XORI: $src1_value ^ $imm; ADDI: $src1_value + $imm; SLLI: $src1_value << $imm[4:0]; SRLI: $src1_value >> $imm[5:0]; AND: $src1_value & $src2_value; OR: $src1_value | $src2_value; XOR: $src1_value ^ $src2_value; ADD: $src1_value + $src2_value; SUB: $src1_value - $src2_value; SLL: $src1_value << $src2_value[4:0]; SRL: $src1_value >> $src2_value[4:0]; SLTU: $sltu_rslt; SLTIU: $sltiu_rslt; LUI: {$imm[31:12],12'b0}; AUIPC: $pc + $imm; JAL: $pc + 32'd4; JALR: $pc + 32'd4; SLT: ( ($src1_value[31] == $src2_value[31]) ? $sltu_rslt : {31'b0, $src1_value[31]} ); SLTI: ( ($src1_value[31] == $imm[31]) ? $sltiu_rslt : {31'b0, $src1_value[31]} ); SRA: $sra_rslt[31:0]; SRAI: $srai_rslt[31:0];")
         .mc-figure-caption
           span
             i Result value TL-Verilog expressions for the ALU for each instruction
@@ -3218,7 +3214,7 @@ include "pane_lib.blade"
     .collapse#jump-logic
 
       .mc-tutorial-figure
-        img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/rv_jump.png")
+        img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/rv_jump.png" alt="The CPU block diagram, highlighting that PC logic, IMem, Dec, RF, ALU, and branch logic are complete and jump logic is to be implemented next.")
         .mc-figure-caption
           span
             i Implementing jump logic
@@ -3274,10 +3270,10 @@ include "pane_lib.blade"
           | this is a byte-address. Loads and stores can read/write single bytes, half-words (2 bytes), or words (4 bytes/32
           | bits).
         .mc-tutorial-figure
-          img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/word_half_byte.png")
+          img.mc-figure-body(width="300" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/word_half_byte.png" alt="A figure showing word, half-word, and byte sizes." )
           .mc-figure-caption
             span
-              i Implementing jump logic
+              i Word, half-word, and byte sizes
         p
           | We will, however, avoid this nuance and implement all load/store instructions to operate on words, assuming that
           | the lowest two address bits are zero. In other words, we are assuming word loads/stores with naturally-aligned
@@ -3298,7 +3294,7 @@ include "pane_lib.blade"
         p
           | It uses I-type instruction format:
         .mc-tutorial-figure
-          img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/itype_imm.png")
+          img.mc-figure-body(width="550" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/itype_imm.png" alt="I-type instruction format diagram." )
           .mc-figure-caption
             span
               i I-type instruction format
@@ -3319,10 +3315,10 @@ include "pane_lib.blade"
         p
           | It has its own S-type instruction format:
         .mc-tutorial-figure
-          img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/itype_imm.png")
+          img.mc-figure-body(width="550" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/stype_imm.png" alt="S-type instruction format diagram." )
           .mc-figure-caption
             span
-              i I-type instruction format
+              i S-type instruction format
         p
           | It writes the specified address of memory with value from the rs2 source register:
         p
@@ -3354,7 +3350,7 @@ include "pane_lib.blade"
       .collapse#data-memory
 
         .mc-tutorial-figure
-          img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/rv_dmem.png")
+          img.mc-figure-body(width="500" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/rv_dmem.png" alt="The CPU block diagram, highlighting that DMem is the only logic remaining and is to be implemented next.")
           .mc-figure-caption
             span
               i Implementing data memory
