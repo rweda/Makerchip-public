@@ -13,105 +13,192 @@
     .settings-content
       .settings-panel.active#verilog-panel
         .settings-section
-          h3 Verilog/SystemVerilog Formatting
+          // TODO: value="--hdl verilog" is treated as a single option.
+          //h3 Compatibility Options
+          //.checkbox-group
+          //  label.checkbox-label
+          //    input(type="checkbox" name="verilog-formatting" value="--hdl verilog")
+          //    span.checkbox-custom
+          //    | Verilog (vs. SystemVerilog)
+            
+          h3 Clocking Options
           .checkbox-group
-            label.checkbox-label
-              input(type="checkbox" name="verilog-formatting" value="--hdl verilog")
-              span.checkbox-custom
-              | Verilog (vs. SystemVerilog)
-            
-            label.checkbox-label
-              input(type="checkbox" name="verilog-formatting" value="--bestsv" checked)
-              span.checkbox-custom
-              | Optimize SystemVerilog code for readability (versus preserving line association with TL-Verilog source)
-            
-            label.checkbox-label
-              input(type="checkbox" name="verilog-formatting" value="--fmtNoSource" checked)
-              span.checkbox-custom
-              | Disable \source tags in TL-Verilog. (Note, this is not an option in Makerchip.)
-            
-            label.checkbox-label
-              input(type="checkbox" name="verilog-formatting" value="--noline" checked)
-              span.checkbox-custom
-              | Disable `line directive in SV output
-            
             label.checkbox-label
               input(type="checkbox" name="verilog-formatting" value="--clkAlways")
               span.checkbox-custom
-              | Use the global/free-running clock for all flip-flops
+              span
+                code
+                  | --clkAlways
+                | : Use the global/free-running clock for all flip-flops
             
             label.checkbox-label
               input(type="checkbox" name="verilog-formatting" value="--clkEnable")
               span.checkbox-custom
-              | Use enable flip-flops, not clock gating. (Good for FPGAs.)
+              span
+                code
+                  | --clkEnable
+                | : Use enable flip-flops, not clock gating. (Good for FPGAs.)
             
             label.checkbox-label
               input(type="checkbox" name="verilog-formatting" value="--clkStageAlways")
               span.checkbox-custom
-              | Apply clock gating/enabling only to the first of a series of flip-flops
+              span
+                code
+                  | --clkStageAlways
+                | : Apply clock gating/enabling only to the first of a series of flip-flops
             
+          h3 Verilog Formatting Options
+          .checkbox-group
             label.checkbox-label
               input(type="checkbox" name="verilog-formatting" value="--fmtDeclSingleton")
               span.checkbox-custom
-              | Each HDL signal is declared in its own declaration statement
+              span
+                code
+                  | --fmtDeclSingleton
+                | : Each HDL signal is declared in its own declaration statement
             label.checkbox-label
               input(type="checkbox" name="verilog-formatting" value="--fmtDeclUnifiedHier")
               span.checkbox-custom
-              | Declare signals in a unified design hierarchy in the generated file
+              span
+                code
+                  | --fmtDeclUnifiedHier
+                | : Declare signals in a unified design hierarchy in the generated file
             
             label.checkbox-label
               input(type="checkbox" name="verilog-formatting" value="--fmtEscapedNames")
               span.checkbox-custom
-              | Use escaped HDL names that resemble TLV names as closely as possible
+              span
+                code
+                  | --fmtEscapedNames
+                | : Use escaped HDL names that resemble TLV names as closely as possible
             
             label.checkbox-label
               input(type="checkbox" name="verilog-formatting" value="--fmtFlatSignals")
               span.checkbox-custom
-              | Declare signals at the top level scope in the generated file
+              span
+                code
+                  | --fmtFlatSignals
+                | : Declare signals at the top level scope in the generated file
             
             label.checkbox-label
               input(type="checkbox" name="verilog-formatting" value="--fmtFullHdlHier")
               span.checkbox-custom
-              | Provide HDL hierarchy for all scopes, including non-replicated scopes
+              span
+                code
+                  | --fmtFullHdlHier
+                | : Provide HDL hierarchy for all scopes, including non-replicated scopes
             
+            // TODO: Hmmm... this isn't really a formatting option.
             label.checkbox-label
               input(type="checkbox" name="verilog-formatting" value="--fmtInlineInjection")
               span.checkbox-custom
-              | Provide X-injection and state recirculation for assignments under 'when' conditions
+              span
+                code
+                  | --fmtInlineInjection
+                | : Provide X-injection and state recirculation for assignments under 'when' conditions
             
             label.checkbox-label
               input(type="checkbox" name="verilog-formatting" value="--fmtNoRespace")
               span.checkbox-custom
-              | Preserve whitespace in HDL expressions as is
+              span
+                code
+                  | --fmtNoRespace
+                | : Preserve whitespace in HDL expressions as is
             
             label.checkbox-label
               input(type="checkbox" name="verilog-formatting" value="--fmtPackAll")
               span.checkbox-custom
-              | Generate HDL signals as packed at all levels of hierarchy
+              span
+                code
+                  | --fmtPackAll
+                | : Generate HDL signals as packed at all levels of hierarchy
             
             label.checkbox-label
               input(type="checkbox" name="verilog-formatting" value="--fmtPackBooleans")
               span.checkbox-custom
-              | Pack an additional level of hierarchy for boolean HDL signals
+              span
+                code
+                  | --fmtPackBooleans
+                | : Pack an additional level of hierarchy for boolean HDL signals
             
             label.checkbox-label
               input(type="checkbox" name="verilog-formatting" value="--fmtStripUniquifiers")
               span.checkbox-custom
-              | Eliminate the use of uniquifiers in HDL names where possible
+              span
+                code
+                  | --fmtStripUniquifiers
+                | : Eliminate the use of uniquifiers in HDL names where possible
             
             label.checkbox-label
               input(type="checkbox" name="verilog-formatting" value="--fmtUseGenerate")
               span.checkbox-custom
-              | Use the generate/endgenerate keywords that are optional in SystemVerilog
+              span
+                code
+                  | --fmtUseGenerate
+                | : Use the 
+                code generate
+                | /
+                code endgenerate
+                |  keywords that are optional in SystemVerilog
             
             label.checkbox-label
               input(type="checkbox" name="verilog-formatting" value="--directiveComments")
               span.checkbox-custom
-              | Allow output line comments after `line and `include directives
+              span
+                code
+                  | --directiveComments
+                | : Allow output line comments after 
+                code `line
+                |  and 
+                code `include
+                |  directives
             
             label.checkbox-label
               input(type="checkbox" name="verilog-formatting" value="--inlineGen")
               span.checkbox-custom
-              | Produce the generated code in an inline code block    
-              | within the translated code, rather than in a        
-              | separate file.
+              span
+                code
+                  | --inlineGen
+                | : Produce the generated code in an inline code block
+                | within the translated code, rather than in a separate file.
+            
+            label.checkbox-label
+              input(type="checkbox" name="verilog-formatting" value="--bestsv")
+              span.checkbox-custom
+              span
+                code
+                  | --bestsv
+                | : Optimize SystemVerilog code for readability.
+                br
+                <i>(class="fa-solid fa-triangle-exclamation" style="color: orange;")
+                i
+                  | Checking this option affects code line associations with TL-Verilog source.
+            
+            label.checkbox-label
+              input(type="checkbox" name="verilog-formatting" value="--fmtNoSource")
+              span.checkbox-custom
+              span
+                code
+                  | --fmtNoSource
+                | : Disable 
+                code \source
+                |  tags in TL-Verilog.
+                br
+                <i>(class="fa-solid fa-triangle-exclamation" style="color: orange;")
+                i
+                  | Checking this option affects code line associations with TL-Verilog source.
+            
+            label.checkbox-label
+              input(type="checkbox" name="verilog-formatting" value="--noline")
+              span.checkbox-custom
+              span
+                code
+                  | --noline
+                | : Disable 
+                code `line
+                |  directive in SV output
+                br
+                <i>(class="fa-solid fa-triangle-exclamation" style="color: orange;")
+                i
+                  | Checking this option affects code line associations in Verilator messages versus TL-Verilog source.
+            
