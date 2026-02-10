@@ -2,10 +2,38 @@
 <html>
   <head>
   <meta charset='UTF-8'>
-  <title>Classes for Redwood EDA, LLC&#39;s Visual Debug Feature</title>
+  <title>Classes for Redwood EDA, LLC&#39;s Visual Debug Feature</title>  <script>
+    (function() {
+      if (!window.parent.frames) {
+        window.parent.frames = {};
+      }
+      window.parent.frames['main'] = {
+        location: {
+          get href() { return ''; },
+          set href(url) {
+            window.parent.postMessage({ navigate: url }, '*');
+          }
+        }
+      };
+    })();
+  </script>
+
   <script src='javascript/application.js'></script>
   <script src='javascript/search.js'></script>
-  <link rel='stylesheet' href='stylesheets/application.css' type='text/css'>
+  <link rel='stylesheet' href='stylesheets/application.css' type='text/css'>  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      document.body.addEventListener('click', function(e) {
+        var target = e.target.closest('a');
+        if (target && target.getAttribute('href') && !target.getAttribute('href').startsWith('#')) {
+          var href = target.getAttribute('href');
+          if (target.getAttribute('target') === 'main') {
+            e.preventDefault();
+            window.parent.postMessage({ navigate: href }, '*');
+          }
+        }
+      });
+    });
+  </script>
 </head>
   <body class='list'>
     <div class='list tree' id='content'>

@@ -2,13 +2,39 @@
 <html>
   <head>
   <meta charset='UTF-8'>
-  <title>Classes for Redwood EDA, LLC&#39;s Visual Debug Feature</title>
+  <title>Classes for Redwood EDA, LLC's Visual Debug Feature</title>
   <script src='javascript/application.js'></script>
   <script src='javascript/search.js'></script>
   <link rel='stylesheet' href='stylesheets/application.css' type='text/css'>
+  <style>
+    body { margin: 0; padding: 0; overflow: hidden; }
+    #frameset-container { display: flex; height: 100vh; }
+    #list-frame { width: 25%; border-right: 1px solid #ccc; }
+    #content-frame { flex: 1; }
+    #list-frame iframe, #content-frame iframe { 
+      width: 100%; 
+      height: 100%; 
+      border: none; 
+      display: block; /* Removes inline spacing that causes scrollbars */
+    }
+  </style>
 </head>
-  <frameset cols='25%, *'>
-    <frame name='list' src='class_list.html'></frame>
-    <frame id='content' name='main' src='extra/public/README.md.html'></frame>
-  </frameset>
+<body>
+  <div id="frameset-container">
+    <div id="list-frame">
+      <iframe src='class_list.html'></iframe>
+    </div>
+    <div id="content-frame">
+      <iframe id="main" src='extra/public/README.md.html'></iframe>
+    </div>
+  </div>
+  <script>
+    // Intercept clicks in the list frame to navigate the content frame
+    window.addEventListener('message', function(e) {
+      if (e.data && e.data.navigate) {
+        document.getElementById('main').src = e.data.navigate;
+      }
+    });
+  </script>
+</body>
 </html>
