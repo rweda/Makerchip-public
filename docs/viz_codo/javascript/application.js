@@ -11513,7 +11513,7 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
       var link;
       link = $(this).find('a:not(.toggle)').attr('href');
       if (link && link !== '#') {
-        parent.frames['main'].location.href = link;
+        try { parent.frames['main'].location.href = link; } catch (e) { /* Sandboxed - postMessage handles navigation */ }
       }
       return event.preventDefault();
     });
