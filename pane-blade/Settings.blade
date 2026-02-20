@@ -38,7 +38,13 @@
                 code
                   | --clkEnable
                 | : Use enable flip-flops, not clock gating. (Good for FPGAs.)
-            
+            label.checkbox-label
+              input(type="checkbox" name="verilog-formatting" value="--hdl")
+              span.checkbox-custom
+              span
+                code
+                  | --hdl verilog
+                | : Use Verilog (vs. SystemVerilog default)
             label.checkbox-label
               input(type="checkbox" name="verilog-formatting" value="--clkStageAlways")
               span.checkbox-custom
