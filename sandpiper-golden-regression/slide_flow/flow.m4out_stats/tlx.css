@@ -1,6 +1,6 @@
 /*
-Copyright (c) Redwood EDA, LLC
-See accompanying LICENSE file for details.
+Copyright (c), Redwood EDA, LLC
+All rights reserved.
 */
 .tlx_unknown {
   color: #505050;
@@ -38,17 +38,17 @@ See accompanying LICENSE file for details.
   font-weight: normal;
 }
 .tlx_instrumentation {
-  color: #a07090;
+  color: #a0508070;
   font-style: normal;
   font-weight: normal;
 }
 .tlx_comments {
-  color: #707070;
+  color: #70707070;
   font-style: normal;
   font-weight: normal;
 }
 .tlx_whitespace {
-  color: #7090a0;
+  color: #7090d070;
   font-style: normal;
   font-weight: normal;
 }
