@@ -20,7 +20,7 @@ function video(title, url)
   p.mc-video-title
     = title
 
-// A video that is embedded if the installation hasMedia or links to youtube otherwise.
+// A video that is embedded if the installation has media (mediaPath) or links to youtube otherwise.
 // Optional attribution parameter for copyright notices.
 function video_media(mediaPath, youtubeUrl, title, attribution)
   - var mediaUrl = "/media/" + mediaPath
