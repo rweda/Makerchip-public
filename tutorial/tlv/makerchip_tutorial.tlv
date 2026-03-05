@@ -1,4 +1,4 @@
-\m4_TLV_version 1d: tl-x.org
+\m5_TLV_version 1d: tl-x.org
 \SV
 
 // ------------------------
@@ -39,7 +39,7 @@ typedef enum bit [3:0] {
 
 
 
-m4_makerchip_module
+m5_makerchip_module
 \TLV
    /*
    

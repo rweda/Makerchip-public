@@ -1,3 +1,5 @@
+include "pane_lib.blade"
+
 .mc-auto-pane-contents.mc-markdown.mc-dragover
   a(name="top")
   h1
@@ -449,15 +451,27 @@
     | can fly for yourself at
     <a(href="http://fractalvalley.net" target="_blank") fractalvalley.net
     | .
-  iframe(width="315" height="315" src="https://www.youtube.com/embed/7ZWva5DC4J4" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen)
-  iframe(width="315" height="315" src="https://www.youtube.com/embed/ZhuTOXnpp0k" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen)
+  p.media-only(style="text-align: center; margin-bottom: 5px")
+    video(controls, controlsList="nodownload", style="display: inline-block; max-width: 315px; width: 45%; margin: 5px")
+      source(src="/media/mandelbrot_2018_04_11.mp4", type="video/mp4")
+      | Your browser does not support the video tag.
+    video(controls, controlsList="nodownload", style="display: inline-block; max-width: 315px; width: 45%; margin: 5px")
+      source(src="/media/3d_flythrough.mp4", type="video/mp4")
+      | Your browser does not support the video tag.
+  p.no-media-only(style="text-align: center; margin-bottom: 5px")
+    a.btn.btn-primary(href="https://www.youtube.com/watch?v=ZhuTOXnpp0k", target="_blank", style="margin: 5px")
+      i.fa-brands.fa-youtube
+      | &nbsp; Mandelbrot Zoom
+    a.btn.btn-primary(href="https://www.youtube.com/watch?v=7ZWva5DC4J4", target="_blank", style="margin: 5px")
+      i.fa-brands.fa-youtube
+      | &nbsp; 3D Flythrough
   p
     | This accelerator was implemented in Makerchip, and debugged with VIZ.
   button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"https://cdn.jsdelivr.net/gh/stevehoover/makerchip_examples@70370adbbb3834e370d31845f2c9241ef7d61ce2/mandelbrot_as_img.tlv\")")
     | Mandelbrot Accelerator (VIZ)
   p
     | Visit the
-    <a>(href="https://github.com/stevehoover/1st-CLaaS", target="_blank") 1st CLaaS repository
+    <a>(href="https://github.com/os-fpga/1st-CLaaS", target="_blank") 1st CLaaS repository
     | to learn how you can deploy your #{appConfig.product} designs in the cloud.
   
 

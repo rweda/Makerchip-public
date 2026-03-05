@@ -15,7 +15,7 @@
 
 
 \SV
-   // Example from slide 34 of https://www.youtube.com/embed/BIwpN7za95M
+   // Example from slide 34 of "TL-Verilog for Verification" presentation (see Courses > Tutorial Sessions > TL-Verilog for Verification).
    `include "sqrt32.v";
 
    m4_makerchip_module

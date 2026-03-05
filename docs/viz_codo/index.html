@@ -2,13 +2,35 @@
 <html>
   <head>
   <meta charset='UTF-8'>
-  <title>Classes for Redwood EDA, LLC&#39;s Visual Debug Feature</title>
-  <script src='javascript/application.js'></script>
-  <script src='javascript/search.js'></script>
-  <link rel='stylesheet' href='stylesheets/application.css' type='text/css'>
+  <title>Classes for Redwood EDA, LLC's Visual Debug Feature</title>
+  <style>
+    body { margin: 0; padding: 0; overflow: hidden; }
+    #container { display: flex; height: 100vh; }
+    #list { width: 25%; border-right: 1px solid #ccc; overflow: auto; }
+    #content { flex: 1; }
+    #list iframe, #content iframe { 
+      width: 100%; 
+      height: 100%; 
+      border: none; 
+      display: block;
+    }
+  </style>
 </head>
-  <frameset cols='25%, *'>
-    <frame name='list' src='class_list.html'></frame>
-    <frame id='content' name='main' src='extra/public/README.md.html'></frame>
-  </frameset>
+<body>
+  <div id="container">
+    <div id="list">
+      <iframe src='class_list.html'></iframe>
+    </div>
+    <div id="content">
+      <iframe id="main" src='extra/public/README.md.html'></iframe>
+    </div>
+  </div>
+  <script>
+    window.addEventListener('message', function(e) {
+      if (e.data && e.data.navigate) {
+        document.getElementById('main').src = e.data.navigate;
+      }
+    });
+  </script>
+</body>
 </html>

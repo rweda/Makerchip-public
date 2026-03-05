@@ -20,6 +20,27 @@ function video(title, url)
   p.mc-video-title
     = title
 
+// A video that is embedded if the installation has media (mediaPath) or links to youtube otherwise.
+// Optional attribution parameter for copyright notices.
+function video_media(mediaPath, youtubeUrl, title, attribution)
+  - var mediaUrl = "/media/" + mediaPath
+  p.media-only
+    video(controls, controlsList="nodownload", style="margin: auto; display: block; max-width: 560px; width: 100%")
+      source(src=mediaUrl, type="video/mp4")
+      | Your browser does not support the video tag.
+  - if(title) {
+    p.mc-video-title.media-only
+      = title
+  - }
+  - if(attribution) {
+    p.media-only(style="text-align: center; font-size: 0.85em; margin-top: -10px;")
+      i!= attribution
+  - }
+  p.no-media-only(style="text-align: center; margin-bottom: 10px")
+    a.btn.btn-primary(href=youtubeUrl, target="_blank", style="margin: 10px")
+      i.fa-brands.fa-youtube
+      | &nbsp; Watch on YouTube
+
 // These create collapsible sections in a tutorial.
 // Use:
 //   call tutorial_section("Title", "id")

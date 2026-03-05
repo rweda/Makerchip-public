@@ -1,3 +1,5 @@
+include "pane_lib.blade"
+
 .mc-auto-pane-contents.mc-markdown.mc-dragover
   a(name="top")
   h1
@@ -150,7 +152,8 @@
       | VSDOpen 2020 tutorial
     | .
   p
-    iframe(width="560", height="315", src="https://www.youtube.com/embed/EeHK3Jbgv2s", title="How Does a CPU Work and How To Create Your Own Processor", frameborder="0", allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture", allowfullscreen, style="margin: auto; display: block")
+    a(href="https://www.youtube.com/watch?v=EeHK3Jbgv2s", target="_blank", style="display: block; text-align: center")
+      img(src="#{basePath}/module/Pane/FEDEVEL_CPU_walkthrough.png", alt="How Does a CPU Work and How To Create Your Own Processor", style="max-width: 560px; width: 100%; cursor: pointer")
 
   a(name="vsdopen")
   h3
@@ -158,11 +161,7 @@
   p
     | In this tutorial session, you provide the combinational logic for a RISC-V subset core that
     | executes a simple test program.
-  video(controls, controlsList="nodownload")
-    source(src="https://github.com/stevehoover/VSDOpen2020_TLV_RISC-V_Tutorial/raw/refs/heads/master/videos/VSDOpen2020%20TLV%20RISC%20V%20Tutorial%20Promo.mp4", type="video/mp4")
-    | Your browser does not support the video tag.
-  p.mc-video-title
-    | Promo Video
+  call video_media("VSDOpen2020 TLV RISC V Tutorial Promo.mp4", "https://www.youtube.com/watch?v=bBwD-v5-CE4", "Promo Video")
   p
     | To get started, click here to restore the EDITOR to the default code template and to open separate tabs with slides and
     | videos. Then start with the first video. Be sure to note the changes from the original workshop, noted along with the
@@ -224,11 +223,11 @@
       | middle schoolers
     | successfully completed the course. Subsequent to this workshop, students have taped out their RVMYTH CPU
     | cores in Open MPW shuttles for SKY130, and this core is used in subsequent workshops from
-    <a(href="https://www.vlsisystemdesign.com/")
+    <a(href="https://www.vlsisystemdesign.com/", target="_blank")
       | VLSI System Design.
   p
     | Similar content is available in a fully-asynchronous format through
-    <a>(href="https://fedevel.com/")
+    <a>(href="https://fedevel.com/", target="_blank")
       | FEDEVEL
     | as "Building your own RISC-V Processor".
   p
@@ -299,7 +298,7 @@
       | MYTH Workshop
     have prepared their designs for ASIC tape-outs on the Skywater 130nm process.
   p
-    a>(href="https://www.vlsisystemdesign.com/")
+    a>(href="https://www.vlsisystemdesign.com/", target="_blank")
       | VLSI System Design
     | has offered ASIC SKY 130 courses using the "RVMYTH" CPU core from the
     <a.mc-anchor-link(onclick="ide.anchorLink(this, 'myth')")
@@ -346,10 +345,7 @@
   p
     button.btn.mc-tutorial-btn(type="button" onclick="ide.openStaticPane(\"Verif Slides\")")
       | Open Slides
-    b
-      | and watch it here!
-  p
-    iframe(width="560", height="315", src="https://www.youtube.com/embed/BIwpN7za95M", title="YouTube video player", frameborder="0", allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture", allowfullscreen, style="margin: auto; display: block")
+  call video_media("TL-Verilog_for_Verification_1hr.mp4", "https://www.youtube.com/watch?v=BIwpN7za95M")
   p
     Examples from the presentation:
   p
@@ -368,10 +364,12 @@
     | NES 2020 Tutorial Session
   p
     | In this 2-hour tutorial session in Silicon Institute of Technology's NES 2020 Conference, Steve Hoover introduces TL-Verilog and Makerchip.
-  h4
-    | Watch it here!
   p
-    iframe(width="560", height="315", src="https://www.youtube.com/embed/_FFmJZPz6aM?start=1456", title="YouTube video player", frameborder="0", allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture", allowfullscreen, style="margin: auto; display: block")
+    a(href="https://www.youtube.com/watch?v=_FFmJZPz6aM&t=1456s", target="_blank", style="display: block; text-align: center")
+      img(src="#{basePath}/module/Pane/NES-2020.png", alt="NES 2020 Tutorial Session", style="max-width: 560px; width: 100%; cursor: pointer")
+  p
+    i
+      | Note: The original session starts at 24:16.
 
   a(name="dac")
   h3
@@ -388,10 +386,15 @@
     <a(href="https://docs.google.com/document/d/e/2PACX-1vQSaUIZcN3R6mYC8B-tz6H1W8V7Vjgx8gvPI8PPTXQYHVlyeP5TJg0FzF5sixDsvVPeSuMUn3HqhlaS/pub", target="_blank")
       | apples-to-apples code comparison
     | . These three modern HDLs are not simply better RTL languages, they are languages that are better than RTL.
-  h4
-    | Watch it here!
-  p
-    iframe(width="560", height="315", src="https://www.youtube.com/embed/cIDGAQ6aQUw", title="YouTube video player", frameborder="0", allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture", allowfullscreen, style="margin: auto; display: block")
+  .media-only
+    call video_media("DAC2020 Transcending RTL 0 Hoover Intro.mp4", "https://www.youtube.com/watch?v=FFieg8ayj18", "Part 1: Intro (Steve Hoover)", "Copyright Steven Hoover, <a href='https://creativecommons.org/licenses/by/4.0/' target='_blank'>CC BY 4.0</a>")
+    call video_media("DAC2020 Transcending RTL 1 Kuper Clash.mp4", "https://www.youtube.com/watch?v=C8gESJeQXSA", "Part 2: Clash (Jan Kuper)", "Copyright Jan Kuper, <a href='https://creativecommons.org/licenses/by-nd/4.0/' target='_blank'>CC BY-ND 4.0</a>")
+    call video_media("DAC2020 Transcending RTL 2 Renau Pyrope.mp4", "https://www.youtube.com/watch?v=FwzRFKnGaU0", "Part 3: Pyrope (Jose Renau)", "Copyright Jose Renau, <a href='https://creativecommons.org/licenses/by-nd/4.0/' target='_blank'>CC BY-ND 4.0</a>")
+    call video_media("DAC2020 Transcending RTL 3 Hoover TL Verilog.mp4", "https://www.youtube.com/watch?v=_eaJyXlvEMM", "Part 4: TL-Verilog (Steve Hoover)", "Copyright Steven Hoover, <a href='https://creativecommons.org/licenses/by/4.0/' target='_blank'>CC BY 4.0</a>")
+  p.no-media-only(style="text-align: center")
+    a.btn.btn-primary(href="https://www.youtube.com/watch?v=cIDGAQ6aQUw", target="_blank", style="margin: 10px")
+      i.fa-brands.fa-youtube
+      | &nbsp; Watch Full Session on YouTube
   p
     button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/dac_2020_ring.tlv\")")
       | Load EDITOR with DAC Ring Code
