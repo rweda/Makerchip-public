@@ -115,7 +115,7 @@
         | Re-compile and simulate your model from the "Editor" pane under the "E" dropdown menu.
         | (or Ctrl-Enter while editing).
   p
-    | You'll see the following symbols in the tabs, indicating the status of the compilation/simulation.
+    | You'll see symbols like the following in the tabs, indicating the status of the compilation/simulation.
   ul
     li
       i.fa.fa-circle(style="color: #2853ff; font-size: 8px; position: relative; top: -3px")
@@ -126,6 +126,9 @@
     li
       i.fa.fa-check(style="color: #18b020")
       | : Success. Pane is up-to-date with last compilation/simulation.
+    li
+      i.fa.fa-triangle-exclamation(style="color: orange")
+      | : Warning. Compilation/simulation completed with errors/warnings.
     li
       i.fa.fa-times(style="color: #b00808")
       | : Failure. Pane was not updated by last compilation/simulation.
@@ -206,18 +209,13 @@
 
   p
     | The Waveform pane and the VIZ pane (if in use) present simulation data. The Nav TLV and Diagram
-    | panes support a "live" mode. When enable (using the video camera icon) these are annotated with
+    | panes support a "live" mode. When enable (using the video camera icon) these views are annotated with
     | simulation data, representing the state of the model at a particular cycle. The VIZ pane
     | is always a live view of the simulation state.
   p
     | Live panes are linked to a common simulation time, each with their own slider to control the
     | time, and play/pause buttons. This time is also reflected in the Waveform pane as a white
     | vertical line, or "cursor". This cursor can be dragged by its handle in the ruler area.
-  .mc-tutorial-note
-    .mc-note-body
-      p
-        | Some pipesignals are replicated multiple times in a design. These multiple values may not
-        | all be visible in the Nav TLV and Diagram panes.
   .mc-tutorial-step
     .mc-step-body
       p
@@ -255,9 +253,8 @@
       b Waveform viewing
       | : The waveform pane is a custom viewer specifically for #{appConfig.product} that
       | is aware of TL-Verilog constructs.
-    
-    You can find a diagram of the build flow in the "IDE"/“Help” menu.
-    under the “Help” menu.
+  p
+    | You can find a diagram of the build flow under "Help" in the "IDE" menu.
     
   a(name="projects")
   h2 Projects
