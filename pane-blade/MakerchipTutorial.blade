@@ -125,10 +125,7 @@
       | : Working. Compilation/Simulation in progress.
     li
       i.fa.fa-check(style="color: #18b020")
-      | : Success. Pane is up-to-date with last compilation/simulation.
-    li
-      i.fa.fa-triangle-exclamation(style="color: orange")
-      | : Warning. Compilation/simulation completed with errors/warnings.
+      | : Success. Compilation/simulation passed.
     li
       i.fa.fa-times(style="color: #b00808")
       | : Failure. Pane was not updated by last compilation/simulation.
@@ -136,7 +133,19 @@
       i.fa.fa-regular.fa-clock(style="color: #b00808")
       | : Timeout. Last compilation/simulation took too long and was terminated.
   p
-    | After compilation, always check the log. If compilation was successful,
+    | The Log tab indicates finer-grained status of the overall compilation/simulation, including:
+    li
+      i.fa.fa-triangle-exclamation(style="color: orange")
+      | : Warning. Compilation/simulation completed with errors/warnings.
+    li
+      i.fa.fa-check(style="color: #b00808")
+      | /
+      i.fa.fa-check(style="color: #666")
+      | : Successful, but simulation asserted 
+      code failed
+      |  or reached max cycles.
+  p
+    | After compilation, check for LOG errors/warnings first. If compilation was successful,
     | you can navigate the design you have created in the "Nav TLV" and "Diagram"
     | panes. You can debug simulation with the Waveform pane. Various TL-Verilog design elements of these
     | panes are selectable and will highlight across panes to help correlate design elements.
@@ -173,6 +182,7 @@
     .mc-step-body
       p
         | Look through the log output and figure out which output comes from which tool.
+        | Notice the Log tab's status icon and how it reflects the simulation result.
   
   h3 Nav TLV
   p
