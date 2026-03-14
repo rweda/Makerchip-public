@@ -116,13 +116,18 @@
         | (or Ctrl-Enter while editing).
   p
     | You'll see symbols like the following in the tabs, indicating the status of the compilation/simulation.
+  p
+    | The Editor shows:
   ul
     li
       i.fa.fa-circle(style="color: #2853ff; font-size: 8px; position: relative; top: -3px")
       | : Outdated. Unsaved changes in Editor.
+  p
+    | Debug pane tabs (Nav-TLV, Diagram, Waveform, Viz) show:
+  ul
     li
       i.fa.fa-spinner(style="color: #000090")
-      | : Working. Compilation/Simulation in progress.
+      | : Working. Compilation/Simulation in progress (colored by SandPiper errors).
     li
       i.fa.fa-check(style="color: #18b020")
       | : Success. Compilation/simulation passed.
@@ -134,16 +139,34 @@
       | : Timeout. Last compilation/simulation took too long and was terminated.
   p
     | The Log tab indicates finer-grained status of the overall compilation/simulation, including:
+  ul
     li
-      i.fa.fa-triangle-exclamation(style="color: orange")
-      | : Warning. Compilation/simulation completed with errors/warnings.
+      i.fa.fa-spinner(style="color: #000090")
+      | /
+      i.fa.fa-spinner(style="color: #0a5c33")
+      | /
+      i.fa.fa-spinner(style="color: #df9d03")
+      | /
+      i.fa.fa-spinner(style="color: red")
+      | /
+      | : Working. Compilation/Simulation in progress with color indicating non-fatal SandPiper (TL-Verilog)
+      | status (running/clean/warnings/errors).
     li
+      i.fa.fa-triangle-exclamation(style="color: #df9d03")
+      | /
+      i.fa.fa-triangle-exclamation(style="color: red")
+      | : Warning/Error. Compilation/simulation completed with errors/warnings.
+    li
+      i.fa.fa-check(style="color: #18b020")
+      | /
       i.fa.fa-check(style="color: #b00808")
       | /
       i.fa.fa-check(style="color: #666")
-      | : Successful, but simulation asserted 
+      | : No Errors/Warnings. Color indicates assertion of 
+      code passed
+      | /
       code failed
-      |  or reached max cycles.
+      |  signals (passed, failed, or reached max cycles).
   p
     | After compilation, check for LOG errors/warnings first. If compilation was successful,
     | you can navigate the design you have created in the "Nav TLV" and "Diagram"
@@ -177,7 +200,7 @@
   
   h3 Log
   p
-    | The log shows output from SandPiper, Verilator compilation, and Verilator simulation.
+    | The log shows tool output (SandPiper, Verilator compilation, and Verilator simulation).
   .mc-tutorial-step
     .mc-step-body
       p
@@ -193,7 +216,14 @@
         | Glance through the MIPS example. Within the 
         <span>.tlv_ident_keyword1.mc-ident-font \TLV 
         | section, click design elements to see them highlight across panes.
-  
+  p
+    | TL-Verilog supports parameterization and code construction using macro preprocessing
+    | using the M5 macro preprocessor. The Nav TLV pane shows the TL-Verilog after macro expansion.
+  .mc-tutorial-step
+    .mc-step-body
+      p
+        | Click a line number to jump to the corresponding line in the Editor.
+
   h3 Diagram
   p
     | Note the controls in the diagram. Click-and-drag will pan. Mouse wheel will zoom
@@ -215,11 +245,15 @@
         | Ctrl-click signals.
 
   a(name="features")
-  h2 Live Mode
+  h2
+    | Live Mode
+    <i(class="fa fa-video-camera")
 
   p
     | The Waveform pane and the VIZ pane (if in use) present simulation data. The Nav TLV and Diagram
-    | panes support a "live" mode. When enable (using the video camera icon) these views are annotated with
+    | panes support a "live" mode. When enable (using the
+    <i>(class="fa fa-video-camera")
+    | icon) these views are annotated with
     | simulation data, representing the state of the model at a particular cycle. The VIZ pane
     | is always a live view of the simulation state.
   p
@@ -235,8 +269,9 @@
   a(name="tools")
   h2 Tools
   p
-    | What’s running under the hood?  When you encounter a perplexing error in the log it’s
-    | good to know what tool is reporting it. #{appConfig.product} utilizes the following client- and server-side tools.
+    | What’s running under the hood? When you encounter a perplexing error in the log it’s
+    | good to know what tool is reporting it. #{appConfig.product} utilizes the client-
+    | and server-side tools described and illustrated below.
   ul
     li
       b Editing
@@ -263,9 +298,12 @@
       b Waveform viewing
       | : The waveform pane is a custom viewer specifically for #{appConfig.product} that
       | is aware of TL-Verilog constructs.
-  p
-    | You can find a diagram of the build flow under "Help" in the "IDE" menu.
-    
+  .mc-tutorial-figure
+    img.mc-figure-body(width="600px" src="#{basePath}/module/Pane/MakerchipFlow.svg")
+    .mc-figure-caption
+      span
+        | Makerchip Tool Flow
+  
   a(name="projects")
   h2 Projects
   p
@@ -291,51 +329,71 @@
   a(name="structure")
   h2 TL-Verilog File Structure
   p
-    | The file may be a Verilog, SystemVerilog, or TL-Verilog file defining a module called
+    | The file may be a Verilog, SystemVerilog, or TL-Verilog file defining a module called 
     code top
-    | with the arguments expected by #{appConfig.product}. Note, however, that #{appConfig.product}'s navigation and
+    |  with the arguments expected by #{appConfig.product}. Note, however, that #{appConfig.product}'s navigation and
     | debug features are built around TL-Verilog constructs. No diagram will be generated for
     | Verilog and SystemVerilog files.
   p
-    | The first line of a TL-Verilog file, such as 
-    <span>.tlv_ident_keyword1.mc-ident-font \m5_TLV_version 1d: tl-x.org 
-    | identifies the file as containing code using TL-Verilog version 1d syntax
-    | and provides a URL for more information. This line is required. The 
-    <span>.tlv_ident_keyword1.mc-ident-font m5_ 
-    | prefix enables the use of the M5 macro preprocessor. The code seen in the “Nav TLV” pane has been
-    | processed by M5. You’ll notice in the “Nav TLV” pane that the 
-    <span>.tlv_ident_keyword1.mc-ident-font m5_ 
-    | prefix has been stripped as the file has been turned into proper TL-Verilog code.
-  p
-    | On the second line,
-    <span>.tlv_ident_keyword1.mc-ident-font \SV
-    | enters SystemVerilog context.
-    | This example was converted from SystemVerilog and
-    | contains SystemVerilog type declarations. The module interface is always provided as
-    | SystemVerilog code. #{appConfig.product} expects a module called
-    <code> top
-    | to be defined with parameters for
-    <code> clk
-    | and
-    <code> reset
-    | inputs as well as
-    <code> passed
-    | and
-    <code> failed
-    | outputs. This module is defined by the instantiation of the M5 macro
-    <span>.tlv_ident_keyword1.mc-ident-font m5_makerchip_module 
-    | at the end of this
-    <span>.tlv_ident_keyword1.mc-ident-font \SV
-    | section. You can see the resulting module definition in the “NavTLV” pane.
-  p
-    | The body of the module in this example is defined in
-    <span>.tlv_ident_keyword1.mc-ident-font \TLV
-    | context, and the module is terminated in
-    <span>.tlv_ident_keyword1.mc-ident-font \SV
-    | context. This example also contains SystemVerilog helper module definitions.
+    | Mouse over elements in the code below to understand the structure of a TL-Verilog file.
+  pre(style="background-color: #f5f5f5; padding: 10px; border-radius: 4px; font-family: monospace;")
+    span.tlv_ident_keyword1.mc-ident-font(title="A required first line providing the language, version, options, and info link")
+      | \m5_TLV_version 1d --bestsv: tl-x.org
+    br
+    span.tlv_ident_keyword1.mc-ident-font(title="Begins an M5 macro preprocessor \"region\"")
+      | \m5
+    br
+    |    
+    span.mc-ident-font(title="Imports version 1.0 of the standard M5 library")
+      | use(m5-1.0)
+    br
+    span.tlv_ident_keyword1.mc-ident-font(title="Begins a SystemVerilog region, not processed by SandPiper")
+      | \SV
+    br
+    |    
+    span.tlv_ident_keyword1.mc-ident-font(title="M5 macro that expands to the standard Makerchip module definition")
+      | m5_makerchip_module
+    br
+    span.tlv_ident_keyword1.mc-ident-font(title="Begins a region supporting TL-Verilog syntax")
+      | \TLV
+    br
+    |    
+    span.tlv_ident_pipe_sig.mc-ident-font(title="Pipeline signal assignment")
+      | $reset
+    |  = 
+    span.tlv_ident_sv_sig.mc-ident-font(title="References a SystemVerilog signal (this one from the module interface)")
+      | *reset
+    | ;
+    br
+    br
+    |    
+    span.tlv_ident_sv_sig.mc-ident-font(title="A module output, asserted to indicate test passed")
+      | *passed
+    |  = 
+    span.tlv_ident_sv_sig.mc-ident-font(title="A module input - cycle counter")
+      | *cyc_cnt
+    span.tlv_ident_sv_sig.mc-ident-font(title="Verilog expression syntax")
+      |  > 40;
+    br
+    |    
+    span.tlv_ident_sv_sig.mc-ident-font(title="A module output - asserted to indicate test failed")
+      | *failed
+    |  = 
+    span.tlv_ident_sv_sig.mc-ident-font(title="Verilog expression syntax")
+      | 1'b0;
+    br
+    span.tlv_ident_keyword1.mc-ident-font(title="Return to SystemVerilog context")
+      | \SV
+    br
+    |    
+    span.mc-ident-font(title="Verilog to end module definition")
+      | endmodule
     
   a(name="wrapup")
   h2 Wrap-Up
   P
-    | You now know your way around #{appConfig.product}!  Subsequent tutorials will walk you through the features
+    | You now know your way around #{appConfig.product}! Further details are available under
+    |"Help" in the "IDE" menu.
+  p
+    | Subsequent tutorials will walk you through the features
     | of TL-Verilog, from combinational logic through transaction flows.
