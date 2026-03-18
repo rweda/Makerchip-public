@@ -41,8 +41,8 @@
 <li><p>Include the plugin iframe:</p><pre><code class="lang-html">&lt;iframe src=&quot;https://makerchip.com/ide/plugin.html?iframeId=myCircuit&quot;&gt;&lt;/iframe&gt;
 </code></pre>
 </li>
-<li><p>Extend the <code>IDE_Plugin</code> class to customize behavior:</p><pre><code class="lang-javascript">window.defineIDE = function(IDE_Plugin) {
-  return class MyPlatform extends IDE_Plugin {
+<li><p>Extend the <code>IdePlugin</code> class to customize behavior:</p><pre><code class="lang-javascript">window.defineIDE = function(IdePlugin) {
+  return class MyPlatform extends IdePlugin {
     // Override methods to customize behavior
     async onReady() {
       // Called when IDE is ready
@@ -53,8 +53,8 @@
 </li>
 </ol>
 <h2 id="multi-instance-support">Multi-Instance Support</h2><p>You can embed multiple independent IDE instances on a single page by using unique <code>iframeId</code> values and providing an object of initialization functions:</p><pre><code class="lang-javascript">window.defineIDE = {
-  &#39;ide1&#39;: function(IDE_Plugin) { /* ... */ },
-  &#39;ide2&#39;: function(IDE_Plugin) { /* ... */ }
+  &#39;ide1&#39;: function(IdePlugin) { /* ... */ },
+  &#39;ide2&#39;: function(IdePlugin) { /* ... */ }
 }
 </code></pre>
 
