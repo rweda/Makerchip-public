@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset='UTF-8'>
+  <title>Makerchip Plugin API for Third-Party Integration</title>
+  <script src='../javascript/application.js'></script>
+  <script src='../javascript/search.js'></script>
+  <link rel='stylesheet' href='../stylesheets/application.css' type='text/css'>
+</head>
+  <body>
+    <div id='base' data-path='../'></div>
+<div id='header'>
+  <div id='menu'>
+    <a href='../extra/plugin/README.md.html' title='Makerchip Plugin API'>
+      Makerchip Plugin API
+    </a>
+    &raquo;
+    <a href='../alphabetical_index.html' title='Index'>
+      Index
+    </a>
+    &raquo;
+    <span class='title'>IDE_Plugin</span>
+  </div>
+</div>
+    <div id='content'>
+      <h1>
+        Class:
+        IDE_Plugin
+      </h1>
+      <table class='box'>
+        <tr>
+          <td>Defined in:</td>
+          <td>..&#47;doc&#47;cleaned_coffee_plugin&#47;IDE_Plugin.coffee</td>
+        </tr>
+      </table>
+      <h2>Overview</h2>
+      <div class='docstring'>
+  <p>Base class for third-party platform integration with the Makerchip IDE.</p><p>Extend this class to customize IDE behavior, manage code loading, and handle compilation events.
+The IDE is embedded in an iframe and communicates with your platform code via this API.</p><p>Internal use: See full class documentation at: <a href="https://makerchip.com/docs/#https://makerchip.com/docs/class/IDE_Plugin.html">https://makerchip.com/docs/#https://makerchip.com/docs/class/IDE_Plugin.html</a></p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      Single instance setup
+    </h4>
+    <pre><code class='coffeescript'>window.defineIDE = function(IDE_Plugin) {
+  return class MyPlatform extends IDE_Plugin {
+    onReady() {
+      console.log(&quot;IDE ready!&quot;);
+      &#47;&#47; Enable UI, set up event handlers, etc.
+    }
+    onCodeChange() {
+      &#47;&#47; Save to localStorage, enable save button, etc.
+    }
+  };
+};</code></pre>
+    <h4>
+      Multiple instances on one page
+    </h4>
+    <pre><code class='coffeescript'>window.defineIDE = {};
+window.defineIDE.circuit1 = function(IDE_Plugin) {
+  return class Circuit1 extends IDE_Plugin {
+    getDefaultCodeURL() { return &#39;examples&#47;adder.tlv&#39;; }
+  };
+};
+window.defineIDE.circuit2 = function(IDE_Plugin) {
+  return class Circuit2 extends IDE_Plugin {
+    getDefaultCodeURL() { return &#39;examples&#47;counter.tlv&#39;; }
+    initReadOnly() { return true; }
+  };
+};
+&#47;&#47; Then access via, e.g.: window.IDE_instances.circuit1.compile()</code></pre>
+  </div>
+</div>
+<div class='tags'>
+  <h3>See also:</h3>
+  <ul class='see'>
+    <li>
+      <a href='#compile-dynamic'>For triggering compilation</a>
+    </li>
+    <li>
+      <a href='#setCode-dynamic'>For loading code into the editor</a>
+    </li>
+    <li>
+      <a href='#getCode-dynamic'>For retrieving current code</a>
+    </li>
+    <li>
+      <a href='#onReady-dynamic'>For initialization callback</a>
+    </li>
+    <li>
+      <a href='#onCodeChange-dynamic'>For handling user edits</a>
+    </li>
+    <li>
+      <a href='#getDefaultCodeURL-dynamic'>For specifying initial code URL</a>
+    </li>
+  </ul>
+</div>
+      <h2>Property Summary</h2>
+      <dl class='properties'>
+        <dt id='iframeId-property'>
+          <span class='signature'>
+            (String)
+            <b>
+              iframeId
+            </b>
+          </span>
+        </dt>
+        <dd class='desc'>
+          Unique identifier for this iframe instance 
+        </dd>
+        <dt id='config-property'>
+          <span class='signature'>
+            (Object)
+            <b>
+              config
+            </b>
+          </span>
+        </dt>
+        <dd class='desc'>
+          Configuration object 
+        </dd>
+        <dt id='iframe-property'>
+          <span class='signature'>
+            (HTMLIFrameElement)
+            <b>
+              iframe
+            </b>
+          </span>
+        </dt>
+        <dd class='desc'>
+          The IDE iframe element 
+        </dd>
+        <dt id='serverCompile-property'>
+          <span class='signature'>
+            (ServerCompile)
+            <b>
+              serverCompile
+            </b>
+          </span>
+        </dt>
+        <dd class='desc'>
+          Server compilation instance 
+        </dd>
+        <dt id='ideMethods-property'>
+          <span class='signature'>
+            (Object)
+            <b>
+              ideMethods
+            </b>
+          </span>
+        </dt>
+        <dd class='desc'>
+          IDE methods provided via Penpal 
+        </dd>
+      </dl>
+      <h2>Instance Method Summary</h2>
+      <ul class='summary'>
+  <li>
+    <span class='signature'>
+      <a href='#getDefaultCodeURL-dynamic'>
+        #
+(String)
+<b>getDefaultCodeURL</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Get URL for default code to load on startup 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#getDefaultCode-dynamic'>
+        #
+(Promise&lt;String&gt;)
+<b>getDefaultCode</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Get default code to load on startup or override getDefaultCodeURL() for simpler URL-based customization
+
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#initReadOnly-dynamic'>
+        #
+(Boolean)
+<b>initReadOnly</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Whether the initial code should be read-only 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#compile-dynamic'>
+        #
+(void)
+<b>compile</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Trigger compilation of current code in editor 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#setCode-dynamic'>
+        #
+(void)
+<b>setCode</b><span>(code, readOnly = false)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Set code in IDE editor 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#getCode-dynamic'>
+        #
+(Promise)
+<b>getCode</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Get code from IDE editor 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#setCodeFromURL-dynamic'>
+        #
+(void)
+<b>setCodeFromURL</b><span>(url)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Load code from URL 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#onReady-dynamic'>
+        #
+(void|Promise)
+<b>onReady</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Third party entry point, called when IDE is fully loaded and ready. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#onCodeChange-dynamic'>
+        #
+(void)
+<b>onCodeChange</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Called when user edits code in the editor (via typing, etc.) This is a notification only - no code is passed to avoid communication overhead.
+
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#onCodeReplaced-dynamic'>
+        #
+(void)
+<b>onCodeReplaced</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Called when code is programmatically replaced (via setCode, setCodeFromURL, loading examples, etc.) This is a notification only - no code is passed to avoid communication overhead.
+
+    </span>
+  </li>
+</ul>
+      <h2>Instance Method Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='getDefaultCodeURL-dynamic'>
+      #
+(String)
+<b>getDefaultCodeURL</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <div class='note'>
+    <strong>Note:</strong>
+    Override to provide custom URL 
+  </div>
+  <p>Get URL for default code to load on startup</p>
+</div>
+<div class='tags'>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>String</tt>
+      )
+      &mdash;
+      <span class='desc'>URL to fetch TL-Verilog code from </span>
+    </li>
+  </ul>
+  <h3>See also:</h3>
+  <ul class='see'>
+    <li>
+      <a href='#getDefaultCode-dynamic'>getDefaultCode</a>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='getDefaultCode-dynamic'>
+      #
+(Promise&lt;String&gt;)
+<b>getDefaultCode</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <div class='note'>
+    <strong>Note:</strong>
+    Override to provide custom default code, 
+  </div>
+  <p>Get default code to load on startup
+or override getDefaultCodeURL() for simpler URL-based customization</p>
+</div>
+<div class='tags'>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>Promise&lt;String&gt;</tt>
+      )
+      &mdash;
+      <span class='desc'>Promise that resolves with TL-Verilog code </span>
+    </li>
+  </ul>
+  <h3>See also:</h3>
+  <ul class='see'>
+    <li>
+      <a href='#getDefaultCodeURL-dynamic'>getDefaultCodeURL</a>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='initReadOnly-dynamic'>
+      #
+(Boolean)
+<b>initReadOnly</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <div class='note'>
+    <strong>Note:</strong>
+    Override to load initial code read-only 
+  </div>
+  <p>Whether the initial code should be read-only</p>
+</div>
+<div class='tags'>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>Boolean</tt>
+      )
+      &mdash;
+      <span class='desc'>True if initial code should be read-only </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='compile-dynamic'>
+      #
+(void)
+<b>compile</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Trigger compilation of current code in editor</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='setCode-dynamic'>
+      #
+(void)
+<b>setCode</b><span>(code, readOnly = false)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Set code in IDE editor</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>code</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>TL-Verilog source code </span>
+    </li>
+    <li>
+      <span class='name'>readOnly</span>
+      <span class='type'>
+        (
+          <tt>Boolean</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Whether the code should be read-only (default: false) </span>
+    </li>
+  </ul>
+  <h3>See also:</h3>
+  <ul class='see'>
+    <li>
+      <a href='#setCodeFromURL-dynamic'>setCodeFromURL</a>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='getCode-dynamic'>
+      #
+(Promise)
+<b>getCode</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Get code from IDE editor</p>
+</div>
+<div class='tags'>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>Promise</tt>
+      )
+      &mdash;
+      <span class='desc'>Promise from IDE methods (designed to enable minimized data transfer) </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='setCodeFromURL-dynamic'>
+      #
+(void)
+<b>setCodeFromURL</b><span>(url)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Load code from URL</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>url</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>URL to fetch TL-Verilog code from </span>
+    </li>
+  </ul>
+  <h3>See also:</h3>
+  <ul class='see'>
+    <li>
+      <a href='#setCode-dynamic'>setCode</a>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='onReady-dynamic'>
+      #
+(void|Promise)
+<b>onReady</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <div class='note'>
+    <strong>Note:</strong>
+    Override to initialize and enable UI after IDE is ready 
+  </div>
+  <p>Third party entry point, called when IDE is fully loaded and ready.
+Can be async/return a Promise for async initialization - splash screen will not be removed
+until the Promise resolves, preventing user interactions during initialization.</p>
+</div>
+<div class='tags'>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>void|Promise</tt>
+      )
+      &mdash;
+      <span class='desc'>Optional Promise for async initialization </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='onCodeChange-dynamic'>
+      #
+(void)
+<b>onCodeChange</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <div class='note'>
+    <strong>Note:</strong>
+    Programmatic code replacements trigger <code>onCodeReplaced</code>, not this. 
+  </div>
+  <div class='note'>
+    <strong>Note:</strong>
+    Override to handle user edit notifications (e.g., save to localStorage) 
+  </div>
+  <p>Called when user edits code in the editor (via typing, etc.)
+This is a notification only - no code is passed to avoid communication overhead.
+Use getCode() if you need to retrieve the actual code.</p>
+</div>
+<div class='tags'>
+  <h3>See also:</h3>
+  <ul class='see'>
+    <li>
+      <a href='#onCodeReplaced-dynamic'>onCodeReplaced</a>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='onCodeReplaced-dynamic'>
+      #
+(void)
+<b>onCodeReplaced</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <div class='note'>
+    <strong>Note:</strong>
+    This is mutually exclusive with onCodeChange - you get one or the other, never both 
+  </div>
+  <div class='note'>
+    <strong>Note:</strong>
+    Override to handle programmatic code replacement notifications 
+  </div>
+  <p>Called when code is programmatically replaced (via setCode, setCodeFromURL, loading examples, etc.)
+This is a notification only - no code is passed to avoid communication overhead.
+Use getCode() if you need to retrieve the actual code.</p>
+</div>
+<div class='tags'>
+  <h3>See also:</h3>
+  <ul class='see'>
+    <li>
+      <a href='#onCodeChange-dynamic'>onCodeChange</a>
+    </li>
+  </ul>
+</div>
+  </div>
+</div>
+    </div>
+    <div id='footer'>
+  By
+  <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
+    Codo
+  </a>
+  2.1.2
+  &#10034;
+  Press H to see the keyboard shortcuts
+  &#10034;
+  <a href='http://twitter.com/netzpirat' target='_parent'>@netzpirat</a>
+  &#10034;
+  <a href='http://twitter.com/_inossidabile' target='_parent'>@_inossidabile</a>
+</div>
+<iframe id='search_frame'></iframe>
+<div id='fuzzySearch'>
+  <input type='text'>
+  <ol></ol>
+</div>
+<div id='help'>
+  <p>
+    Quickly fuzzy find classes, mixins, methods, file:
+  </p>
+  <ul>
+    <li>
+      <span>T</span>
+      Open fuzzy finder dialog
+    </li>
+  </ul>
+  <p>
+    Control the navigation frame:
+  </p>
+  <ul>
+    <li>
+      <span>L</span>
+      Toggle list view
+    </li>
+    <li>
+      <span>C</span>
+      Show class list
+    </li>
+    <li>
+      <span>I</span>
+      Show mixin list
+    </li>
+    <li>
+      <span>F</span>
+      Show file list
+    </li>
+    <li>
+      <span>M</span>
+      Show method list
+    </li>
+    <li>
+      <span>E</span>
+      Show extras list
+    </li>
+  </ul>
+  <p>
+    You can focus and blur the search input:
+  </p>
+  <ul>
+    <li>
+      <span>S</span>
+      Focus search input
+    </li>
+    <li>
+      <span>Esc</span>
+      Blur search input
+    </li>
+  </ul>
+</div>
+  </body>
+</html>
