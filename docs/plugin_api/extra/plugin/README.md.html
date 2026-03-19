@@ -37,8 +37,8 @@
       </nav>
       <div id='filecontents'>
         <h1 id="makerchip-plugin-api">Makerchip Plugin API</h1>
-<h2 id="overview">Overview</h2><p>The Makerchip Plugin API enables third-party platforms to embed the Makerchip IDE in an iframe and interact with it programmatically. This allows you to integrate TL-Verilog circuit design and simulation capabilities into your own web applications.</p><p>This documentation details the classes and methods available for integration.</p><p><strong>See also the <a href="../../../module/IDE/plugin_example.html" target="_blank">Example Use Page</a></strong></p><h2 id="getting-started">Getting Started</h2><p>To embed Makerchip in your application:</p><ol>
-<li><p>Include the plugin iframe:</p><pre><code class="lang-html">&lt;iframe src=&quot;https://makerchip.com/ide/plugin.html?iframeId=myCircuit&quot;&gt;&lt;/iframe&gt;
+<h2 id="overview">Overview</h2><p>The Makerchip Plugin API enables third-party platforms to embed the Makerchip IDE in an iframe and interact with it programmatically. This allows you to integrate TL-Verilog circuit design and simulation capabilities into your own web applications.</p><p>This documentation details the classes and methods available for integration.</p><p><strong>See also the <a href="../../../../../module/IDE/plugin_example.html" target="_blank">Example Use Page</a></strong></p><h2 id="getting-started">Getting Started</h2><p>To embed Makerchip in your application:</p><ol>
+<li><p>Include the plugin iframe:</p><pre><code class="lang-html">&lt;iframe src=&quot;https://makerchip.com/plugin.html?iframeId=myCircuit&quot;&gt;&lt;/iframe&gt;
 </code></pre>
 </li>
 <li><p>Extend the <code>IdePlugin</code> class to customize behavior:</p><pre><code class="lang-javascript">window.defineIDE = function(IdePlugin) {
