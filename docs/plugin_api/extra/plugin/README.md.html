@@ -52,7 +52,7 @@
 </code></pre>
 </li>
 </ol>
-<h2 id="multi-instance-support">Multi-Instance Support</h2><p>You can embed multiple independent IDE instances on a single page by using unique <code>iframeId</code> values and providing an object of initialization functions:</p><pre><code class="lang-javascript">window.defineIDE = {
+<h2 id="multi-instance-support">Multi-Instance Support</h2><p>You can embed multiple independent IDE instances on a single page by using unique <code>iframeId</code> values and providing an object of initialization functions (which could be a common function):</p><pre><code class="lang-javascript">window.defineIDE = {
   &#39;ide1&#39;: function(IdePlugin) { /* ... */ },
   &#39;ide2&#39;: function(IdePlugin) { /* ... */ }
 }
