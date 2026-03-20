@@ -1,1 +1,0 @@
-window.searchData = [{"t":"plugin/README.md","p":"extra/plugin/README.md.html"}]
