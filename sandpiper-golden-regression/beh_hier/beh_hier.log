@@ -1,6 +1,6 @@
 INFORM(0) (PROD_INFO):
 	SandPiper(TM) 1.14-2022/10/10-beta-Pro from Redwood EDA, LLC
-	(DEV) Run as: "java -jar /home/steve/repos/mono_raj/sandpiper/target/sandpiper.jar --bestsv --viz --compiler=modelsim -p default --outdir=run/gen/beh_hier -i run/gen/beh_hier/beh_hier.m4out.tlv -o beh_hier.sv
+	(DEV) Run as: "java -jar /home/steve/repos/mono_plugin/sandpiper/target/sandpiper.jar --bestsv --viz --compiler=modelsim -p default --outdir=run/gen/beh_hier -i run/gen/beh_hier/beh_hier.m4out.tlv -o beh_hier.sv
 	For help, including product info, run with -h.
 
 INFORM(0) (LICENSE):
@@ -8,7 +8,7 @@ INFORM(0) (LICENSE):
 
 INFORM(0) (FILES):
 	Reading "run/gen/beh_hier/beh_hier.m4out.tlv"
-	to produce (relative to "/home/steve/repos/mono_raj/sandpiper"):
+	to produce (relative to "/home/steve/repos/mono_plugin/sandpiper"):
 		Translated HDL File: "run/gen/beh_hier/beh_hier.sv"
 		Generated HDL File: "run/gen/beh_hier/beh_hier_gen.sv"
 		Simulation Visualization File: "run/gen/beh_hier/beh_hier.m4out_viz.json"
