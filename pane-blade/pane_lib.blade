@@ -23,7 +23,7 @@ function video(title, url)
 // A video that is embedded if the installation has media (mediaPath) or links to youtube otherwise.
 // Optional attribution parameter for copyright notices.
 function video_media(mediaPath, youtubeUrl, title, attribution)
-  - var mediaUrl = "../media/" + mediaPath
+  - var mediaUrl = basePath + "/media/" + mediaPath
   p.media-only
     video(controls, controlsList="nodownload", style="margin: auto; display: block; max-width: 560px; width: 100%")
       source(src=mediaUrl, type="video/mp4")
