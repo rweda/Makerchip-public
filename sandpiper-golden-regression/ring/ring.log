@@ -1,28 +1,20 @@
-INFORM(0) (PROD_INFO):
+<div class="sandpiper-message" mc-sp-sev="0">INFORM(0) (PROD_INFO):
 	SandPiper(TM)
 	(DEV) Run as: "java -jar sandpiper.jar --ide --noversion --fmtDeclSingleton --fmtNoRespace --webContent  --debugSigs --xinj --xclk --fmtPackAll --inlineGen --compiler=modelsim -p default --outdir=run/gen/ring -i run/gen/ring/ring.m4out.tlv -o ring.sv
 	For help, including product info, run with -h.
-
-<div class="sandpiper-message">INFORM(0) (LICENSE):
+</div><!-- end sandpiper-message --><div class="sandpiper-message" mc-sp-sev="0">INFORM(0) (LICENSE):
 	Licensed to "Redwood EDA, LLC" as: Full Edition.
-
-</div><!-- end sandpiper-message -->
-<div class="sandpiper-message">INFORM(0) (FILES):
+</div><!-- end sandpiper-message --><div class="sandpiper-message" mc-sp-sev="0">INFORM(0) (FILES):
 	Reading "run/gen/ring/ring.m4out.tlv"
 	to produce:
 		Translated HDL File: "run/gen/ring/ring.sv"
-
-</div><!-- end sandpiper-message -->
-<div class="sandpiper-message">INFORM(0) (VERSION): File 'run/gen/ring/ring.m4out.tlv' Line 1 (char 14)
+</div><!-- end sandpiper-message --><div class="sandpiper-message" mc-sp-sev="0">INFORM(0) (VERSION): File 'run/gen/ring/ring.m4out.tlv' Line 1 (char 14)
 <div data-navtlv-scroll="data-navtlv-scroll"><div data-navtlv-linenums="data-navtlv-linenums"><div class="source-line error-line" source-line-num="1" line-num="1"></div>
 </div><div data-navtlv-code="data-navtlv-code"><pre>null</pre></div><div data-navtlv-highlight="data-navtlv-highlight"></div></div>	This version of SandPiper can read this TL-X Version (1b),
 	but your version and license support TL-X 1d.
 	To up-rev this file to TL-X 1d use "--scrub".
-
-</div><!-- end sandpiper-message -->
-<div class="sandpiper-message">INFORM(0) (ARGS): File 'run/gen/ring/ring.m4out.tlv' Line 1 (char 25)
+</div><!-- end sandpiper-message --><div class="sandpiper-message" mc-sp-sev="0">INFORM(0) (ARGS): File 'run/gen/ring/ring.m4out.tlv' Line 1 (char 25)
 <div data-navtlv-scroll="data-navtlv-scroll"><div data-navtlv-linenums="data-navtlv-linenums"><div class="source-line error-line" source-line-num="1" line-num="1"></div>
 </div><div data-navtlv-code="data-navtlv-code"><pre>null</pre></div><div data-navtlv-highlight="data-navtlv-highlight"></div></div>	The following arguments given in input file are ignored since there is no --iArgs argument.
 		 --stats
-
 </div><!-- end sandpiper-message -->

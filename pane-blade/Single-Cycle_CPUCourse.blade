@@ -22,7 +22,7 @@ include "pane_lib.blade"
     p
       | You'll be introduced along the way to these reference solutions. You don't need them now, but you can
       | find them here whenever you need them
-    button.btn.mc-tutorial-btn(type="button" onclick="window.open('/sandbox?code_url=https%3A%2F%2Fraw.githubusercontent.com%2Fstevehoover%2FLF-Building-a-RISC-V-CPU-Core%2Frefs%2Fheads%2Fmain%2Frisc-v_solutions.tlv')")
+    button.btn.mc-tutorial-btn(type="button" onclick="window.open('#{appConfig.idePath}?code_url=https%3A%2F%2Fraw.githubusercontent.com%2Fstevehoover%2FLF-Building-a-RISC-V-CPU-Core%2Frefs%2Fheads%2Fmain%2Frisc-v_solutions.tlv')")
       | Open Reference Solutions
       <i.fa.fa-up-right-from-square
 
@@ -1351,8 +1351,9 @@ include "pane_lib.blade"
           | Verilator is an open-source tool used to compile your Verilog code into a C++ simulator. This simulator
           | is run to produce the trace data that you can view in the waveform viewer.
         p
-          | The LOG tab shows output from all these tools. Output from M4 and SandPiper is in blue, and
-          | output from Verilator and its resulting simulation are in black.
+          | The LOG tab shows output from all these tools. Output from M4 is deep purple; SandPiper output is
+          | colored based on error severity; and
+          | output from Verilator and its resulting simulation are black.
         p
           | TL-Verilog features are used to define the logic within a (System)Verilog module. Code comments below
           | explain the parts of a TL-Verilog source file structured for use within Makerchip.
@@ -2340,7 +2341,7 @@ include "pane_lib.blade"
       p
         | Remember, reference solutions are available for all RISC-V labs in times of desperation,
         | linked below and in the first section of this course.
-      button.btn.mc-tutorial-btn(type="button" onclick="window.open('/sandbox?code_url=https%3A%2F%2Fraw.githubusercontent.com%2Fstevehoover%2FLF-Building-a-RISC-V-CPU-Core%2Frefs%2Fheads%2Fmain%2Frisc-v_solutions.tlv')")
+      button.btn.mc-tutorial-btn(type="button" onclick="window.open('#{appConfig.idePath}?code_url=https%3A%2F%2Fraw.githubusercontent.com%2Fstevehoover%2FLF-Building-a-RISC-V-CPU-Core%2Frefs%2Fheads%2Fmain%2Frisc-v_solutions.tlv')")
         | Open Reference Solutions
         <i.fa.fa-up-right-from-square
     

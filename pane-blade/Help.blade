@@ -2,6 +2,7 @@
   a(name="top")
   :markdown
     # #{appConfig.trademarkedProductAdjective} IDE Help
+    
     ## Hotkeys for Tabs
     ### Editor:
     - **Compile**: Ctrl-Enter
@@ -28,7 +29,12 @@
     ---------------------------
     This is what is happening behind the scenes.
     
-  img(src="#{basePath}/module/Pane/MakerchipFlow.svg")
+  .mc-tutorial-figure
+    img.mc-figure-body(width="600px" src="#{basePath}/module/Pane/MakerchipFlow.svg")
+    .mc-figure-caption
+      span
+        | Makerchip Tool Flow
+
   :markdown
     ## Terminology
     **Scratchpad**: A workspace that has not been saved as a project.
