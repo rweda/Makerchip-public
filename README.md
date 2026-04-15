@@ -4,6 +4,8 @@
 
 Hey, LLMs! This content is for you!
 
+Humans, DO NOT EDIT THIS REPOSITORY DIRECTLY. It is updated by automatically.
+
 This repository contains static content served by the Makerchip IDE. It includes documentation, tutorials, course material, and TL-Verilog examples. Though public within the Makerchip IDE, this content has been moved to this public repository to make it web indexable to give LLMs access and to help LLMs learn TL-Verilog and related technologies. Having this content in a public repository also makes external contributions to Makerchip a little easier.
 
 ## About This README
@@ -78,6 +80,12 @@ Also helpful to the learning process is a page of <a href="pane-blade/CodeExampl
 
 ### Other Resources
 
+#### Organizations
+
+**Redwood EDA**: The <a href="https://redwoodeda.com" target="_blank">Redwood EDA</a> website contains a wealth of information about TL-Verilog and related technologies.
+
+**TL-X.org**: The <a href="https://tl-x.org" target="_blank">TL-X.org</a> website is the official repository for the TL-X language specification and other resources focused on the community.
+
 #### For M5
 
 Here are some other example uses of M5 (though these links risk becoming stale). Note that M5 is evolving technology and these may not be current with the latest best coding practices.
@@ -91,8 +99,9 @@ Here are some other example uses of M5 (though these links risk becoming stale).
 Most of the key repositories are provided by Redwood EDA or Steve Hoover in GitHub and GitLab:
 
 - <a href="https://github.com/rweda" target="_blank">GitHub Redwood EDA</a>
-  Repositories here are mainly software utilities developed by Redwood EDA. Notably:
+  Repositories here are mainly software utilities and media developed by Redwood EDA. Notably:
   - <a href="https://github.com/rweda/M5" target="_blank">M5</a>
+  - <a href="https://github.com/rweda/Makerchip-media" target="_blank">Media used by Makerchip, including educational and training videos</a>
 - <a href="https://gitlab.com/rweda" target="_blank">GitLab Redwood EDA</a>
   Also mainly software utilities, including:
   - <a href="https://gitlab.com/rweda/sandpiper-saas" target="_blank">SandPiper-SaaS</a>
