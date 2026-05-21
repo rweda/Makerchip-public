@@ -171,7 +171,7 @@ include "pane_lib.blade"
       | course videos in YouTube
     | .)
   p
-    button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/module/IDE/default.tlv\"); ide.openStaticPane(\"VSDOpen Slides\", true); ide.openStaticPane(\"VSDOpen Videos\")")
+    button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/module/IDE/default.tlv\"); ide.openPane(\"VSDOpen Slides+2020\", true); ide.openPane(\"VSDOpen Videos+2020\")")
       | Start Course
   
   a(name="chipexpo")
@@ -189,7 +189,7 @@ include "pane_lib.blade"
       | course videos in YouTube
     | .)
   p
-    button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/module/IDE/default.tlv\"); ide.openStaticPane(\"ChipEXPO Slides\", true); ide.openStaticPane(\"ChipEXPO Videos\")")
+    button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/module/IDE/default.tlv\"); ide.openPane(\"ChipEXPO Slides+2021\", true); ide.openPane(\"ChipEXPO Videos+2021\")")
       | Start Course
   
   a(name="edx")
@@ -268,7 +268,7 @@ include "pane_lib.blade"
       | (then come back to this tab).
     li
       | Click to
-      button.btn.mc-tutorial-btn(type="button" onclick="ide.openStaticPane(\"MYTH Slides\", true); ide.openStaticPane(\"MYTH Videos\", false)")
+      button.btn.mc-tutorial-btn(type="button" onclick="ide.openPane(\"MYTH Slides+Workshop\", true); ide.openPane(\"MYTH Videos+Workshop\", false)")
         | Open Slides and Videos
       | , and start watching.
 
@@ -332,7 +332,7 @@ include "pane_lib.blade"
   p
     | Set in the context of RISC-V, this training covers various topics of TL-Verilog with lab exercises.
   p
-    button.btn.mc-tutorial-btn(type="button" onclick="ide.openStaticPane(\"Course Slides\")")
+    button.btn.mc-tutorial-btn(type="button" onclick="ide.openPane(\"Course Slides+Udemy\")")
       | Open Slides
 
   a(name="texas-am")
@@ -343,11 +343,11 @@ include "pane_lib.blade"
     | highlighting the benefits of timing abstraction and transaction-level design for simplifying test harness
     | construction and for making verification collateral more resilient to design changes.
   p
-    button.btn.mc-tutorial-btn(type="button" onclick="ide.openStaticPane(\"Verif Slides\")")
+    button.btn.mc-tutorial-btn(type="button" onclick="ide.openPane(\"Verif Slides+TAMU\")")
       | Open Slides
   call video_media("TL-Verilog_for_Verification_1hr.mp4", "https://www.youtube.com/watch?v=BIwpN7za95M")
   p
-    Examples from the presentation:
+    Open/compile example code from the presentation:
   p
     button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/pythagorean_example.tlv\")")
       | Slide 17 Pythagoras's Theorem Example

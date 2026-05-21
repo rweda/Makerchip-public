@@ -67,7 +67,7 @@ include "pane_lib.blade"
     p
       | You should set aside 20-30 hours to this course, depending on your
       | background. Shorter course options can be found in the
-      <a(href="#" onclick="ide.openStaticPane(\"Courses\")")
+      <a(href="#" onclick="ide.openPane(\"Courses\")")
         | "Courses" pane
       | .
     
@@ -79,7 +79,7 @@ include "pane_lib.blade"
         p
           | The slides are available for reference in a separate pane. Note that slide numbers in the
           | videos are approximate.
-        button.btn.mc-tutorial-btn2(type="button" onclick="ide.openStaticPane(\"RISC-V Slides\")")
+        button.btn.mc-tutorial-btn2(type="button" onclick="ide.openPane(\"RISC-V Slides+Workshop\")")
           | Open Slides
         p
 
