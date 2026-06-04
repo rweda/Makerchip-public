@@ -24,7 +24,6 @@ INFORM(0) (VERSION): File 'run/gen/life/life.tlv' Line 1 (char 46)
 INFORM(0) (MULTI-ASSIGN): File 'run/gen/life/life.tlv' Line 98 (char 54)
 	Preprocessed as 'run/gen/life/life.m4out.tlv':98(ch54):
 	+-----------------------------------------------------v
-	|               \SV_plus
 	|                  if (xx < X_SIZE - 1)
 	|                     assign $$right_alive_accum[10:0] = >xx[xx + 1]$horiz_alive_accum;
 	|                  else
@@ -38,7 +37,6 @@ INFORM(0) (MULTI-ASSIGN): File 'run/gen/life/life.tlv' Line 98 (char 54)
 INFORM(0) (MULTI-ASSIGN): File 'run/gen/life/life.tlv' Line 104 (char 51)
 	Preprocessed as 'run/gen/life/life.m4out.tlv':104(ch51):
 	+--------------------------------------------------v
-	|            \SV_plus
 	|               if (yy < Y_SIZE -1)
 	|                  assign $$below_alive_accum[21:0] = >yy[yy + 1]$vert_alive_accum;
 	|               else
