@@ -9,7 +9,9 @@
     .mc-browser-fav-wrap(style="position:relative;")
       button.mc-browser-star(title="Favorites" style="border-radius:4px; padding:4px 8px; cursor:pointer;")
         i.fa-solid.fa-star
-      .mc-browser-favorites(style="display:none; position:absolute; right:0; top:100%; margin-top:2px; min-width:160px; border-radius:4px; z-index:10000;")
+      //- Reparented to <body> and positioned as a fixed flyout by Browser.showFavMenu so it paints
+      //- above the body-level iframe overlay layer (see Browser.coffee); z-index tops the overlay's 50.
+      .mc-browser-favorites(style="display:none; position:fixed; min-width:160px; border-radius:4px; z-index:10000;")
     button.mc-browser-popout(title="Open in its own pane" style="border-radius:4px; padding:4px 8px; cursor:pointer;")
       i.fa-solid.fa-arrow-turn-up
     button.mc-browser-close(title="Done navigating; close address bar" style="border-radius:4px; padding:4px 8px; cursor:pointer;")
