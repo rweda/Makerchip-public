@@ -23,6 +23,8 @@ include "pane_lib.blade"
       | Building a RISC-V CPU Core, 14-hrs, EdX
     li(onclick="ide.anchorLink(this, 'myth')")
       | Microprocessor for You in Thirty Hours (MYTH) Workshop
+    li(onclick="ide.anchorLink(this, 'cpp-to-cpu')")
+      | [In Development] Unravelling the Mystery of Software Execution: Software → Assembly Language → Binary → CPU Execution
   h3.mc-anchor-link(onclick="ide.anchorLink(this, 'fpga')")
     | FPGA Courses
   h3.mc-anchor-link(onclick="ide.anchorLink(this, 'asic')")
@@ -271,6 +273,43 @@ include "pane_lib.blade"
       button.btn.mc-tutorial-btn(type="button" onclick="ide.openPane('MYTH Slides+Workshop', true); ide.openPane('MYTH Videos+Workshop', $(this))")
         | Open Slides and Videos
       | , and start watching.
+
+
+  a(name="cpp-to-cpu")
+  h3
+    | RISC-V: From C++ to Assembly Language to CPU Execution
+  p
+    i
+      | This course is under development. But you can explore its interactive environment below, in early preview.
+  p
+    | This course connects four stages of a program's journey from software to silicon, all within
+    | Makerchip:
+  ul
+    li
+      | C++: You write a program in a language like C++ (currently supported languages: C/C++/Fortran/RISC-V Assembly).
+    li
+      | Compiler Explorer compiles your program to RISC-V assembly language, and let's you explore
+      | the transformation.
+    li
+      | Your assembly language is assembled into binary form, for hardware consumption.
+    li
+      | That binary representation can be consumed by various hardware implementations. WARP-V is
+      | an configurable open-source CPU generator. Its configurator opens in Makerchip. You decide
+      | what RISC-V CPU to use. That RISC-V CPU core is written in TL-Verilog, compiled (hardware
+      | compilation--distinct from software compilation) into a hardware simulator that executes
+      | and visualizes your program's binary instructions.
+  p
+    | You can see and control the entire stack, from software to hardware, in a single environment, and
+    | see your program execute clock cycle by clock cycle.
+  p
+    | Click below to open Compiler Explorer and WARP-V. Click the green "Run on WARP-V" button in
+    | Compiler Explorer. WARP-V will compile and simulate. In the VIZ view, explore how the WARP-VCPU
+    | executes the program's assembly instructions. Then play with anything--change the language,
+    | write a program, change compiler options, configure WARP-V, and see the inner workings of the
+    | hardware executing your program.
+  p
+    button.btn.mc-tutorial-btn(type="button" onclick="ide.openWarpVDemo()")
+      | Open Compiler Explorer + WARP-V
 
 
   a(name="fpga")
