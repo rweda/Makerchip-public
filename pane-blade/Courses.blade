@@ -8,23 +8,34 @@ include "pane_lib.blade"
   h2
     | Table of Contents
   
+  h3.mc-anchor-link(onclick="ide.anchorLink(this, 'digital-logic')")
+    | Digital Logic Courses
+  ul.mc-toc
+    li(onclick="ide.anchorLink(this, 'digital-logic-intro')")
+      i Digital Design with Makerchip & TL-Verilog
+      |  - Ines Iraoui, 2026
   h3.mc-anchor-link(onclick="ide.anchorLink(this, 'riscv')")
     | RISC-V CPU Design Courses
   ul.mc-toc
     li(onclick="ide.anchorLink(this, 'riscv-overview')")
       | RISC-V Courses - Overview
     li(onclick="ide.anchorLink(this, 'how-cpu-works')")
-      | How a CPU Works, 1.5-hrs, YouTube with Robert Feranec, 2022
+      i How a CPU Works, 1.5-hrs
+      | , YouTube with Robert Feranec, 2022
     li(onclick="ide.anchorLink(this, 'vsdopen')")
-      | RISC-V Tutorial, 2.5-hrs, VSDOpen 2020
+      i RISC-V Tutorial
+      | , 2.5-hrs, VSDOpen 2020
     li(onclick="ide.anchorLink(this, 'chipexpo')")
-      | Building RISC-V using TL-Verilog, 3.5-hrs, ChipEXPO-2021
+      i Building RISC-V using TL-Verilog
+      | , 3.5-hrs, ChipEXPO-2021
     li(onclick="ide.anchorLink(this, 'edx')")
-      | Building a RISC-V CPU Core, 14-hrs, EdX
+      i Building a RISC-V CPU Core
+      | , 14-hrs, EdX
     li(onclick="ide.anchorLink(this, 'myth')")
-      | Microprocessor for You in Thirty Hours (MYTH) Workshop
+      i Microprocessor for You in Thirty Hours (MYTH) Workshop
     li(onclick="ide.anchorLink(this, 'cpp-to-cpu')")
-      | [In Development] Unravelling the Mystery of Software Execution: Software → Assembly Language → Binary → CPU Execution
+      | [In Development] 
+      i Unravelling the Mystery of Software Execution: Software → Assembly Language → Binary → CPU Execution
   h3.mc-anchor-link(onclick="ide.anchorLink(this, 'fpga')")
     | FPGA Courses
   h3.mc-anchor-link(onclick="ide.anchorLink(this, 'asic')")
@@ -33,14 +44,31 @@ include "pane_lib.blade"
     | TL-Verilog Training
   ul.mc-toc
     li(onclick="ide.anchorLink(this, 'udemy')")
-      | Pipelining RISC-V with Transaction-Level Verilog, 3-hrs, Udemy
+      i Pipelining RISC-V with Transaction-Level Verilog
+      | , 3-hrs, Udemy
     li(onclick="ide.anchorLink(this, 'texas-am')")
-      | Verification with TL-Verilog, 1-hr
+      i Verification with TL-Verilog
+      | , 1-hr
     li(onclick="ide.anchorLink(this, 'nes')")
-      | NES 2020 TL-Verilog Tutorial, 2-hrs
+      i NES 2020 TL-Verilog Tutorial
+      | , 2-hrs
     li(onclick="ide.anchorLink(this, 'dac')")
-      | Transcending RTL, DAC 2020, 1-hr
+      i Transcending RTL
+      | , DAC 2020, 1-hr
 
+  a(name="digital-logic")
+  h2
+    | Digital Logic Courses
+  a(name="digital-logic-intro")
+  h3
+    | Digital Design with Makerchip & TL-Verilog
+  p
+    | This course is a great starting point for those who are completely new to digital logic.
+    | It presents concepts visually and interactively and follows them up with fun little exercises.
+  p
+    a.btn.mc-tutorial-btn.mc-extern(type="button", href="https://in-ir.github.io/makerchip-curriculum/", target="_blank")
+      | Open the course
+  
   a(name="riscv")
   h2
     | RISC-V CPU Design Courses
@@ -61,7 +89,7 @@ include "pane_lib.blade"
     | No college tuition is required. The first three courses below are made available
     | by Redwood EDA, LLC FREE through #{(new Date().getMonth() < 6) ? "June" : "December"}
     | #{new Date().getFullYear()}, so enjoy! (Training geared toward professionals is also available from
-    <a(href="https://redwoodeda.com/contact", target="_blank")
+    <a.mc-extern(href="https://redwoodeda.com/contact", target="_blank")
       | Redwood EDA, LLC
     | .)
   h4
@@ -137,10 +165,10 @@ include "pane_lib.blade"
     | Help
   p
     | With an appropriate level of respect and after a good faith effort on your part, you might request assistance from the community in the
-    <a(href="https://join.slack.com/t/tl-verilog-users/shared_invite/zt-4fatipnr-dmDgkbzrCe0ZRLOOVm89gA", target="_blank")
+    <a.mc-extern(href="https://join.slack.com/t/tl-verilog-users/shared_invite/zt-4fatipnr-dmDgkbzrCe0ZRLOOVm89gA", target="_blank")
       | TL-Verilog Users Slack Workspace
     | . To report issues or to inquire about paid assistance, please contact
-    <a(href="https://www.redwoodeda.com/contact", target="_blank")
+    <a.mc-extern(href="https://www.redwoodeda.com/contact", target="_blank")
       | Redwood EDA, LLC
     | .
   
@@ -169,7 +197,7 @@ include "pane_lib.blade"
     | videos. Then start with the first video. Be sure to note the changes from the original workshop, noted along with the
     | videos and in callouts in the slides. (For non-English speakers, subtitles in various languages are
     | available by instead viewing the
-    <a(href="https://www.youtube.com/playlist?list=PL5hpwuXY8XebJv7giIvVb69j7Te095J4-", target="_blank")
+    <a.mc-extern(href="https://www.youtube.com/playlist?list=PL5hpwuXY8XebJv7giIvVb69j7Te095J4-", target="_blank")
       | course videos in YouTube
     | .)
   p
@@ -187,7 +215,7 @@ include "pane_lib.blade"
     | Be sure to note the changes from the original workshop, noted along with the
     | videos and in callouts in the slides. (For non-English speakers, subtitles in various languages are
     | available by instead viewing the
-    <a(href="https://www.youtube.com/playlist?list=PL5hpwuXY8Xeah39tNi81vQBMEUSbrsqAe", target="_blank")
+    <a.mc-extern(href="https://www.youtube.com/playlist?list=PL5hpwuXY8Xeah39tNi81vQBMEUSbrsqAe", target="_blank")
       | course videos in YouTube
     | .)
   p
@@ -204,9 +232,9 @@ include "pane_lib.blade"
     | (baseline RISC-V) instruction set. While the other courses are based on video content, this one
     | is mostly written. While the course is free to audit, certification is available for a fee.
   p
-    a.btn.mc-tutorial-btn(type="button", href="https://www.edx.org/course/building-a-risc-v-cpu-core", target="_blank")
+    a.btn.mc-tutorial-btn.mc-extern(type="button", href="https://www.edx.org/course/building-a-risc-v-cpu-core", target="_blank")
       | Take the course in EdX
-  
+
   a(name="myth")
   h3
     | Microprocessor for You in Thirty Hours (MYTH) Workshop
@@ -214,28 +242,29 @@ include "pane_lib.blade"
     img.mc-figure-body(src="#{basePath}/module/Pane/myth_banner.png", style="width: 55%")
   p
     | The
-    <a>(href="https://www.vlsisystemdesign.com/riscv-based-myth/", target="_blank")
+    <a>.mc-extern(href="https://www.vlsisystemdesign.com/riscv-based-myth/", target="_blank")
       | Microprocessor for You in Thirty Hours (MYTH) Workshop
     | is a 5-day intensive workshop covering RISC-V tools in days 1-2 and pipelined RISC-V
     | CPU design in days 3-5 using Makerchip and TL-Verilog. (We've also run the course in a 3-week
     | format with an FPGA focus.) The MYTH Workshop was launched in 2020
     | and has since certified hundreds of students and professionals on TL-Verilog and CPU design.
     | Even these two exceptional
-    <a(href="https://riscv.org/blog/2020/12/risc-v-microarchitecture-for-kids-steve-hoover-redwood-eda/", target="_blank")
+    <a.mc-extern(href="https://riscv.org/blog/2020/12/risc-v-microarchitecture-for-kids-steve-hoover-redwood-eda/", target="_blank")
       | middle schoolers
     | successfully completed the course. Subsequent to this workshop, students have taped out their RVMYTH CPU
     | cores in Open MPW shuttles for SKY130, and this core is used in subsequent workshops from
-    <a(href="https://www.vlsisystemdesign.com/", target="_blank")
-      | VLSI System Design.
+    <a.mc-extern(href="https://www.vlsisystemdesign.com/", target="_blank")
+      | VLSI System Design
+    | .
   p
     | Similar content is available in a fully-asynchronous format through
-    <a>(href="https://fedevel.com/", target="_blank")
+    <a>.mc-extern(href="https://fedevel.com/", target="_blank")
       | FEDEVEL
     | as "Building your own RISC-V Processor".
   p
     | Continued course offerings are expected.
     | Feel free to
-    <a>(href="https://docs.google.com/forms/d/e/1FAIpQLScBBurTohnXCrzS2rLRk0eB0A177uJivC4s8rFoJr6Ds--02Q/viewform?usp=sf_link", target="_blank")
+    <a>.mc-extern(href="https://docs.google.com/forms/d/e/1FAIpQLScBBurTohnXCrzS2rLRk0eB0A177uJivC4s8rFoJr6Ds--02Q/viewform?usp=sf_link", target="_blank")
       | leave your contact information
     | if interested in future course offerings.
   //h4
@@ -324,7 +353,7 @@ include "pane_lib.blade"
   p
     | Other courses may be coming soon.
     | Feel free to
-    <a>(href="https://docs.google.com/forms/d/e/1FAIpQLScBBurTohnXCrzS2rLRk0eB0A177uJivC4s8rFoJr6Ds--02Q/viewform?usp=sf_link", target="_blank")
+    <a>.mc-extern(href="https://docs.google.com/forms/d/e/1FAIpQLScBBurTohnXCrzS2rLRk0eB0A177uJivC4s8rFoJr6Ds--02Q/viewform?usp=sf_link", target="_blank")
       | leave your contact information
     | if interested in future course offerings.
 
@@ -338,7 +367,7 @@ include "pane_lib.blade"
       | MYTH Workshop
     have prepared their designs for ASIC tape-outs on the Skywater 130nm process.
   p
-    a>(href="https://www.vlsisystemdesign.com/", target="_blank")
+    a>.mc-extern(href="https://www.vlsisystemdesign.com/", target="_blank")
       | VLSI System Design
     | has offered ASIC SKY 130 courses using the "RVMYTH" CPU core from the
     <a.mc-anchor-link(onclick="ide.anchorLink(this, 'myth')")
@@ -347,7 +376,7 @@ include "pane_lib.blade"
   p
     | Other courses may be coming soon.
     | Feel free to
-    <a>(href="https://docs.google.com/forms/d/e/1FAIpQLScBBurTohnXCrzS2rLRk0eB0A177uJivC4s8rFoJr6Ds--02Q/viewform?usp=sf_link", target="_blank")
+    <a>.mc-extern(href="https://docs.google.com/forms/d/e/1FAIpQLScBBurTohnXCrzS2rLRk0eB0A177uJivC4s8rFoJr6Ds--02Q/viewform?usp=sf_link", target="_blank")
       | leave your contact information
     | if interested in future course offerings.
 
@@ -362,7 +391,7 @@ include "pane_lib.blade"
   p
     img.mc-figure-body(src="#{basePath}/module/Pane/udemy.jpg", style="width: 50%")
   p
-    a>(href="https://www.udemy.com/course/1549918", target="_blank")
+    a>.mc-extern(href="https://www.udemy.com/course/1549918", target="_blank")
       | Pipelining RISC-V with Transaction-Level Verilog:
     br
     i
@@ -423,16 +452,16 @@ include "pane_lib.blade"
     | For this session, Steve Hoover called upon fellow innovators, Jan Kuper and Jose Renau, to showcase to
     | the industry the breadth of opportunity that exists between RTL and high-level synthesis. The session
     | covered the methodologies behind TL-Verilog, Clash, and Pyrope, including an
-    <a(href="https://docs.google.com/document/d/e/2PACX-1vQSaUIZcN3R6mYC8B-tz6H1W8V7Vjgx8gvPI8PPTXQYHVlyeP5TJg0FzF5sixDsvVPeSuMUn3HqhlaS/pub", target="_blank")
+    <a.mc-extern(href="https://docs.google.com/document/d/e/2PACX-1vQSaUIZcN3R6mYC8B-tz6H1W8V7Vjgx8gvPI8PPTXQYHVlyeP5TJg0FzF5sixDsvVPeSuMUn3HqhlaS/pub", target="_blank")
       | apples-to-apples code comparison
     | . These three modern HDLs are not simply better RTL languages, they are languages that are better than RTL.
   .media-only
-    call video_media("DAC2020 Transcending RTL 0 Hoover Intro.mp4", "https://www.youtube.com/watch?v=FFieg8ayj18", "Part 1: Intro (Steve Hoover)", "Copyright Steven Hoover, <a href='https://creativecommons.org/licenses/by/4.0/' target='_blank'>CC BY 4.0</a>")
-    call video_media("DAC2020 Transcending RTL 1 Kuper Clash.mp4", "https://www.youtube.com/watch?v=C8gESJeQXSA", "Part 2: Clash (Jan Kuper)", "Copyright Jan Kuper, <a href='https://creativecommons.org/licenses/by-nd/4.0/' target='_blank'>CC BY-ND 4.0</a>")
-    call video_media("DAC2020 Transcending RTL 2 Renau Pyrope.mp4", "https://www.youtube.com/watch?v=FwzRFKnGaU0", "Part 3: Pyrope (Jose Renau)", "Copyright Jose Renau, <a href='https://creativecommons.org/licenses/by-nd/4.0/' target='_blank'>CC BY-ND 4.0</a>")
-    call video_media("DAC2020 Transcending RTL 3 Hoover TL Verilog.mp4", "https://www.youtube.com/watch?v=_eaJyXlvEMM", "Part 4: TL-Verilog (Steve Hoover)", "Copyright Steven Hoover, <a href='https://creativecommons.org/licenses/by/4.0/' target='_blank'>CC BY 4.0</a>")
+    call video_media("DAC2020 Transcending RTL 0 Hoover Intro.mp4", "https://www.youtube.com/watch?v=FFieg8ayj18", "Part 1: Intro (Steve Hoover)", "Copyright Steven Hoover, <a class='mc-extern' href='https://creativecommons.org/licenses/by/4.0/' target='_blank'>CC BY 4.0</a>")
+    call video_media("DAC2020 Transcending RTL 1 Kuper Clash.mp4", "https://www.youtube.com/watch?v=C8gESJeQXSA", "Part 2: Clash (Jan Kuper)", "Copyright Jan Kuper, <a class='mc-extern' href='https://creativecommons.org/licenses/by-nd/4.0/' target='_blank'>CC BY-ND 4.0</a>")
+    call video_media("DAC2020 Transcending RTL 2 Renau Pyrope.mp4", "https://www.youtube.com/watch?v=FwzRFKnGaU0", "Part 3: Pyrope (Jose Renau)", "Copyright Jose Renau, <a class='mc-extern' href='https://creativecommons.org/licenses/by-nd/4.0/' target='_blank'>CC BY-ND 4.0</a>")
+    call video_media("DAC2020 Transcending RTL 3 Hoover TL Verilog.mp4", "https://www.youtube.com/watch?v=_eaJyXlvEMM", "Part 4: TL-Verilog (Steve Hoover)", "Copyright Steven Hoover, <a class='mc-extern' href='https://creativecommons.org/licenses/by/4.0/' target='_blank'>CC BY 4.0</a>")
   p.no-media-only(style="text-align: center")
-    a.btn.btn-primary(href="https://www.youtube.com/watch?v=cIDGAQ6aQUw", target="_blank", style="margin: 10px")
+    a.btn.btn-primary.mc-extern(href="https://www.youtube.com/watch?v=cIDGAQ6aQUw", target="_blank", style="margin: 10px")
       i.fa-brands.fa-youtube
       | &nbsp; Watch Full Session on YouTube
   p

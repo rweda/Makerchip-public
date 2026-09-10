@@ -37,7 +37,7 @@ function video_media(mediaPath, youtubeUrl, title, attribution)
       i!= attribution
   - }
   p.no-media-only(style="text-align: center; margin-bottom: 10px")
-    a.btn.btn-primary(href=youtubeUrl, target="_blank", style="margin: 10px")
+    a.btn.btn-primary.mc-extern(href=youtubeUrl, target="_blank", style="margin: 10px")
       i.fa-brands.fa-youtube
       | &nbsp; Watch on YouTube
 
@@ -90,7 +90,5 @@ function tutorial_quiz(title, id)
 
 function external_link(text, url)
   span(style="white-space: nowrap;")
-    a(href=url, target="_blank")
+    a.mc-extern(href=url, target="_blank")
       = text
-      |  
-      i.fa.fa-up-right-from-square.mc-external-link
