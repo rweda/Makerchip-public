@@ -129,7 +129,11 @@
       | : Success. Compilation/simulation passed.
     li
       i.fa.fa-times(style="color: #b00808")
-      | : Failure. Pane was not updated by last compilation/simulation.
+      | : Failure. This pane's result could not be produced by the last compilation/simulation.
+    li
+      i.fa.fa-ban(style="color: #888")
+      | : Irrelevant. This pane doesn't apply to the last compilation, so any content shown is stale.
+      |  (e.g. Verilog compilation does not produce NAV-TLV, DIAGRAM, or VIZ.)
     li
       i.fa.fa-regular.fa-clock(style="color: #b00808")
       | : Timeout. Last compilation/simulation took too long and was terminated.
