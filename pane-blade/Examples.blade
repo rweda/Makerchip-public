@@ -121,7 +121,8 @@ include "pane_lib.blade"
 
   p
     | A template for developing FPGA logic for various FPGA boards, based on this
-    <a>(href="https://github.com/os-fpga/Virtual-FPGA-Lab", target="_blank") Virtual FPGA Lab
+    <a>.mc-extern(href="https://github.com/os-fpga/Virtual-FPGA-Lab", target="_blank")
+      | Virtual FPGA Lab
     | project.
   button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"https://cdn.jsdelivr.net/gh/os-fpga/Virtual-FPGA-Lab@af10a071abb11616a8b9ef17b6e2970f725ebd1d/examples/fpga_template.tlv\")")
     | TLV FPGA Template (VIZ)
@@ -133,7 +134,8 @@ include "pane_lib.blade"
 
   p
     | A template for Tiny Tapeout 10. (Search
-    <a>(href="https://github.com/stevehoover", target="_blank") here
+    <a>.mc-extern(href="https://github.com/stevehoover", target="_blank")
+      | here
     | for the latest Tiny Tapeout template.)
   button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"https://raw.githubusercontent.com/stevehoover/tt10-makerchip-template/57415ad93768146f3fd108e7579111bf14269df9/src/project.tlv\")")
     | Tiny Tapeout 10 Template (VIZ)
@@ -195,9 +197,11 @@ include "pane_lib.blade"
   p
     | Some FPGAs contain fixed-width multiply units. This example shows how the fixed-width multipliers can be used to implement
     | a wider multiply by summing partial-products in a pipelined calculation. It is based on a
-    <a>(href="http://surf-vhdl.com/how-to-implement-pipeline-multiplier-vhdl/?utm_source=mult-pipe&utm_medium=LK2&utm_campaign=ACLEAD", target="_blank") VHDL example
+    <a>.mc-extern(href="http://surf-vhdl.com/how-to-implement-pipeline-multiplier-vhdl/?utm_source=mult-pipe&utm_medium=LK2&utm_campaign=ACLEAD", target="_blank")
+      | VHDL example
     | from
-    <a(href="http://surf-vhdl.com/", target="_blank") Surf VHDL
+    <a.mc-extern(href="http://surf-vhdl.com/", target="_blank")
+      | Surf VHDL
     | .
   button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/fpga_mult_example.tlv\")")
     | FPGA Multiplier
@@ -232,7 +236,8 @@ include "pane_lib.blade"
     | These examples illustrate how to import SystemVerilog designs from external repositories and built them in #{appConfig.product}.
   p
     | Olof Kindgren's
-    <a>(href="https://github.com/olofk/serv", target="_blank") SERV core
+    <a>.mc-extern(href="https://github.com/olofk/serv", target="_blank")
+      | SERV core
     | is an award-winning bit-serial RISC-V CPU.
   button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"https://cdn.jsdelivr.net/gh/stevehoover/makerchip_examples@a0d80f640661653639c05de49fb8df76e9616f5c/serv.tlv\")")
     | SERV CPU
@@ -240,7 +245,8 @@ include "pane_lib.blade"
   h4 BaseJump STL
   p
     | BaseJump STL is a library of SystemVerilog components from the
-    <a>(href="https://github.com/bespoke-silicon-group", target="_blank") Bespoke Silicon Group
+    <a>.mc-extern(href="https://github.com/bespoke-silicon-group", target="_blank")
+      | Bespoke Silicon Group
     | . This example imports the library and uses a FIFO.
   button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"https://cdn.jsdelivr.net/gh/stevehoover/makerchip_examples@a0d80f640661653639c05de49fb8df76e9616f5c/flow_example_basejump_viz.tlv\")")
     | BaseJump STL
@@ -325,7 +331,8 @@ include "pane_lib.blade"
   h4 Transaction Flow
   p
     | The example microarchitecture below is implemented in 13 lines of code, using a
-    <a(href="https://github.com/stevehoover/tlv_flow_lib" target="_blank") library of flow components
+    <a.mc-extern(href="https://github.com/stevehoover/tlv_flow_lib" target="_blank")
+      | library of flow components
     | .
   .mc-tutorial-figure
     img.mc-figure-body.resize-400(src="#{basePath}/module/IDE/flow_diagram.png")
@@ -338,9 +345,11 @@ include "pane_lib.blade"
   h4 Simple Ring
   p
     | A simple ring (without use of flow macros) with VIZ. This example was
-    <a>(href="https://www.youtube.com/playlist?list=PL5hpwuXY8XealvOvJQ2nan_tSTeQbbk7B", target="_blank") presented
+    <a>.mc-extern(href="https://www.youtube.com/playlist?list=PL5hpwuXY8XealvOvJQ2nan_tSTeQbbk7B", target="_blank")
+      | presented
     | (virtually) at the Design Automation Conference in 2020,
-    <a>(href="https://docs.google.com/document/d/e/2PACX-1vQSaUIZcN3R6mYC8B-tz6H1W8V7Vjgx8gvPI8PPTXQYHVlyeP5TJg0FzF5sixDsvVPeSuMUn3HqhlaS/pub", target="_blank") comparing
+    <a>.mc-extern(href="https://docs.google.com/document/d/e/2PACX-1vQSaUIZcN3R6mYC8B-tz6H1W8V7Vjgx8gvPI8PPTXQYHVlyeP5TJg0FzF5sixDsvVPeSuMUn3HqhlaS/pub", target="_blank")
+      | comparing
     | three modern HDLs.
   button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"https://cdn.jsdelivr.net/gh/stevehoover/makerchip_examples@a0d80f640661653639c05de49fb8df76e9616f5c/DAC_ring_example.tlv\")")
     | Simple Ring (VIZ)
@@ -384,11 +393,14 @@ include "pane_lib.blade"
     | WARP-V, is a highly-adaptable TL-Verilog CPU generator, with flexible pipeline staging
     | and support for multiple instruction-set architectures (RISC-V, MIPS, ...). WARP-V has been implemented as a cloud FPGA
     | microservice using
-    <a(href="https://github.com/stevehoover/1st-CLaaS" target="_blank") 1st CLaaS
+    <a.mc-extern(href="https://github.com/stevehoover/1st-CLaaS" target="_blank")
+      | 1st CLaaS
     | . The
-    <a>(href="https://github.com/stevehoover/warp-v", target="_blank") WARP-V project
+    <a>.mc-extern(href="https://github.com/stevehoover/warp-v", target="_blank")
+      | WARP-V project
     | is living and breathing in github and even has a configurator at
-    <a>(href="https://warp-v.org", target="_blank") warp-v.org
+    <a>.mc-extern(href="https://warp-v.org", target="_blank")
+      | warp-v.org
     | .
   p
     img(width=300 src="#{basePath}/module/Pane/WARP-V.png")
@@ -399,13 +411,15 @@ include "pane_lib.blade"
     | Latest WARP-V (VIZ)
   p
     | This toy MIPS CPU example comes from a course at
-    <a(href="https://www.asu.edu/", target="_blank") ASU
+    <a.mc-extern(href="https://www.asu.edu/", target="_blank")
+      | ASU
     | .
   button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/makerchip_tutorial.tlv\")")
     | MIPS Toy
   p
     | This toy MIPS CPU example comes from a course at the
-    <a(href="http://illinois.edu/", target="_blank") University of Illinois
+    <a.mc-extern(href="http://illinois.edu/", target="_blank")
+      | University of Illinois
     | .
   button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"#{basePath}/public/tutorial/tlv/mips_uiuc_411_mp0.tlv\")")
     | MIPS Toy 2
@@ -428,7 +442,8 @@ include "pane_lib.blade"
 
   p
     | An AES encryption algorithm implemented for Tiny Tapeout as a final project. (Zoom into FPGA chip for VIZ.)
-    <a(href="https://www.linkedin.com/pulse/aes-encryption-taped-out-days-steve-hoover-d4lxe/",  target="_blank") (Read more)
+    <a.mc-extern(href="https://www.linkedin.com/pulse/aes-encryption-taped-out-days-steve-hoover-d4lxe/",  target="_blank")
+      | (Read more)
   button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"https://cdn.jsdelivr.net/gh/stevehoover/makerchip_examples@a0d80f640661653639c05de49fb8df76e9616f5c/tiny_tapeout_examples/tt_um_AES.tlv\")")
     | AES Encryption (VIZ)
 
@@ -445,11 +460,13 @@ include "pane_lib.blade"
 
   p
     | TL-Verilog is utilized in
-    <a(href="https://github.com/stevehoover/1st-CLaaS" target="_blank") 1st CLaaS
+    <a.mc-extern(href="https://github.com/stevehoover/1st-CLaaS" target="_blank")
+      | 1st CLaaS
     | , a framework for creating FPGA-accelerated web and cloud applications
     | . These fractal flythroughs were generated by an Amazon F1 Cloud FPGA programmed with TL-Verilog logic, and you
     | can fly for yourself at
-    <a(href="http://fractalvalley.net" target="_blank") fractalvalley.net
+    <a.mc-extern(href="http://fractalvalley.net" target="_blank")
+      | fractalvalley.net
     | .
   p.media-only(style="text-align: center; margin-bottom: 5px")
     video(controls, controlsList="nodownload", style="display: inline-block; max-width: 315px; width: 45%; margin: 5px")
@@ -459,10 +476,10 @@ include "pane_lib.blade"
       source(src="../media/3d_flythrough.mp4", type="video/mp4")
       | Your browser does not support the video tag.
   p.no-media-only(style="text-align: center; margin-bottom: 5px")
-    a.btn.btn-primary(href="https://www.youtube.com/watch?v=ZhuTOXnpp0k", target="_blank", style="margin: 5px")
+    a.btn.btn-primary.mc-extern(href="https://www.youtube.com/watch?v=ZhuTOXnpp0k", target="_blank", style="margin: 5px")
       i.fa-brands.fa-youtube
       | &nbsp; Mandelbrot Zoom
-    a.btn.btn-primary(href="https://www.youtube.com/watch?v=7ZWva5DC4J4", target="_blank", style="margin: 5px")
+    a.btn.btn-primary.mc-extern(href="https://www.youtube.com/watch?v=7ZWva5DC4J4", target="_blank", style="margin: 5px")
       i.fa-brands.fa-youtube
       | &nbsp; 3D Flythrough
   p
@@ -471,7 +488,8 @@ include "pane_lib.blade"
     | Mandelbrot Accelerator (VIZ)
   p
     | Visit the
-    <a>(href="https://github.com/os-fpga/1st-CLaaS", target="_blank") 1st CLaaS repository
+    <a>.mc-extern(href="https://github.com/os-fpga/1st-CLaaS", target="_blank")
+      | 1st CLaaS repository
     | to learn how you can deploy your #{appConfig.product} designs in the cloud.
   
 

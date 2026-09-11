@@ -276,14 +276,17 @@
     li
       b Editing
       | : The Editor is
-      <a(href="https://codemirror.net/", target="_blank") CodeMirror
+      <a.mc-extern(href="https://codemirror.net/", target="_blank")
+        | CodeMirror
       | , an open source Web-based text editor with TL-Verilog support.
     li
       b Compilation
       | : TL-Verilog code is compiled first by Redwood EDA, LLC’s
-      <a>(href="http://www.redwoodeda.com/software", target="_blank") SandPiper™
+      <a>.mc-extern(href="http://www.redwoodeda.com/software", target="_blank")
+        | SandPiper™
       | tool to turn any TL-Verilog constructs into SystemVerilog, then the open source
-      <a>(href="https://www.veripool.org", target="_blank") Verilator
+      <a>.mc-extern(href="https://www.veripool.org", target="_blank")
+        | Verilator
       | tool compiles the SystemVerilog into C++ for simulation.
     li
       b Simulation
@@ -292,7 +295,8 @@
       b Navigation
       | : "Diagram" and "Nav TLV" panes are produced by SandPiper with the help of an
       | open source tool called
-      <a(href="http://www.graphviz.org", target="_blank") graphviz
+      <a.mc-extern(href="http://www.graphviz.org", target="_blank")
+        | graphviz
       | .
     li
       b Waveform viewing
