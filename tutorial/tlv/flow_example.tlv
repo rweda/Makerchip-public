@@ -61,6 +61,17 @@ m4_define_hier(M4_RING_STOP, 4, 0)
    // Testbench
    m4+router_testbench(/top, /ring_stop, |stall0, @1, |fifo2_out, @1, /trans, /top<>0$reset)
    
+   // Show color in DIAGRAM
+   /tb
+      /ring_stop[*]
+         |send
+            /gen_trans
+               @1
+                  m4_rand($color, 23, 0)
+         |receive2
+            /trans
+               @1
+                  `BOGUS_USE($color)
    
    // Simulation control.
    *passed = & /top/tb/ring_stop[*]|passed>>1$passed;
