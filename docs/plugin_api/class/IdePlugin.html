@@ -1,0 +1,2781 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset='UTF-8'>
+  <title>Makerchip Plugin API for Third-Party Integration</title>
+  <script src='../javascript/application.js'></script>
+  <script src='../javascript/search.js'></script>
+  <link rel='stylesheet' href='../stylesheets/application.css' type='text/css'>
+</head>
+  <body>
+    <div id='base' data-path='../'></div>
+<div id='header'>
+  <div id='menu'>
+    <a href='../extra/plugin/README.md.html' title='Makerchip Plugin API'>
+      Makerchip Plugin API
+    </a>
+    &raquo;
+    <a href='../alphabetical_index.html' title='Index'>
+      Index
+    </a>
+    &raquo;
+    <span class='title'>IdePlugin</span>
+  </div>
+</div>
+    <div id='content'>
+      <h1>
+        Class:
+        IdePlugin
+      </h1>
+      <table class='box'>
+        <tr>
+          <td>Defined in:</td>
+          <td>..&#47;doc&#47;cleaned_coffee_plugin&#47;IdePlugin.coffee</td>
+        </tr>
+      </table>
+      <h2>Overview</h2>
+      <div class='docstring'>
+  <p>Base class for third-party platform integration with the Makerchip IDE.</p><p>Extend this class to customize IDE behavior and interact with the IDE and its compilations.</p><p>See the README.md (under &quot;Extras&quot;) for an overview.</p>
+</div>
+<div class='tags'>
+</div>
+      <h2>Property Summary</h2>
+      <dl class='properties'>
+        <dt id='version-property'>
+          <span class='signature'>
+            (String)
+            <b>
+              version
+            </b>
+          </span>
+        </dt>
+        <dd class='desc'>
+          Semantic version of the IdePlugin API. 2.0.0: instances are created via the static <a href='../class/IdePlugin.html#create-static'>IdePlugin.create</a> factory; the
+constructor no longer returns a Promise (breaking change from 1.x).
+
+        </dd>
+        <dt id='API_METHODS-property'>
+          <span class='signature'>
+            (Array&lt;String&gt;)
+            <b>
+              API_METHODS
+            </b>
+          </span>
+        </dt>
+        <dd class='desc'>
+          A list of public API method names, exposed via the <code>api</code> object. 
+        </dd>
+        <dt id='containerId-property'>
+          <span class='signature'>
+            (String)
+            <b>
+              containerId
+            </b>
+          </span>
+        </dt>
+        <dd class='desc'>
+          Plugin DOM container element ID and unique identifier for this instance 
+        </dd>
+        <dt id='iframe-property'>
+          <span class='signature'>
+            (HTMLIFrameElement)
+            <b>
+              iframe
+            </b>
+          </span>
+        </dt>
+        <dd class='desc'>
+          The IDE iframe element 
+        </dd>
+        <dt id='api-property'>
+          <span class='signature'>
+            (Object)
+            <b>
+              api
+            </b>
+          </span>
+        </dt>
+        <dd class='desc'>
+          Public API surface for external callers (human and AI users). Provides controlled access to IDE functionality, bundling all public methods into a single
+object that can be exposed to human/AI users, protecting private/internal/developer
+methods and callbacks. Public API methods are defined in the API_METHODS array and
+are described as &quot;Public API method to...&quot; in their descriptions.
+
+        </dd>
+      </dl>
+      <h2>Class Method Summary</h2>
+      <ul class='summary'>
+  <li>
+    <span class='signature'>
+      <a href='#create-static'>
+        .
+(Promise&lt;IdePlugin&gt;)
+<b>create</b><span>(containerId, options = {})</span>
+      </a>
+    </span>
+    <span class='desc'>
+      The supported entry point for asynchronously creating and initializing an IdePlugin (or subclass) instance.
+
+    </span>
+  </li>
+</ul>
+      <h2>Instance Method Summary</h2>
+      <ul class='summary'>
+  <li>
+    <span class='signature'>
+      <a href='#compile-dynamic'>
+        #
+(void)
+<b>compile</b><span>(code, enableSimulation = true, settings = {})</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Public API method to trigger compilation. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#setCode-dynamic'>
+        #
+(void)
+<b>setCode</b><span>(code, readOnly)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Public API method to set code in IDE editor. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#getCode-dynamic'>
+        #
+(Promise&lt;Object&gt;)
+<b>getCode</b><span>(lastChangeGeneration)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Public API method to get current code from the editor. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#setCodeFromURL-dynamic'>
+        #
+(void)
+<b>setCodeFromURL</b><span>(url, readOnly)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Public API method to load code from URL. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#openPane-dynamic'>
+        #
+(Promise&lt;boolean&gt;)
+<b>openPane</b><span>(name, background = false)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Public API method to open a static pane by name. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#activatePane-dynamic'>
+        #
+(Promise&lt;void&gt;)
+<b>activatePane</b><span>(name)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Public API method to activate an existing pane by its name/mnemonic. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#openThirdPartyPane-dynamic'>
+        #
+(Promise&lt;String&gt;)
+<b>openThirdPartyPane</b><span>(mnemonic, contentType, contentParams, options)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Public API method to open a third-party-provided pane with external content. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#reservePane-dynamic'>
+        #
+(Promise&lt;String&gt;)
+<b>reservePane</b><span>(mnemonic)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Public API method to reserve a (uniquified) pane mnemonic ahead of opening it. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#busEmit-dynamic'>
+        #
+(Promise)
+<b>busEmit</b><span>(type, payload, target, agent)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Public API method to emit an application event onto the IDE bus as a <code>platform</code> participant. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#callPane-dynamic'>
+        #
+(Promise)
+<b>callPane</b><span>(mnemonic, method, args, timeoutMs)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Public API method to call a method on a connected third-party pane and await its result (host-&gt;pane RPC).
+
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#getLayoutState-dynamic'>
+        #
+(Promise&lt;Object&gt;)
+<b>getLayoutState</b><span>(options = {})</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Public API method to get the current layout state of the IDE. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#setLayoutState-dynamic'>
+        #
+(Promise&lt;void&gt;)
+<b>setLayoutState</b><span>(state)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Public API method to set the layout state of the IDE. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#getVizImage-dynamic'>
+        #
+(Promise&lt;String|null&gt;)
+<b>getVizImage</b><span>(options)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Public API method to export the VIZ pane visualization as an image. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#captureVideo-dynamic'>
+        #
+(Promise&lt;Blob|null&gt;)
+<b>captureVideo</b><span>(startCyc, endCyc, options)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Capture the VIZ simulation as a video (APNG, GIF, MP4, or WebM) and resolve to a Blob, optionally downloading it.
+
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#getKeyframe-dynamic'>
+        #
+(Promise&lt;Object|null&gt;)
+<b>getKeyframe</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Capture the current VIZ state as an absolute keyframe object. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#fitKeyframe-dynamic'>
+        #
+(Promise&lt;Object|null&gt;)
+<b>fitKeyframe</b><span>(width, height)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Compute an absolute contain-fit keyframe that frames the whole design for a target recording size (fits the design&#39;s bounding box to width x height, centered), WITHOUT changing the current view.
+
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#getAvailablePanes-dynamic'>
+        #
+(Promise&lt;Array&lt;Object&gt;&gt;)
+<b>getAvailablePanes</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Public API method to get all available panes. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#fitPane-dynamic'>
+        #
+(Promise&lt;Boolean&gt;)
+<b>fitPane</b><span>(mnemonic)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Public API method to fit the content of a named pane to its viewport. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#getCycle-dynamic'>
+        #
+(Promise&lt;Number&gt;)
+<b>getCycle</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Public API method to get the current cycle value. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#setCycle-dynamic'>
+        #
+(Promise&lt;void&gt;)
+<b>setCycle</b><span>(newCyc)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Public API method to set the current cycle value. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#updatePlayState-dynamic'>
+        #
+(Promise&lt;void&gt;)
+<b>updatePlayState</b><span>(isPlaying, cycleTimeout, startCyc, endCyc)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Public API method to control waveform playback. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#highlight-dynamic'>
+        #
+(Promise&lt;Boolean&gt;)
+<b>highlight</b><span>(id, accumulate = false)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Public API method to highlight a logical entity across all IDE views. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#clearHighlights-dynamic'>
+        #
+(Promise&lt;void&gt;)
+<b>clearHighlights</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Public API method to clear all highlighted logical entities across all IDE views. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#setDarkMode-dynamic'>
+        #
+(Promise&lt;Boolean&gt;)
+<b>setDarkMode</b><span>(enabled)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Public API method to enable or disable dark mode across the IDE. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#setLiveMode-dynamic'>
+        #
+(Promise&lt;Boolean&gt;)
+<b>setLiveMode</b><span>(mnemonic, enabled)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Public API method to enable or disable live mode for a specific pane. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#onReady-dynamic'>
+        #
+(void|Promise)
+<b>onReady</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Third party entry point, called when IDE is fully loaded and ready. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#onTermsAccepted-dynamic'>
+        #
+(void)
+<b>onTermsAccepted</b><span>(acceptedAt)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Called when the user accepts the Makerchip Terms of Service and Privacy Policy in the IDE. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#onCodeChange-dynamic'>
+        #
+(void)
+<b>onCodeChange</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Called when user edits code in the editor (via typing, etc.) This is a notification only - no code is passed to avoid communication overhead.
+
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#onCodeReplaced-dynamic'>
+        #
+(void)
+<b>onCodeReplaced</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Called when code is loaded programmatically (e.g., via setCode, setCodeFromURL, loadProject). 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#onCompilationVcd-dynamic'>
+        #
+(void)
+<b>onCompilationVcd</b><span>(id, vcd)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Called when VCD (Value Change Dump) file is generated from simulation. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#onCompilationLog-dynamic'>
+        #
+(void)
+<b>onCompilationLog</b><span>(id, log, complete, type)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Called when compilation produces log output (incrementally or complete). 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#onCompilationStart-dynamic'>
+        #
+(void)
+<b>onCompilationStart</b><span>(info)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Called once the server assigns a compile id, with the exact source that produced it.
+
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#onJumpToLine-dynamic'>
+        #
+(void)
+<b>onJumpToLine</b><span>(lineNumber)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Called when user clicks on a line number in Nav-TLV or ErrorLog panes. 
+    </span>
+  </li>
+</ul>
+      <h2>Class Method Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='create-static'>
+      .
+(Promise&lt;IdePlugin&gt;)
+<b>create</b><span>(containerId, options = {})</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>The supported entry point for asynchronously creating and initializing an IdePlugin
+(or subclass) instance.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>containerId</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>DOM element ID / Penpal channel identifier </span>
+    </li>
+    <li>
+      <span class='name'>options</span>
+      <span class='type'>
+        (
+          <tt>Object</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>See <a href='../class/IdePlugin.html#constructor-dynamic'>IdePlugin#constructor</a> for supported options </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>Promise&lt;IdePlugin&gt;</tt>
+      )
+      &mdash;
+      <span class='desc'>Promise that resolves to the initialized instance </span>
+    </li>
+  </ul>
+</div>
+  </div>
+</div>
+      <h2>Constructor Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='constructor-dynamic'>
+      #
+(void)
+<b>constructor</b><span>(containerId, options = {})</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Constructor
+Note that contruction should be done via the <code>create()</code> factory, which performs async initialization.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>containerId</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>DOM element ID where IDE should be rendered and the PenPal channel identifier </span>
+    </li>
+    <li>
+      <span class='name'>options</span>
+      <span class='type'>
+        (
+          <tt>Object</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Optional configuration object </span>
+    </li>
+  </ul>
+  <h3>
+    Options Hash:
+    (options):
+  </h3>
+  <ul class='options'>
+    <li>
+      <span class='name'>code</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Initial TL-Verilog code to load </span>
+    </li>
+    <li>
+      <span class='name'>codeURL</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>URL to fetch initial code from (ignored if code is provided, defaults to default.tlv) </span>
+    </li>
+    <li>
+      <span class='name'>readOnly</span>
+      <span class='type'>
+        (
+          <tt>Boolean</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Whether initial code should be read-only (default: false) </span>
+    </li>
+    <li>
+      <span class='name'>hasEditor</span>
+      <span class='type'>
+        (
+          <tt>Boolean</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Whether to include Editor pane (default: true). When false, platform provides code via compile() calls. </span>
+    </li>
+    <li>
+      <span class='name'>defaultDarkMode</span>
+      <span class='type'>
+        (
+          <tt>Boolean</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Whether to default to dark mode on first launch (default: false). Only applies when localStorage has no saved preference. </span>
+    </li>
+    <li>
+      <span class='name'>termsAcceptedAt</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>ISO time at which the user accepted the Makerchip Terms of Service and Privacy Policy. By passing it, you attest that they did (Terms of Service, section 6). Unless it is no earlier than both documents&#39; last revision, the IDE asks the user to accept them, and reports a new acceptance via {#onTermsAccepted}. </span>
+    </li>
+  </ul>
+</div>
+  </div>
+</div>
+      <h2>Instance Method Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='compile-dynamic'>
+      #
+(void)
+<b>compile</b><span>(code, enableSimulation = true, settings = {})</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Public API method to trigger compilation.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>code</span>
+      <span class='type'>
+        (
+          <tt>String|Object</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>(optional) TL-Verilog source to compile. A String compiles a single top file. An Object of the form <code>{files, top}</code> compiles multiple files, where <code>files</code> maps relative path -&gt; contents and <code>top</code> names the entry file (default &quot;top.tlv&quot;); sibling files referenced via <code>m4_include</code> are resolved by their relative path. If not provided, retrieves code from the editor. Required (in either form) when using hasEditor: false mode. </span>
+    </li>
+    <li>
+      <span class='name'>enableSimulation</span>
+      <span class='type'>
+        (
+          <tt>Boolean</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>(optional, default true) whether to run the Verilator simulation after Verilog generation. Pass false for a faster Verilog-only (model) run. </span>
+    </li>
+    <li>
+      <span class='name'>settings</span>
+      <span class='type'>
+        (
+          <tt>Object</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>(optional, default {}) user compilation settings. </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='setCode-dynamic'>
+      #
+(void)
+<b>setCode</b><span>(code, readOnly)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Public API method to set code in IDE editor.
+TODO: Should probably transition to loadCode() or initCode() to avoid confusion with other <code>setCode()</code>
+      methods. (Also for setCodeFromURL().)</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>code</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>TL-Verilog source code </span>
+    </li>
+    <li>
+      <span class='name'>readOnly</span>
+      <span class='type'>
+        (
+          <tt>Boolean</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Whether the code should be read-only (optional, defaults to false) </span>
+    </li>
+  </ul>
+  <h3>See also:</h3>
+  <ul class='see'>
+    <li>
+      <a href='#setCodeFromURL-dynamic'>setCodeFromURL</a>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='getCode-dynamic'>
+      #
+(Promise&lt;Object&gt;)
+<b>getCode</b><span>(lastChangeGeneration)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Public API method to get current code from the editor.</p><p>To avoid unnecessary data transfer, you can optionally pass the last known change generation.
+If the code hasn&#39;t changed since that generation, the method returns null for the code property.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>lastChangeGeneration</span>
+      <span class='type'>
+        (
+          <tt>Number</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Optional change generation to check against </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>Promise&lt;Object&gt;</tt>
+      )
+      &mdash;
+      <span class='desc'>Promise resolving to <code>{code, changeGeneration}</code> where code is the source string or null if unchanged, and changeGeneration associates with it for optional use in subsequent calls. </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='setCodeFromURL-dynamic'>
+      #
+(void)
+<b>setCodeFromURL</b><span>(url, readOnly)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Public API method to load code from URL.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>url</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>URL to fetch TL-Verilog code from </span>
+    </li>
+    <li>
+      <span class='name'>readOnly</span>
+      <span class='type'>
+        (
+          <tt>Boolean</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Whether the code should be read-only (optional, defaults to false) </span>
+    </li>
+  </ul>
+  <h3>See also:</h3>
+  <ul class='see'>
+    <li>
+      <a href='#setCode-dynamic'>setCode</a>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='openPane-dynamic'>
+      #
+(Promise&lt;boolean&gt;)
+<b>openPane</b><span>(name, background = false)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Public API method to open a static pane by name.
+Static panes include documentation, tutorials, and reference materials.</p><p>Available panes include:</p><ul>
+<li>&quot;About&quot;, &quot;Help&quot; - General information</li>
+<li>&quot;Tutorials&quot;, &quot;Code-Examples&quot; - Learning resources</li>
+<li>&quot;Courses&quot; - Course materials</li>
+<li>&quot;Settings&quot; - IDE settings</li>
+<li>Various tutorial-specific panes and PDF documents</li>
+</ul>
+
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>name</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>The name/mnemonic of the static pane </span>
+    </li>
+    <li>
+      <span class='name'>background</span>
+      <span class='type'>
+        (
+          <tt>Boolean</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Whether to open in background without activating (optional, defaults to false) </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>Promise&lt;boolean&gt;</tt>
+      )
+      &mdash;
+      <span class='desc'>Promise resolving to boolean success </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='activatePane-dynamic'>
+      #
+(Promise&lt;void&gt;)
+<b>activatePane</b><span>(name)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Public API method to activate an existing pane by its name/mnemonic.
+This only works for panes that are already opened. The pane will be brought to the front
+in its tabbed view.</p><p>Common pane names include:</p><ul>
+<li>&quot;Editor&quot; - Code editor</li>
+<li>&quot;Diagram&quot; - Block diagram visualization</li>
+<li>&quot;Viz&quot; - Visual debug</li>
+<li>&quot;Waveform&quot; - Waveform viewer</li>
+<li>&quot;Nav-TLV&quot; - Navigable TL-Verilog</li>
+<li>&quot;Log&quot; - Error/compilation log</li>
+</ul>
+
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>name</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>The name of the pane as it appears in the panes&#39;s tab (though case-sensitive) </span>
+    </li>
+  </ul>
+  <h3>Throws:</h3>
+  <ul class='throw'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>Error</tt>
+      )
+      &mdash;
+      <span class='desc'>If pane not found or not opened </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>Promise&lt;void&gt;</tt>
+      )
+      &mdash;
+      <span class='desc'>Promise that resolves when pane is activated </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='openThirdPartyPane-dynamic'>
+      #
+(Promise&lt;String&gt;)
+<b>openThirdPartyPane</b><span>(mnemonic, contentType, contentParams, options)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Public API method to open a third-party-provided pane with external content.
+This enables platforms to inject custom panes into the IDE.
+Panes are provided by the embedding platform (e.g., VS Code extension, web app).</p><p>Currently supports:</p><ul>
+<li>&quot;pdf&quot; - Display a PDF document via URL. The viewer&#39;s own origin check is disabled, but the sandbox CSP still governs the fetch (<code>connect-src &#39;self&#39; https: blob:</code>), so <code>https:</code>, <code>blob:</code> and same-origin URLs work. <code>file://</code> does NOT: browsers block local-file loads from an <code>http(s)</code> document beneath CSP, so no CSP change can enable it (see <code>doc-src/plugin/Third_Party_Pane_API.md</code>). Pass a <code>blob:</code> URL to present local bytes.</li>
+<li>&quot;iframe&quot; - Embed external web content via URL</li>
+</ul><p>All third-party panes are closable by default.</p><p>The mnemonic is automatically uniquified if there&#39;s a collision with existing
+panes (based on sanitized HTML ID). Uniquification appends +# or -#</p><p>Third-party panes are always included in layout state. Recoverable panes (default)
+include full creation data and can be automatically recreated. Non-recoverable panes
+are tracked with null (position visible, but can&#39;t be recreated if not present).</p><pre><code>Recoverable panes retain the contentParams and can provide it in layout state (see `getLayoutState()`)
+to enable automatic recreation in another IDE instance.
+</code></pre>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      
+    </h4>
+    <pre><code class='coffeescript'># Open a PDF document
+ide.api.openThirdPartyPane(&quot;My Guide&quot;, &quot;pdf&quot;, {
+  contentUrl: &quot;https:&#47;&#47;example.com&#47;guide.pdf&quot;
+})
+
+# Open external documentation in iframe
+ide.api.openThirdPartyPane(&quot;External Docs&quot;, &quot;iframe&quot;, {
+  contentUrl: &quot;https:&#47;&#47;docs.example.com&quot;
+}, {
+  background: true  # Don&#39;t activate immediately
+})</code></pre>
+  </div>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>mnemonic</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Requested identifier for the pane (used as tab title, auto-uniquified if needed) </span>
+    </li>
+    <li>
+      <span class='name'>contentType</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Type of content: &quot;pdf&quot; or &quot;iframe&quot; </span>
+    </li>
+    <li>
+      <span class='name'>contentParams</span>
+      <span class='type'>
+        (
+          <tt>Object</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Content-specific parameters: @option contentParams {String} contentUrl URL for the content (required, supports any origin) </span>
+    </li>
+    <li>
+      <span class='name'>options</span>
+      <span class='type'>
+        (
+          <tt>Object</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Control options (optional): @option options {Boolean} background If true, don&#39;t activate pane after opening (default: false) @option options {Boolean} nonTransferrable If true, mark as non-transferrable to optimize memory (default: false) </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>Promise&lt;String&gt;</tt>
+      )
+      &mdash;
+      <span class='desc'>Promise that resolves to actual mnemonic used (may differ from requested if uniquified), or null on error </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='reservePane-dynamic'>
+      #
+(Promise&lt;String&gt;)
+<b>reservePane</b><span>(mnemonic)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Public API method to reserve a (uniquified) pane mnemonic ahead of opening it.
+A later openThirdPartyPane() call with the returned mnemonic is guaranteed to use it unchanged,
+which lets callers wire up channel contracts that reference the mnemonic before the pane exists
+(e.g. reserve both panes, then open each subscribing to the other&#39;s reserved mnemonic).</p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      
+    </h4>
+    <pre><code class='coffeescript'>ce    = await ide.api.reservePane(&quot;Compiler Explorer&quot;)
+warpv = await ide.api.reservePane(&quot;WARP-V&quot;)</code></pre>
+  </div>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>mnemonic</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Requested identifier to reserve (auto-uniquified on collision) </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>Promise&lt;String&gt;</tt>
+      )
+      &mdash;
+      <span class='desc'>Promise resolving to the reserved (possibly uniquified) mnemonic </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='busEmit-dynamic'>
+      #
+(Promise)
+<b>busEmit</b><span>(type, payload, target, agent)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Public API method to emit an application event onto the IDE bus as a <code>platform</code> participant.
+Panes (and the IDE) receive it through their subscriptions, filtered by <code>type</code> and <code>source</code>;
+the source is always within the reserved <code>platform</code> namespace, so it cannot be spoofed as
+&quot;ide&quot; or a pane. This is a fire-and-forget broadcast onto the same <code>ext/&lt;type&gt;</code> channel panes
+use — an existing pane whose contract names &quot;platform&quot; in a subscription&#39;s <code>sources</code> receives
+it with no change.
+TRUST: the <code>platform</code> namespace is only <em>mostly</em> trusted — anyone can host a Makerchip Plugin,
+and the host may relay this API to AI agents — so recipients opt in per source. Omit <code>agent</code>
+for the host&#39;s own actions (source &quot;platform&quot;); pass an agent tag (e.g. &quot;ai&quot;) to mark an emit
+the host relays on a less-trusted agent&#39;s behalf (source &quot;platform.ai&quot;). Recipients can then
+accept &quot;platform&quot; only or a specific &quot;platform.<agent>&quot; via exact <code>sources</code>; to accept the
+whole family it omits <code>sources</code> and tests source.startsWith(&quot;platform&quot;). The platform can never
+reach reserved first-party ide/<type> events.</p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      
+    </h4>
+    <pre><code class='coffeescript'>await ide.api.busEmit(&quot;sourceAsm&quot;, { source, asm })              # as &quot;platform&quot;
+await ide.api.busEmit(&quot;sourceAsm&quot;, { source, asm }, null, &quot;ai&quot;)  # as &quot;platform.ai&quot;</code></pre>
+  </div>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>type</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Event type (e.g. &quot;sourceAsm&quot;). </span>
+    </li>
+    <li>
+      <span class='name'>payload</span>
+      <span class='type'>
+        (
+          <tt>*</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Structured-clone-safe payload. </span>
+    </li>
+    <li>
+      <span class='name'>[target]</span>
+      <span class='type'>
+        (
+          <tt>String|Array&lt;String&gt;</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Optional recipient identity whitelist. </span>
+    </li>
+    <li>
+      <span class='name'>[agent]</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Optional agent tag; omit for source &quot;platform&quot;, or pass e.g. &quot;ai&quot; for source &quot;platform.ai&quot;. Only ever extends the &quot;platform&quot; namespace. </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>Promise</tt>
+      )
+      &mdash;
+      <span class='desc'>Resolves once the emit has been dispatched. </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='callPane-dynamic'>
+      #
+(Promise)
+<b>callPane</b><span>(mnemonic, method, args, timeoutMs)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Public API method to call a method on a connected third-party pane and await its result
+(host-&gt;pane RPC). Names a pane the caller opened (by its reserved/uniquified mnemonic) and
+forwards <code>method</code>/<code>args</code> over that pane&#39;s channel; the pane must have declared <code>rpc: true</code> and
+implemented a handler for <code>method</code>. This is the request/response complement to {busEmit}&#39;s
+fire-and-forget broadcast: use it when you need a value back (e.g. tell a pane to run and wait
+for its outcome). The IDE is a pass-through — it interprets neither the method nor the arguments.</p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      
+    </h4>
+    <pre><code class='coffeescript'>result = await ide.api.callPane(&quot;Compiler Explorer+2&quot;, &quot;runOnWarpV&quot;, [])</code></pre>
+  </div>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>mnemonic</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>The target pane&#39;s mnemonic (as returned by reservePane/openThirdPartyPane). </span>
+    </li>
+    <li>
+      <span class='name'>method</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>The pane method to invoke. </span>
+    </li>
+    <li>
+      <span class='name'>[args]</span>
+      <span class='type'>
+        (
+          <tt>Array</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Positional arguments (structured-clone-safe). </span>
+    </li>
+    <li>
+      <span class='name'>[timeoutMs]</span>
+      <span class='type'>
+        (
+          <tt>Number</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Optional response timeout in ms (default 30000). </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>Promise</tt>
+      )
+      &mdash;
+      <span class='desc'>Resolves with the pane&#39;s result; rejects on pane error, timeout, or if the pane is unknown or did not opt into RPC. </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='getLayoutState-dynamic'>
+      #
+(Promise&lt;Object&gt;)
+<b>getLayoutState</b><span>(options = {})</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Public API method to get the current layout state of the IDE.
+The state includes the arrangement of panes, splits, and active tabs.
+It may include recovery data for reconstructing third-party panes.
+This can be used to save and restore user&#39;s layout preferences, transfer to a different IDE instance,
+or to inspect (then modify) the layout.</p><p>The returned state is a recursive tree representing the split layout hierarchy. Each node is either
+a FlexSplit (has &#39;sides&#39; property with left/right or top/bottom children) or a TabbedView (has &#39;panes&#39;
+array). Split direction is inferred from which children exist (left+right = horizontal, top+bottom = vertical).</p><p>TabbedView panes array contains mnemonic strings, or, for transferrable third-party panes with forTransfer: true,
+objects containing: {mnemonic, contentType, contentParams}</p><p>See Plugin_API.md (in Extras) for complete layout state and third-party pane documentation.</p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      Get and save layout state for future recovery
+    </h4>
+    <pre><code class='coffeescript'>const state = await ide.getLayoutState({forTransfer: true});
+localStorage.setItem(&#39;layout&#39;, JSON.stringify(state));</code></pre>
+    <h4>
+      Restore saved layout
+    </h4>
+    <pre><code class='coffeescript'>const saved = JSON.parse(localStorage.getItem(&#39;layout&#39;));
+await ide.setLayoutState(saved);</code></pre>
+    <h4>
+      Get state for same-instance rearrangement
+    </h4>
+    <pre><code class='coffeescript'>const state = await ide.getLayoutState();  &#47;&#47; forTransfer not needed</code></pre>
+    <h4>
+      Example state structure (forTransfer: true)
+    </h4>
+    <pre><code class='coffeescript'>{
+  sides: {
+    left: {
+      panes: [&quot;Editor&quot;, &quot;Nav-TLV&quot;],
+      activePane: &quot;Editor&quot;
+    },
+    right: {
+      sides: {
+        top: {
+          panes: [
+            &quot;Diagram&quot;,
+            {
+              mnemonic: &quot;User Guide&quot;,
+              contentType: &quot;pdf&quot;,
+              contentParams: {contentUrl: &quot;https:&#47;&#47;example.com&#47;guide.pdf&quot;}
+            }
+          ],
+          activePane: &quot;Diagram&quot;
+        },
+        bottom: {
+          panes: [&quot;Waveform&quot;, &quot;Log&quot;],
+          activePane: &quot;Waveform&quot;
+        }
+      },
+      splitAt: 0.6
+    }
+  },
+  splitAt: 0.3
+}</code></pre>
+  </div>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>options</span>
+      <span class='type'>
+        (
+          <tt>Object</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Optional configuration </span>
+    </li>
+  </ul>
+  <h3>
+    Options Hash:
+    (options):
+  </h3>
+  <ul class='options'>
+    <li>
+      <span class='name'>forTransfer</span>
+      <span class='type'>
+        (
+          <tt>Boolean</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>If true, include third-party panes for cross-instance transfer (default: false). Set to true when saving state that may be restored in a different IDE instance that may not have the panes. Set to false (default) when rearranging within the same instance where panes already exist. </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>Promise&lt;Object&gt;</tt>
+      )
+      &mdash;
+      <span class='desc'>Promise resolving to the serializable layout state object </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='setLayoutState-dynamic'>
+      #
+(Promise&lt;void&gt;)
+<b>setLayoutState</b><span>(state)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Public API method to set the layout state of the IDE.
+This will close the current layout and rebuild it from the provided state.</p><p>Third-party panes named by the state that are not already open are recreated, with the platform
+as their <code>creator</code> (the restoring participant, not whoever opened them in the captured session).
+A pane whose state carries no construction data (opened <code>nonTransferrable</code>) is dropped from the
+restored layout unless it is already open in this IDE.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>state</span>
+      <span class='type'>
+        (
+          <tt>Object</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>The layout state object (from getLayoutState) </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>Promise&lt;void&gt;</tt>
+      )
+      &mdash;
+      <span class='desc'>Promise that resolves when layout is restored </span>
+    </li>
+  </ul>
+  <h3>See also:</h3>
+  <ul class='see'>
+    <li>
+      <a href='#getLayoutState-dynamic'>getLayoutState for details on the structure of the state object and usage examples.</a>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='getVizImage-dynamic'>
+      #
+(Promise&lt;String|null&gt;)
+<b>getVizImage</b><span>(options)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Public API method to export the VIZ pane visualization as an image.
+Returns a data URL containing the image in the specified format.
+Returns null if the VIZ pane is not available or has no content.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>options</span>
+      <span class='type'>
+        (
+          <tt>Object</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Optional export options </span>
+    </li>
+  </ul>
+  <h3>
+    Options Hash:
+    (options):
+  </h3>
+  <ul class='options'>
+    <li>
+      <span class='name'>format</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Image format: &#39;png&#39; (default), &#39;jpeg&#39;, &#39;webp&#39; </span>
+    </li>
+    <li>
+      <span class='name'>quality</span>
+      <span class='type'>
+        (
+          <tt>Number</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Image quality (0-1) for jpeg/webp formats </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>Promise&lt;String|null&gt;</tt>
+      )
+      &mdash;
+      <span class='desc'>Promise resolving to image data URL or null if VIZ not available </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='captureVideo-dynamic'>
+      #
+(Promise&lt;Blob|null&gt;)
+<b>captureVideo</b><span>(startCyc, endCyc, options)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Capture the VIZ simulation as a video (APNG, GIF, MP4, or WebM) and resolve to a Blob,
+optionally downloading it. Rendering is performed headlessly (via the VIZ
+pane&#39;s VizRecorder + FFmpeg) blocking in the foreground process. The output format is chosen
+from the <code>format</code> option if given, else the <code>filename</code> extension (.apng, .gif, .mp4, .webm),
+else a frames-based default (GIF for a single-frame capture, MP4 for animated captures). Because
+<code>format</code> is independent of <code>filename</code>, a caller can request a format while returning the blob
+only (no download). Throws an error if the simulation data is not available or has no simulation
+data.</p><p>Video capture steps through cycles like VIZ playback, with flexible camera control via
+keyframes. Each keyframe specifies:</p><ul>
+<li><code>cycle</code>: may be fractional; monotonically increasing from earlier keyframes, spanning at least startCyc..endCyc across all keyframe cycles.</li>
+<li><code>scale</code> and <code>focus</code>: the zoom and center point of the view.</li>
+<li><code>width</code>/<code>height</code>: the reference view within which scale/focus are interpreted.
+The keyframe view is fit within the recording dimensions, so framing stays consistent at any
+recording size (when width/height are provided).</li>
+</ul><p>Keyframes are interpreted according to the <code>mode</code> option:</p><ul>
+<li>&#39;viz-relative&#39; (default): scale is a multiplier on the current VIZ scale (0.5 = zoom out 2x, 2.0 = zoom in 2x) and focus is an offset as a fraction of the current view&#39;s visible width/height. <code>keyframes</code> may be omitted to record the current view (a single default keyframe).</li>
+<li>&#39;fit-relative&#39;: like viz-relative, but the base is the whole-design contain-fit AT THE RECORDING SIZE rather than the current pane view (scale 1 = whole design framed, 2 = 2x zoom in; focus is a fraction of the fit&#39;s visible area). This is the reliable way to frame a recording without hand-tuning scale, since it is independent of the pane&#39;s aspect and scroll position. <code>keyframes</code> may be omitted to record the whole-design fit. Equivalent to using <a href='../class/IdePlugin.html#fitKeyframe-dynamic'>IdePlugin#fitKeyframe</a> as the base keyframe.</li>
+<li>&#39;absolute&#39;: scale/focus are absolute VIZ coordinates, with the reference view given by each keyframe&#39;s width/height (or <code>default.width</code>/<code>height</code>). The current view is NOT used, so <code>keyframes</code> is REQUIRED (at least one entry); <code>default</code> only supplies values for properties an individual keyframe omits and does not substitute for the array.</li>
+</ul>
+<h2 id="frame-capture-behavior">Frame capture behavior</h2>
+<ul>
+<li>startCyc &gt;= 0: captures only the final (settled) frame of the start cycle.</li>
+<li>subsequent cycles (startCyc+1..endCyc): captures a frame every delta = 1000/fps ms through the cycle duration.</li>
+<li>startCyc = -1: skips cycle -1, enabling capture of cycle 0&#39;s animation frames.</li>
+</ul><p>Examples (fps=3, cyclesPerSecond=1, delta=333ms): <code>captureVideo(0, 0, {fps: 3})</code>  → 1 frame at 1000ms (final state of cycle 0) <code>captureVideo(0, 1, {fps: 3})</code>  → 4 frames: 1000ms (cyc 0 final), 333/666/1000ms (cyc 1) <code>captureVideo(-1, 0, {fps: 3})</code> → 3 frames at 333/666/1000ms (cycle 0 animation only)</p><h2 id="limitations">Limitations</h2>
+<ul>
+<li>Maximum 2000 frames per capture (~67s @ 30fps, ~33s @ 60fps).</li>
+<li>All frames are held in memory during encoding (no streaming).</li>
+<li><p>For longer captures, reduce fps/cyclesPerSecond or use screen-recording software.</p><pre><code>          but animates to cycle 0)
+          from `filename`, else GIF for a single frame / MP4 for animation). Independent of
+          `filename`, so it selects the codec even when returning the blob without download.
+          true for an auto-generated name; omit/false to return the blob only
+          current VIZ view), &#39;fit-relative&#39; (relative to the whole-design fit at the recording
+          size — best for reliable framing), or &#39;absolute&#39; (absolute VIZ scale/coordinates)
+          Required in &#39;absolute&#39; mode; in the relative modes may be omitted (records the current
+          view, or the whole-design fit for &#39;fit-relative&#39;). First/last keyframe cycles auto-fill
+          from startCyc/endCyc; interpolated with Catmull-Rom splines.
+</code></pre></li>
+</ul>
+
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      Get a blob without downloading
+    </h4>
+    <pre><code class='coffeescript'>const blob = await ide.api.captureVideo(0, 100);</code></pre>
+    <h4>
+      Download with an auto-generated filename
+    </h4>
+    <pre><code class='coffeescript'>await ide.api.captureVideo(0, 50, {filename: true});</code></pre>
+    <h4>
+      Download a high-quality MP4, based on current VIZ view
+    </h4>
+    <pre><code class='coffeescript'>await ide.api.captureVideo(0, 20, {
+  fps: 25,                  &#47;&#47; 25 frames per second
+  cyclesPerSecond: 2,       &#47;&#47; play 2 cycles per second
+  Mbps: 10,                 &#47;&#47; high-quality bitrate
+  filename: &#39;my-viz.mp4&#39;    &#47;&#47; .mp4 → h264
+});</code></pre>
+    <h4>
+      Static camera adjustment (single VIZ-relative keyframe)
+    </h4>
+    <pre><code class='coffeescript'>await ide.api.captureVideo(0, 100, {
+  keyframes: [{scale: 0.5, focus: {x: 0.1, y: -0.1}}],  &#47;&#47; zoom out 2x, pan right&#47;up
+  filename: &#39;adjusted.mp4&#39;
+});</code></pre>
+    <h4>
+      Animated camera with VIZ-relative keyframes
+    </h4>
+    <pre><code class='coffeescript'>await ide.api.captureVideo(0, 100, {
+  keyframes: [
+    {scale: 1.0, focus: {x: 0, y: 0}},               &#47;&#47; cycle auto-set to 0 (startCyc)
+    {cycle: 50, scale: 0.5, focus: {x: 0.25, y: 0}}, &#47;&#47; zoom out 2x, pan right 25%
+    {scale: 0.25, focus: {x: 0.5, y: 0.5}}           &#47;&#47; cycle auto-set to 100 (endCyc)
+  ],
+  filename: &#39;animated.mp4&#39;
+});</code></pre>
+    <h4>
+      Absolute VIZ coordinates relative to a 1200x1200 reference view
+    </h4>
+    <pre><code class='coffeescript'>await ide.api.captureVideo(0, 100, {
+  width: 600, height: 600,                &#47;&#47; record at half size; framing stays consistent
+  mode: &#39;absolute&#39;,
+  default: {width: 1200, height: 1200},   &#47;&#47; reference view the absolute scale is relative to
+  keyframes: [{scale: 0.1, focus: {x: 250, y: -100}}],
+  filename: &#39;absolute.mp4&#39;
+});</code></pre>
+    <h4>
+      Frame the whole design for the recording, no manual scale (fit-relative)
+    </h4>
+    <pre><code class='coffeescript'>await ide.api.captureVideo(0, 20, {
+  width: 350, height: 250,
+  mode: &#39;fit-relative&#39;,           &#47;&#47; default keyframe (scale 1 &#47; focus 0) = whole design framed
+  filename: &#39;framed.mp4&#39;
+});</code></pre>
+    <h4>
+      Zoom into a region from the whole-design fit (fit-relative)
+    </h4>
+    <pre><code class='coffeescript'>await ide.api.captureVideo(0, 20, {
+  width: 350, height: 250,
+  mode: &#39;fit-relative&#39;,
+  keyframes: [{scale: 2, focus: {x: 0.15, y: -0.1}}],  &#47;&#47; 2x zoom, panned right&#47;up 15%&#47;10%
+  filename: &#39;region.mp4&#39;
+});</code></pre>
+  </div>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>startCyc</span>
+      <span class='type'>
+        (
+          <tt>Number</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Starting cycle, where the initial frame is the final/resting (1000ms) state of this cycle (or -1 excludes this frame, </span>
+    </li>
+    <li>
+      <span class='name'>endCyc</span>
+      <span class='type'>
+        (
+          <tt>Number</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Ending cycle (inclusive) </span>
+    </li>
+    <li>
+      <span class='name'>options</span>
+      <span class='type'>
+        (
+          <tt>Object</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Optional capture options </span>
+    </li>
+  </ul>
+  <h3>
+    Options Hash:
+    (options):
+  </h3>
+  <ul class='options'>
+    <li>
+      <span class='name'>format</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Output format: &#39;apng&#39; | &#39;gif&#39; | &#39;mp4&#39; | &#39;webm&#39; (default: chosen </span>
+    </li>
+    <li>
+      <span class='name'>fps</span>
+      <span class='type'>
+        (
+          <tt>Number</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Frames per second in the output video (default: 1 frame per cycle, no animation) </span>
+    </li>
+    <li>
+      <span class='name'>cyclesPerSecond</span>
+      <span class='type'>
+        (
+          <tt>Number</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Playback speed in cycles per second (default: 1) </span>
+    </li>
+    <li>
+      <span class='name'>Mbps</span>
+      <span class='type'>
+        (
+          <tt>Number</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Video bitrate in Mbps (default: 2.5, recommended: 10+ for high quality; ignored for GIF/APNG) </span>
+    </li>
+    <li>
+      <span class='name'>backgroundColor</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>CSS canvas background color (default: &#39;white&#39;, e.g. &#39;#1e1e1e&#39; for dark mode) </span>
+    </li>
+    <li>
+      <span class='name'>filename</span>
+      <span class='type'>
+        (
+          <tt>String|Boolean</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Filename with extension (.apng/.gif/.mp4/.webm) to download; </span>
+    </li>
+    <li>
+      <span class='name'>width</span>
+      <span class='type'>
+        (
+          <tt>Number</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Recording width in pixels (default: current VIZ canvas width) </span>
+    </li>
+    <li>
+      <span class='name'>height</span>
+      <span class='type'>
+        (
+          <tt>Number</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Recording height in pixels (default: current VIZ canvas height) </span>
+    </li>
+    <li>
+      <span class='name'>mode</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Keyframe reference frame: &#39;viz-relative&#39; (default; relative to the </span>
+    </li>
+    <li>
+      <span class='name'>default</span>
+      <span class='type'>
+        (
+          <tt>Object</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Default {scale?, focus?, width?, height?} applied to keyframes that omit these properties </span>
+    </li>
+    <li>
+      <span class='name'>keyframes</span>
+      <span class='type'>
+        (
+          <tt>Array&lt;Object&gt;</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Camera keyframes [{cycle?, scale?, focus?, width?, height?}, ...]. </span>
+    </li>
+    <li>
+      <span class='name'>onProgress</span>
+      <span class='type'>
+        (
+          <tt>Function</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Callback function(current, total) invoked as cycles are captured </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>Promise&lt;Blob|null&gt;</tt>
+      )
+      &mdash;
+      <span class='desc'>Promise resolving to the video Blob, or null if VIZ is not available </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='getKeyframe-dynamic'>
+      #
+(Promise&lt;Object|null&gt;)
+<b>getKeyframe</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Capture the current VIZ state as an absolute keyframe object.</p><p>Returns a keyframe describing the current cycle, camera positioning (scale and
+focus), and canvas bounds. The keyframe is in absolute form, suitable for use in
+captureVideo&#39;s <code>keyframes</code> array (with <code>mode: &#39;absolute&#39;</code>). The included width/height
+record the canvas dimensions this keyframe was captured at, ensuring the keyframe
+resolves consistently even if the recording is at a different size.</p><p>Keyframes are typically captured at different simulation cycles or camera positions
+(via manual zoom/pan in the VIZ) and then used to animate the camera during video
+capture. The captureVideo method interpolates between keyframes using Catmull-Rom
+splines for smooth motion.</p><p>Common workflow:</p><ol>
+<li>Navigate to a cycle and camera position in the VIZ</li>
+<li>Call getKeyframe() to capture the state</li>
+<li>Repeat for other positions</li>
+<li><p>Pass collected keyframes to captureVideo with <code>mode: &#39;absolute&#39;</code></p><pre><code>                        or null if VIZ is not available
+</code></pre></li>
+</ol>
+
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      Capture two keyframes and animate between them
+    </h4>
+    <pre><code class='coffeescript'>&#47;&#47; Navigate to start position in VIZ
+await ide.api.setCycle(0);
+const kf1 = await ide.api.getKeyframe();
+
+&#47;&#47; Navigate to end position
+await ide.api.setCycle(100);
+&#47;&#47; ... manually zoom&#47;pan in VIZ to desired end view ...
+const kf2 = await ide.api.getKeyframe();
+
+&#47;&#47; Capture video with animated camera
+await ide.api.captureVideo(kf1.cycle, kf2.cycle, {
+  mode: &#39;absolute&#39;,
+  keyframes: [kf1, kf2],
+  filename: &#39;animated-camera.mp4&#39;
+});</code></pre>
+    <h4>
+      Multi-point camera path
+    </h4>
+    <pre><code class='coffeescript'>const keyframes = [];
+for (let cyc of [0, 25, 50, 75, 100]) {
+  await ide.api.setCycle(cyc);
+  &#47;&#47; ... adjust camera for each cycle ...
+  keyframes.push(await ide.api.getKeyframe());
+}
+await ide.api.captureVideo(0, 100, {
+  mode: &#39;absolute&#39;,
+  keyframes,
+  filename: &#39;multi-point.mp4&#39;
+});</code></pre>
+  </div>
+</div>
+<div class='tags'>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>Promise&lt;Object|null&gt;</tt>
+      )
+      &mdash;
+      <span class='desc'>Promise resolving to keyframe {cycle, scale, focus: {x, y}, width, height}, </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='fitKeyframe-dynamic'>
+      #
+(Promise&lt;Object|null&gt;)
+<b>fitKeyframe</b><span>(width, height)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Compute an absolute contain-fit keyframe that frames the whole design for a target recording
+size (fits the design&#39;s bounding box to width x height, centered), WITHOUT changing the current view.</p><p>Rarely needed. For a whole-design capture, or a zoom into it, prefer captureVideo&#39;s
+<code>mode: &#39;fit-relative&#39;</code>, which frames the fit automatically with no keyframe. Reach for fitKeyframe
+only when you need the fit as an <em>absolute</em> keyframe: to interpolate a whole-design frame together
+with <a href='../class/IdePlugin.html#getKeyframe-dynamic'>IdePlugin#getKeyframe</a> views in one <code>mode: &#39;absolute&#39;</code> path, or when you want its concrete
+numeric scale/focus. The returned keyframe&#39;s width/height equal the requested size, so pass the
+same width/height to captureVideo.</p><pre><code>                            or null if VIZ is not available
+</code></pre>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      Glide from the whole-design frame to a hand-positioned getKeyframe view (absolute)
+    </h4>
+    <pre><code class='coffeescript'>const fit = await ide.api.fitKeyframe(350, 250);
+await ide.api.setCycle(100);                  &#47;&#47; ...zoom&#47;pan to a detail view...
+const detail = await ide.api.getKeyframe();
+await ide.api.captureVideo(fit.cycle, detail.cycle, {
+  width: 350, height: 250,
+  mode: &#39;absolute&#39;,
+  keyframes: [fit, detail],
+  filename: &#39;framed.mp4&#39;
+});</code></pre>
+  </div>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>width</span>
+      <span class='type'>
+        (
+          <tt>Number</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Target recording width in pixels </span>
+    </li>
+    <li>
+      <span class='name'>height</span>
+      <span class='type'>
+        (
+          <tt>Number</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Target recording height in pixels </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>Promise&lt;Object|null&gt;</tt>
+      )
+      &mdash;
+      <span class='desc'>Promise resolving to keyframe {cycle, scale, focus: {x, y}, width, height}, </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='getAvailablePanes-dynamic'>
+      #
+(Promise&lt;Array&lt;Object&gt;&gt;)
+<b>getAvailablePanes</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Public API method to get all available panes.
+Returns an array of pane metadata including main IDE panes and static panes.
+Useful for discovering what panes can be opened via openPane() or activatePane().</p><p>Each pane object contains:</p><ul>
+<li>mnemonic: Unique identifier for the pane</li>
+<li>displayName: Human-readable name</li>
+<li>description: Explanation of the pane&#39;s purpose</li>
+<li>isStatic: true for static panes (tutorials, docs), false for main IDE panes</li>
+<li>available: true if the pane can be opened (false for main panes not included in this IDE instance)</li>
+</ul>
+
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      
+    </h4>
+    <pre><code class='coffeescript'>const panes = await ide.api.getAvailablePanes();
+console.log(panes.filter(p =&gt; p.available));</code></pre>
+  </div>
+</div>
+<div class='tags'>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>Promise&lt;Array&lt;Object&gt;&gt;</tt>
+      )
+      &mdash;
+      <span class='desc'>Promise resolving to array of pane metadata objects </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='fitPane-dynamic'>
+      #
+(Promise&lt;Boolean&gt;)
+<b>fitPane</b><span>(mnemonic)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Public API method to fit the content of a named pane to its viewport.
+This forwards to the IDE&#39;s pane-level fit handler, which is implemented by panes that
+opt in (for example VIZ, Diagram, and Waveform).</p><pre><code>                      false otherwise
+</code></pre>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      
+    </h4>
+    <pre><code class='coffeescript'>await ide.api.fitPane(&#39;Viz&#39;);</code></pre>
+  </div>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>mnemonic</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>The pane mnemonic to fit </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>Promise&lt;Boolean&gt;</tt>
+      )
+      &mdash;
+      <span class='desc'>Promise resolving to true if the pane exists and acted on the fit request, </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='getCycle-dynamic'>
+      #
+(Promise&lt;Number&gt;)
+<b>getCycle</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Public API method to get the current cycle value.
+The cycle represents the current time step in the waveform simulation.
+This is useful for synchronizing external visualizations or tracking simulation state.</p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      
+    </h4>
+    <pre><code class='coffeescript'>const currentCycle = await ide.api.getCycle();
+console.log(&#39;Current cycle:&#39;, currentCycle);</code></pre>
+  </div>
+</div>
+<div class='tags'>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>Promise&lt;Number&gt;</tt>
+      )
+      &mdash;
+      <span class='desc'>Promise resolving to the current cycle value </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='setCycle-dynamic'>
+      #
+(Promise&lt;void&gt;)
+<b>setCycle</b><span>(newCyc)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Public API method to set the current cycle value.
+This updates the waveform viewer and visualization panes to display the specified time step.
+The cycle value is clamped to the valid range [0, endCycle] where endCycle is determined
+by the available waveform data from the most recent simulation.</p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      
+    </h4>
+    <pre><code class='coffeescript'>&#47;&#47; Jump to cycle 42
+await ide.api.setCycle(42);
+
+&#47;&#47; Go to the beginning
+await ide.api.setCycle(0);</code></pre>
+  </div>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>newCyc</span>
+      <span class='type'>
+        (
+          <tt>Number</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>The cycle value to set </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>Promise&lt;void&gt;</tt>
+      )
+      &mdash;
+      <span class='desc'>Promise that resolves when the cycle is updated </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='updatePlayState-dynamic'>
+      #
+(Promise&lt;void&gt;)
+<b>updatePlayState</b><span>(isPlaying, cycleTimeout, startCyc, endCyc)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Public API method to control waveform playback.
+This starts or stops automatic cycling through waveform time steps.
+Optionally set speed and/or starting and ending cycles for bounded playback (for isPlaying == true).</p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      
+    </h4>
+    <pre><code class='coffeescript'>&#47;&#47; Start playing from current position
+await ide.api.updatePlayState(true);
+
+&#47;&#47; Stop playing
+await ide.api.updatePlayState(false);
+
+&#47;&#47; Play from cycle 10 to cycle 50 at 500ms per cycle
+await ide.api.updatePlayState(true, 500, 10, 50);
+
+&#47;&#47; Play from cycle 0 to end of waveform
+await ide.api.updatePlayState(true, undefined, 0);</code></pre>
+  </div>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>isPlaying</span>
+      <span class='type'>
+        (
+          <tt>Boolean</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>true to start playback, false to stop (must be the only argument if false) </span>
+    </li>
+    <li>
+      <span class='name'>cycleTimeout</span>
+      <span class='type'>
+        (
+          <tt>Number</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Optional delay in milliseconds between cycles (default: keeps current timeout, initially 1000ms) </span>
+    </li>
+    <li>
+      <span class='name'>startCyc</span>
+      <span class='type'>
+        (
+          <tt>Number</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Optional starting cycle - if provided, jumps to this cycle before starting playback </span>
+    </li>
+    <li>
+      <span class='name'>endCyc</span>
+      <span class='type'>
+        (
+          <tt>Number</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Optional ending cycle - if provided, playback stops at this cycle; otherwise plays to end of waveform </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>Promise&lt;void&gt;</tt>
+      )
+      &mdash;
+      <span class='desc'>Promise that resolves when play state is updated </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='highlight-dynamic'>
+      #
+(Promise&lt;Boolean&gt;)
+<b>highlight</b><span>(id, accumulate = false)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Public API method to highlight a logical entity across all IDE views.
+Logical entities are circuit elements identified by their TL-Verilog paths.
+Highlights appear in the Diagram, Waveform, and Nav-TLV panes.</p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      
+    </h4>
+    <pre><code class='coffeescript'>&#47;&#47; Examples of highlighting entities of various types, clearing previous highlights
+&#47;&#47; Pipesignal:
+await ide.api.highlight(&#39;&#47;cpu|my_pipe$data&#39;)
+&#47;&#47; Scope (behavioral hierarchy level or pipeline):
+await.ide.api.highlight(&#39;&#47;cpu&#39;)
+await.ide.api.highlight(&#39;&#47;cpu|my_pipe&#39;)
+await.ide.api.highlight(&#39;&#47;cpu|my_pipe&#47;reg&#39;)
+&#47;&#47; Pipeline stage (pipestage):
+await.ide.api.highlight(&#39;|my_pipe@2&#39;)  &#47;&#47; (without any hierarchy, just pipeline and stage)
+
+&#47;&#47; Add to existing highlights (Ctrl+click behavior)
+await ide.api.highlight(&#39;|fetch@1&#39;, true);</code></pre>
+  </div>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>id</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>The unique identifier (logical entity path) to highlight </span>
+    </li>
+    <li>
+      <span class='name'>accumulate</span>
+      <span class='type'>
+        (
+          <tt>Boolean</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Optional - if true, adds to existing highlights (Ctrl+click behavior); if false, replaces all highlights (default: false) </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>Promise&lt;Boolean&gt;</tt>
+      )
+      &mdash;
+      <span class='desc'>Promise that resolves to true if entity was found in the DOM and highlight was applied, false if entity not found or ID invalid. </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='clearHighlights-dynamic'>
+      #
+(Promise&lt;void&gt;)
+<b>clearHighlights</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Public API method to clear all highlighted logical entities across all IDE views.
+Removes all highlights from Diagram, Waveform, and Nav-TLV panes.</p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      
+    </h4>
+    <pre><code class='coffeescript'>&#47;&#47; Remove all highlights
+await ide.api.clearHighlights();</code></pre>
+  </div>
+</div>
+<div class='tags'>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>Promise&lt;void&gt;</tt>
+      )
+      &mdash;
+      <span class='desc'>Promise that resolves when highlights are cleared </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='setDarkMode-dynamic'>
+      #
+(Promise&lt;Boolean&gt;)
+<b>setDarkMode</b><span>(enabled)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Public API method to enable or disable dark mode across the IDE.
+Dark mode affects the appearance of all IDE views, including the editor, diagram, and waveform.</p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      
+    </h4>
+    <pre><code class='coffeescript'>&#47;&#47; Enable dark mode
+await ide.api.setDarkMode(true);
+
+&#47;&#47; Disable dark mode (light mode)
+await ide.api.setDarkMode(false);</code></pre>
+  </div>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>enabled</span>
+      <span class='type'>
+        (
+          <tt>Boolean</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>true to enable dark mode, false to disable </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>Promise&lt;Boolean&gt;</tt>
+      )
+      &mdash;
+      <span class='desc'>Promise that resolves to true when dark mode is set </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='setLiveMode-dynamic'>
+      #
+(Promise&lt;Boolean&gt;)
+<b>setLiveMode</b><span>(mnemonic, enabled)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Public API method to enable or disable live mode for a specific pane.
+Live mode causes the pane to update automatically as the cycle changes during waveform playback or stepping.
+Supported panes: Diagram, Nav-TLV. VIZ is always live and cannot be changed.</p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      
+    </h4>
+    <pre><code class='coffeescript'>&#47;&#47; Enable live mode for Diagram pane
+await ide.api.setLiveMode(&quot;Diagram&quot;, true);
+
+&#47;&#47; Disable live mode for Nav-TLV pane (freeze at current cycle)
+await ide.api.setLiveMode(&quot;Nav-TLV&quot;, false);</code></pre>
+  </div>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>mnemonic</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>The mnemonic of the pane to control (e.g., &quot;Diagram&quot;, &quot;Nav-TLV&quot;) </span>
+    </li>
+    <li>
+      <span class='name'>enabled</span>
+      <span class='type'>
+        (
+          <tt>Boolean</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>true to enable live mode, false to disable (dead mode) </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>Promise&lt;Boolean&gt;</tt>
+      )
+      &mdash;
+      <span class='desc'>Promise that resolves to true if successful, false if pane not found or doesn&#39;t support live mode </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='onReady-dynamic'>
+      #
+(void|Promise)
+<b>onReady</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <div class='note'>
+    <strong>Note:</strong>
+    Override to initialize and enable UI after IDE is ready 
+  </div>
+  <p>Third party entry point, called when IDE is fully loaded and ready.
+Can be async/return a Promise for async initialization - splash screen will not be removed
+until the Promise resolves, preventing user interactions during initialization.</p>
+</div>
+<div class='tags'>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>void|Promise</tt>
+      )
+      &mdash;
+      <span class='desc'>Optional Promise for async initialization </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='onTermsAccepted-dynamic'>
+      #
+(void)
+<b>onTermsAccepted</b><span>(acceptedAt)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <div class='note'>
+    <strong>Note:</strong>
+    Override to remember the user&#39;s acceptance of the terms 
+  </div>
+  <p>Called when the user accepts the Makerchip Terms of Service and Privacy Policy in the IDE.
+Pass the time back as the <code>termsAcceptedAt</code> option next time, so they are not asked again.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>acceptedAt</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>ISO time of acceptance </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='onCodeChange-dynamic'>
+      #
+(void)
+<b>onCodeChange</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <div class='note'>
+    <strong>Note:</strong>
+    Override to handle user edit notifications (e.g., save to localStorage) 
+  </div>
+  <p>Called when user edits code in the editor (via typing, etc.)
+This is a notification only - no code is passed to avoid communication overhead.
+Use getCode() if you need to retrieve the actual code.
+Note: This is only triggered by user edits, not programmatic code loads (see onCodeReplaced).</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='onCodeReplaced-dynamic'>
+      #
+(void)
+<b>onCodeReplaced</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <div class='note'>
+    <strong>Note:</strong>
+    Override to handle programmatic code replacement notifications 
+  </div>
+  <p>Called when code is loaded programmatically (e.g., via setCode, setCodeFromURL, loadProject).
+This is distinct from onCodeChange which is only triggered by user edits.
+Use getCode() if you need to retrieve the actual code.
+Note: This is only triggered by programmatic code loads, not user edits (see onCodeChange).</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='onCompilationVcd-dynamic'>
+      #
+(void)
+<b>onCompilationVcd</b><span>(id, vcd)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <div class='note'>
+    <strong>Note:</strong>
+    Override to receive VCD waveform data after compilation 
+  </div>
+  <p>Called when VCD (Value Change Dump) file is generated from simulation.
+The VCD contains signal waveforms that can be visualized.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>id</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Compilation ID </span>
+    </li>
+    <li>
+      <span class='name'>vcd</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>VCD file contents as a string </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='onCompilationLog-dynamic'>
+      #
+(void)
+<b>onCompilationLog</b><span>(id, log, complete, type)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <div class='note'>
+    <strong>Note:</strong>
+    Override to receive compilation log output 
+  </div>
+  <p>Called when compilation produces log output (incrementally or complete).
+Logs include SandPiper compiler output and Verilator (C++ simulator) output.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>id</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Compilation ID </span>
+    </li>
+    <li>
+      <span class='name'>log</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Log text content </span>
+    </li>
+    <li>
+      <span class='name'>complete</span>
+      <span class='type'>
+        (
+          <tt>Boolean</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Whether this is the final log chunk (true) or incremental (false) </span>
+    </li>
+    <li>
+      <span class='name'>type</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Log type: &#39;sandpiper&#39; for TL-Verilog compiler or &#39;verilator&#39; for C++ simulator </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='onCompilationStart-dynamic'>
+      #
+(void)
+<b>onCompilationStart</b><span>(info)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <div class='note'>
+    <strong>Note:</strong>
+    Override to observe the start of each compilation. 
+  </div>
+  <p>Called once the server assigns a compile id, with the exact source that produced
+it. Fires for every compile accepted by the server whether triggered by the IDE or externally.
+        a <code>{files, top}</code> object (multi-file). e.g.
+        {files: {&quot;top.tlv&quot;: &quot;...&quot;, &quot;lib.tlv&quot;: &quot;...&quot;}, top: &quot;top.tlv&quot;}`.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>info</span>
+      <span class='type'>
+        (
+          <tt>Object</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Compile-start details. </span>
+    </li>
+  </ul>
+  <h3>
+    Options Hash:
+    (info):
+  </h3>
+  <ul class='options'>
+    <li>
+      <span class='name'>id</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Server-assigned compilation ID. </span>
+    </li>
+    <li>
+      <span class='name'>source</span>
+      <span class='type'>
+        (
+          <tt>String|Object</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>The compiled source: a string (single-file) or </span>
+    </li>
+    <li>
+      <span class='name'>sim</span>
+      <span class='type'>
+        (
+          <tt>Boolean</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Whether simulation was requested. </span>
+    </li>
+    <li>
+      <span class='name'>dot</span>
+      <span class='type'>
+        (
+          <tt>Boolean</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>Whether a diagram (graph.svg) was requested. </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='onJumpToLine-dynamic'>
+      #
+(void)
+<b>onJumpToLine</b><span>(lineNumber)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <div class='note'>
+    <strong>Note:</strong>
+    Override to handle line navigation requests from IDE 
+  </div>
+  <p>Called when user clicks on a line number in Nav-TLV or ErrorLog panes.
+This is useful when using hasEditor: false mode with an external editor.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>lineNumber</span>
+      <span class='type'>
+        (
+          <tt>Number</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>1-based line number in source code to navigate to </span>
+    </li>
+  </ul>
+</div>
+  </div>
+</div>
+    </div>
+    <div id='footer'>
+  By
+  <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
+    Codo
+  </a>
+  2.1.2
+  &#10034;
+  Press H to see the keyboard shortcuts
+  &#10034;
+  <a href='http://twitter.com/netzpirat' target='_parent'>@netzpirat</a>
+  &#10034;
+  <a href='http://twitter.com/_inossidabile' target='_parent'>@_inossidabile</a>
+</div>
+<iframe id='search_frame'></iframe>
+<div id='fuzzySearch'>
+  <input type='text'>
+  <ol></ol>
+</div>
+<div id='help'>
+  <p>
+    Quickly fuzzy find classes, mixins, methods, file:
+  </p>
+  <ul>
+    <li>
+      <span>T</span>
+      Open fuzzy finder dialog
+    </li>
+  </ul>
+  <p>
+    Control the navigation frame:
+  </p>
+  <ul>
+    <li>
+      <span>L</span>
+      Toggle list view
+    </li>
+    <li>
+      <span>C</span>
+      Show class list
+    </li>
+    <li>
+      <span>I</span>
+      Show mixin list
+    </li>
+    <li>
+      <span>F</span>
+      Show file list
+    </li>
+    <li>
+      <span>M</span>
+      Show method list
+    </li>
+    <li>
+      <span>E</span>
+      Show extras list
+    </li>
+  </ul>
+  <p>
+    You can focus and blur the search input:
+  </p>
+  <ul>
+    <li>
+      <span>S</span>
+      Focus search input
+    </li>
+    <li>
+      <span>Esc</span>
+      Blur search input
+    </li>
+  </ul>
+</div>
+  </body>
+</html>

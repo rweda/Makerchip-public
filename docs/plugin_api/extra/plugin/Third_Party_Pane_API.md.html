@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset='UTF-8'>
+  <title>Makerchip Plugin API for Third-Party Integration</title>
+  <script src='../../javascript/application.js'></script>
+  <script src='../../javascript/search.js'></script>
+  <link rel='stylesheet' href='../../stylesheets/application.css' type='text/css'>
+</head>
+  <body>
+    <div id='base' data-path='../../'></div>
+<div id='header'>
+  <div id='menu'>
+    <a href='../../extra/plugin/README.md.html' title='Makerchip Plugin API'>
+      Makerchip Plugin API
+    </a>
+    &raquo;
+    <a href='../../alphabetical_index.html' title='Index'>
+      Index
+    </a>
+    &raquo;
+    <span class='title'>plugin</span>
+    &raquo;
+    <span class='title'>Third_Party_Pane_API.md</span>
+  </div>
+</div>
+    <div id='content'>
+      <nav class='toc'>
+        <p class='title'>
+          <a class='hide_toc' href='#'>
+            <strong>Table of Contents</strong>
+          </a>
+          <small>
+            (<a class='float_toc' href='#'>left</a>)
+          </small>
+        </p>
+      </nav>
+      <div id='filecontents'>
+        <h1 id="third-party-pane-api">Third-Party Pane API</h1>
+<blockquote><p><strong>Plugin API vs. Third-Party Pane API.</strong> These are two distinct integration
+surfaces, and it is worth being clear about which one you need:</p><ul>
+<li>The <strong><a href="README.md.html">Makerchip Plugin API</a></strong> lets an <em>external host</em> (a web app, a
+VS Code extension) <strong>embed the Makerchip IDE</strong> and drive it from the
+outside (load code, compile, capture layout, open panes, …). The host is the parent;
+the IDE is the guest.</li>
+<li>The <strong>Third-Party Pane API</strong> (this document) is the mirror image: it lets a
+<strong>third party contribute a pane that lives <em>inside</em> the IDE</strong>, rendered as an
+<code>iframe</code> in the tabbed layout, and — via the communication channel described
+below — participate in the IDE&#39;s event flow alongside built-in panes. Here the IDE
+is the parent; the pane is the guest.</li>
+</ul><p>A single deployment routinely uses both at once (e.g. a VS Code extension embeds the
+IDE <em>via the Plugin API</em>, and that IDE hosts a Compiler Explorer <em>third-party pane</em>).</p></blockquote><p>This document has four sections:</p><ol>
+<li><strong><a href="#pane-construction">Pane construction</a></strong> — how third-party panes are created,
+uniquified, and configured.</li>
+<li><strong><a href="#communication-channel">Communication channel</a></strong> — how a third-party pane
+exchanges events with the IDE (via pub/sub on the bus and request/response RPC) and
+with other panes (and, TODO: non-pane participants).</li>
+<li><strong><a href="#persistence">Persistence</a></strong> — how transferrable panes are captured and restored.</li>
+<li><strong><a href="#security-model">Security model</a></strong> — the current trust model and isolation notes.</li>
+</ol>
+<hr>
+<h2 id="pane-construction">Pane construction</h2><p>Third-party panes inject external content (PDFs, web pages) into the IDE&#39;s tabbed
+interface. They are created via <code>openThirdPartyPane()</code>.</p><h3 id="method-signature">Method signature</h3>
+<pre><code class="lang-typescript">openThirdPartyPane(
+  requestedMnemonic: string,
+  contentType: &quot;pdf&quot; | &quot;iframe&quot;,
+  contentParams: ContentParams,   // content-type-specific parameters
+  options?: OpenOptions,
+  agent?: string                  // optional; attributes the open to &quot;platform.&lt;agent&gt;&quot;
+): Promise&lt;string&gt;
+</code></pre><p>Returns the pane&#39;s actual mnemonic, which may differ from <code>requestedMnemonic</code> if it had
+to be uniquified.</p><h3 id="content-parameters">Content parameters</h3>
+<h4 id="pdf-content-contenttype-pdf-">PDF content (<code>contentType: &quot;pdf&quot;</code>)</h4>
+<pre><code class="lang-typescript">{ contentUrl: string }
+</code></pre><p><strong><code>contentUrl</code></strong> — URL to a PDF file. The bundled viewer&#39;s own origin check is disabled, but
+the sandbox CSP still governs the fetch (<code>connect-src &#39;self&#39; https: blob:</code>), so in practice:
+<code>https://</code>, <code>blob:</code>, and same-origin URLs work. <code>file://</code> does <strong>not</strong> — browsers block local-file
+loads from an <code>http(s)</code> document beneath CSP, so no CSP change can enable it. <code>http://</code> is upgraded/blocked, and <code>data:</code> is not in
+<code>connect-src</code>. To present a local file, pass its bytes as a <code>blob:</code> URL.</p><pre><code class="lang-javascript">await ide.api.openThirdPartyPane(
+  &quot;User Guide&quot;, &quot;pdf&quot;,
+  { contentUrl: &quot;https://example.com/guide.pdf&quot; }
+);
+</code></pre>
+<h4 id="iframe-content-contenttype-iframe-">Iframe content (<code>contentType: &quot;iframe&quot;</code>)</h4>
+<pre><code class="lang-typescript">{ contentUrl: string }
+</code></pre>
+<ul>
+<li><strong><code>contentUrl</code></strong> — URL to embed. Subject to browser same-origin and CSP policies, and
+must permit framing (no <code>X-Frame-Options: DENY</code> / restrictive <code>frame-ancestors</code>).</li>
+</ul>
+<blockquote><p><code>contentParams</code> carries <strong>only</strong> content-type-specific parameters. The communication
+<a href="#communication-channel"><code>channel</code></a> contract and pane-specific
+<a href="#pane-parameters"><code>params</code></a> are renderer-independent and are supplied
+via <a href="#options"><code>options</code></a> instead.</p></blockquote>
+<pre><code class="lang-javascript">await ide.api.openThirdPartyPane(
+  &quot;API Docs&quot;, &quot;iframe&quot;,
+  { contentUrl: &quot;https://docs.example.com&quot; }
+);
+</code></pre>
+<h3 id="options">Options</h3><p>The optional fourth argument groups two kinds of settings — transient open behavior, and
+persisted, renderer-independent configuration:</p><pre><code class="lang-typescript">{
+  // Transient (affect this open call only; NOT persisted):
+  background?: boolean,        // default false — if true, do not activate immediately
+  nonTransferrable?: boolean,  // default false — if true, construction data is not stored
+                               //   (saves memory; pane cannot be recovered via getLayoutState())
+
+  // Persisted with the pane (survive save / restore / cross-instance transfer,
+  // unless nonTransferrable); apply to iframe AND pdf panes:
+  channel?: ChannelContract,   // communication contract — see “Communication channel”
+  params?: object              // pane-specific parameters made available to the pane —
+                               //   see “Pane parameters”
+}
+</code></pre><p><strong><code>channel</code></strong> and <strong><code>params</code></strong> apply to both <code>iframe</code> and <code>pdf</code> panes. Unlike <code>background</code> /
+<code>nonTransferrable</code>, they are <strong>persisted</strong> with the pane so a restored pane is reconstructed
+identically.</p><p>For a <code>pdf</code> pane the channel client is not author-supplied code: it is Makerchip&#39;s own bridge,
+injected into the PDF.js viewer bundle by <code>bin/install_pdfjs.sh</code>. A PDF can only contribute
+<strong>static link strings</strong> (currently as an experimental feature, subject to change) so it expresses intent through a sentinel URL that the bridge intercepts and relays:</p><pre><code class="lang-latex">\href{https://makerchip.com/_bus?rpc=openExample&amp;code_url=https://.../fifo.tlv}{Open in Makerchip}
+</code></pre><p>Ordinary links are untouched. Everything the PDF can express remains bounded by the pane&#39;s
+<code>produces</code> contract and the IDE&#39;s inward RPC whitelist, exactly as for an iframe pane.</p><h3 id="mnemonics-and-uniquification">Mnemonics and uniquification</h3><p>A mnemonic is a display name (used as the tab label) with an optional <code>+</code>-delimited
+uniquifier. Uniqueness is enforced for third-party panes: on collision, a <code>+#</code> / <code>-#</code>
+suffix is appended. Collisions are compared case-insensitively with special characters mapped to <code>-</code>.</p><pre><code class="lang-javascript">const m1 = await ide.api.openThirdPartyPane(&quot;Guide&quot;, &quot;pdf&quot;, {...}); // &quot;Guide&quot;
+const m2 = await ide.api.openThirdPartyPane(&quot;Guide&quot;, &quot;pdf&quot;, {...}); // &quot;Guide+2&quot;
+</code></pre><p>Always use the <strong>returned</strong> mnemonic for subsequent API calls:</p><pre><code class="lang-javascript">const mnemonic = await ide.api.openThirdPartyPane(...);
+await ide.api.activatePane(mnemonic);
+</code></pre><p>The full pane mnemonic is also the pane&#39;s <strong>identity on the communication channel</strong> (see
+below). At times it is necessary to know a pane&#39;s mnemonic before opening it. <code>reservePane()</code>
+resolves a pane&#39;s mnemonic ahead of creating the pane:</p><pre><code class="lang-typescript">reservePane(requestedMnemonic: string): Promise&lt;string&gt;   // → the actual (uniquified) mnemonic
+</code></pre><p>It uniquifies <code>requestedMnemonic</code> against existing panes (and outstanding reservations), reserves the resulting mnemonic, and returns it. A later <code>openThirdPartyPane()</code> (or
+<code>initThirdPartyPane()</code>) called with that exact mnemonic is then guaranteed to return it
+<strong>unchanged</strong> — the reservation is consumed as the pane is created.</p><p>An unused reservation persists for the session. (TODO: a future <code>closeThirdPartyPane()</code> will release reservations as well as close open panes).</p><h3 id="pane-parameters">Pane parameters</h3><p><code>params</code> is an opaque, structured-clone-safe, and (because it is persisted)
+JSON-serializable object of pane-specific configuration — for example, a WARP-V
+configurator&#39;s default settings. An iframe pane pulls its <code>params</code> on demand (e.g., for initialization) via the
+<strong><code>getContext</code> RPC</strong> (see <a href="#pane--ide-rpc">Pane → IDE RPC</a>):</p><pre><code class="lang-javascript">const { params } = await callIde(&quot;getContext&quot;);  // Assuming callIde() definition below.
+</code></pre><p><code>params</code> are persisted automatically across layout save/restore for transferrable panes. The reloaded pane repeats its initialization using <code>getContext</code>.</p><p>For example, a Compiler Explorer pane is opened pre-set to emit RISC-V assembly:</p><pre><code class="lang-javascript">ide.openThirdPartyPane(&quot;Compiler Explorer&quot;, &quot;iframe&quot;,
+  { contentUrl: &quot;https://compiler-explorer.example/&quot; },
+  { channel: { produces: [&quot;sourceAsm&quot;], subscribes: [], rpc: true },
+    params: { ce: { language: &quot;c&quot;, compiler: &quot;rv32-cgcc1430&quot;,
+                    options: &quot;-O2 -march=rv32i -mabi=ilp32&quot;,
+                    source: &quot;int fib(int n){ ... }&quot;,
+                    filters: &quot;directives,labels,commentOnly&quot; } } });
+</code></pre><p>The Compiler Explorer pane reads <code>params.ce</code> from the <code>getContext</code> result and translates it into its own native
+initial-state mechanism (here, a Compiler Explorer share-link URL). The <code>params</code> shape is
+entirely the pane&#39;s own convention; the IDE treats it as opaque.</p><blockquote><p>Alternatively, a pane author may encode configuration directly in the <code>contentUrl</code> (query
+string or hash fragment) and read it synchronously at load. This needs no support from the
+IDE — the URL is part of <code>contentParams</code> and so is carried across save / restore / transfer
+like any other content parameter — and is entirely the pane&#39;s own convention. <code>params</code> is
+often preferable when the iframe is loaded from a blob URL, where <code>contentUrl</code> is best kept
+as an opaque handle to the iframe content rather than as the configuration channel.</p></blockquote>
+<h2 id="communication-channel">Communication channel</h2>
+<blockquote><p>A connected iframe pane can publish and receive bus events, and
+can call a bounded IDE RPC surface (pane-scoped methods plus the safe subset of Plugin API
+operations). Both are carried over <code>postMessage</code> by a per-pane connector.</p></blockquote><p>The channel is carried on an <strong>IDE-level event bus</strong>. Built-in panes already participate in
+IDE events, and third-party panes join that flow through explicitly declared contracts.
+Filtering happens outside the iframe: large payloads are never delivered to panes that did
+not subscribe to them, and undeclared outbound events are dropped.</p><h3 id="channel-overview">Channel overview</h3><p>A connected pane declares its event contract in <a href="#options"><code>options.channel</code></a>, persisted
+with the pane:</p><pre><code class="lang-typescript">type ChannelContract = {
+  produces: string[]
+  subscribes: Array&lt;{ type: string, sources?: string[] }&gt;
+  rpc?: boolean
+}
+</code></pre>
+<ul>
+<li><strong><code>produces</code></strong> is the outbound whitelist: event types this pane may publish.</li>
+<li><strong><code>subscribes</code></strong> is the inbound whitelist: event types this pane wants delivered.</li>
+<li><strong><code>sources</code></strong> optionally narrows a subscription to specific pane mnemonics; omit it to
+accept that event type from any producer. (Sources can also be filtered internally.)</li>
+<li><strong><code>rpc</code></strong> opts the pane into pane → IDE RPC. It is a coarse, all-or-nothing capability:
+with <code>rpc: true</code> the pane may call any whitelisted IDE method; without it (the default)
+RPC requests are refused with an <code>rpc-error</code>.</li>
+</ul><p>Bus events carry application payloads between panes. Pane → IDE RPC uses the same
+<code>postMessage</code> connector for request/response calls, but never touches the bus.</p><h3 id="identities">Identities</h3><p>An identity names a bus participant — it is what appears in <code>source</code>, <code>target</code>, and a
+subscription&#39;s <code>sources</code>. A pane&#39;s channel identity is its full mnemonic. If a contract needs
+a specific pane in <code>subscribes[].sources</code>, reserve that mnemonic before opening panes with
+<a href="#mnemonics-and-uniquification"><code>reservePane()</code></a>. If the subscriber accepts any producer of
+an event type, omit <code>sources</code>. The reserved identity <strong><code>ide</code></strong> names the host IDE itself.</p><p>The mirror-image reserved identity <strong><code>platform</code></strong> names the <strong>embedding host</strong> — the outside
+application, VS Code extension, or AI agent that embeds the IDE via the <a href="README.md.html">Plugin
+API</a> — and is the source stamped when the host publishes onto the bus. Where the
+host relays an action on behalf of a <em>less-trusted</em> agent, it stamps <strong><code>platform.&lt;agent&gt;</code></strong>
+(e.g. <code>platform.ai</code> for a relayed AI action), so recipients can distinguish first-hand host
+events from relayed ones. A subscriber accepts host events by listing <code>platform</code> (or a
+specific <code>platform.&lt;agent&gt;</code>) in <code>subscribes[].sources</code>; to accept the whole family it omits
+<code>sources</code>, which matches any source (<code>platform</code> and every <code>platform.&lt;agent&gt;</code> alike). Like a
+pane, the <code>platform</code> identity is stamped by the IDE and cannot forge the reserved <code>ide</code>
+identity. The host publishes and calls panes through the Plugin API&#39;s <code>busEmit</code> (broadcast,
+as <code>platform</code> / <code>platform.&lt;agent&gt;</code>) and <code>callPane</code> (host→pane RPC); see the <code>IdePlugin</code>
+methods of the same name for their signatures.</p><h3 id="event-types">Event types</h3><p>An event type is the <code>type</code> string an event travels under — it is what appears in <code>produces</code>,
+a subscription&#39;s <code>type</code>, and the emitted envelope. Application event types are named directly
+by their <code>type</code> (e.g. <code>sourceAsm</code>). Until a <a href="#registry">registry</a> defines shared types, custom
+types should be named under the owning pane&#39;s mnemonic — <code>&lt;mnemonic&gt;/&lt;type&gt;</code> — to avoid
+collisions. <a href="#first-party-events">First-party events</a> use plain types and are distinguished by
+the reserved <code>ide</code> source.</p><h3 id="registry">Registry</h3><p>A future public registry is expected to define stable pane <strong>identities</strong> and shared <strong>event
+types</strong>, and to reserve/govern both namespaces — so panes can target well-known identities and
+agree on event types without the opener brokering every mnemonic inline. Until it exists,
+channel contracts are supplied inline at pane creation (see <a href="#identities">Identities</a> and
+<a href="#event-types">Event types</a>).</p><h3 id="bus-events">Bus events</h3><p>Bus envelopes are structured-clone-safe plain objects:</p><pre><code class="lang-typescript">{
+  v: 1,                          // wire-framing version (as negotiated; see below)
+  source: string,                // stamped by the IDE; never trusted from the pane
+  origin?: string,               // IDE-stamped web origin of `source` (see below)
+  author?: string,               // IDE-stamped responsible participant for `source` (see below)
+  type: string,                  // e.g. &quot;sourceAsm&quot;
+  payload: any,
+  target?: string | string[]     // optional recipient whitelist
+}
+</code></pre><p>The <code>origin</code>/<code>author</code> trust stamps and the negotiated <code>v</code> are covered under
+<a href="#wire-versioning-and-trust-stamps">Wire versioning and trust stamps</a>.</p><p>Example: Compiler Explorer publishes <code>sourceAsm</code>; WARP-V subscribes to that event from the
+reserved CE instance.</p><pre><code class="lang-javascript">const ce    = await ide.api.reservePane(&quot;Compiler Explorer&quot;);
+const warpv = await ide.api.reservePane(&quot;WARP-V&quot;);
+
+await ide.api.openThirdPartyPane(ce, &quot;iframe&quot;,
+  { contentUrl: &quot;https://makerchip.com/ce/&quot; },
+  { channel: { subscribes: [], produces: [&quot;sourceAsm&quot;], rpc: true } });
+
+await ide.api.openThirdPartyPane(warpv, &quot;iframe&quot;,
+  { contentUrl: &quot;https://warp-v.org/pane/&quot; },
+  { channel: { subscribes: [ { type: &quot;sourceAsm&quot;, sources: [ce] } ],
+               produces:   [&quot;warpvConfig&quot;], rpc: true } });
+</code></pre><p>Outbound delivery is: validate iframe window, check <code>produces</code>, stamp <code>source</code>, and publish the
+event on the IDE bus. Inbound delivery is: match each connector&#39;s <code>subscribes</code>, then
+<code>postMessage</code> only to matching panes.</p><h3 id="first-party-events">First-party events</h3><p>Besides pane-to-pane traffic, the host IDE itself publishes a few events on the same bus,
+stamped with the reserved <code>ide</code> source. A pane opts in by subscribing with
+<code>sources: [&quot;ide&quot;]</code>. Two are available today:</p><table>
+<thead>
+<tr>
+<th>type</th>
+<th>payload</th>
+<th>when</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>theme</code></td>
+<td><code>{ dark: boolean }</code></td>
+<td>The IDE&#39;s dark mode changes. The initial value is also available synchronously from <a href="#pane--ide-rpc"><code>getContext().theme</code></a>.</td>
+</tr>
+<tr>
+<td><code>compile-result</code></td>
+<td><code>{ which, id, success?, artifacts? }</code></td>
+<td>A compile starts, and each stage completes (see below).</td>
+</tr>
+</tbody>
+</table><p><code>compile-result</code> reports Makerchip&#39;s build pipeline so a pane can follow it live:</p><ul>
+<li><strong><code>which</code></strong> names the event: <code>&quot;start&quot;</code> when a new compile begins, or the stage that just
+finished — <code>&quot;sandpiper&quot;</code> (Verilog / model generation) or <code>&quot;vcd&quot;</code> (simulation waveform, only if &quot;sandpiper&quot; succeeds).</li>
+<li><strong><code>id</code></strong> is the compile id (stable per compile; the same id appears in <code>/compile/&lt;id&gt;/…</code> URLs).</li>
+<li><strong><code>success</code></strong> accompanies the stage events (except <code>&quot;start&quot;</code>) and is <code>true</code> if that stage
+succeeded. A failed <code>&quot;sandpiper&quot;</code> stage skips simulation, so no <code>&quot;vcd&quot;</code> event follows.</li>
+<li><strong><code>artifacts</code></strong> accompanies a successful <code>&quot;sandpiper&quot;</code> stage: a map of model-run artifact
+filename → <code>boolean</code> (present) reporting which intermediates the compile actually produced —
+e.g. <code>top.m4.pre</code>/<code>top.m4</code> exist only when M5/M4 preprocessing ran, and <code>top_gen.sv</code> is absent
+when Verilog generation is inlined. Use it to offer only the <code>/compile/&lt;id&gt;/results/&lt;file&gt;</code> links
+that exist instead of guessing (and 404-ing).</li>
+</ul>
+<pre><code class="lang-javascript">on(&quot;compile-result&quot;, (env) =&gt; {
+  const p = env.payload;
+  if (p.which === &quot;start&quot;) showBusy();
+  else if (p.which === &quot;sandpiper&quot; &amp;&amp; p.success) myIndicateCompilationStarted(p.artifacts);
+});
+</code></pre>
+<h3 id="lifecycle-and-wire-protocol">Lifecycle and wire protocol</h3><p>The connector attaches its receive-listener synchronously when the pane is created, before
+the iframe loads. A pane may emit immediately. Before the IDE delivers events <strong>to</strong> a pane,
+the pane posts <code>{v:1, type:&quot;ready&quot;}</code>; the IDE queues inbound deliveries until that control
+message arrives. <code>ready</code> is handled locally and is never relayed onto the bus. RPC replies
+are not gated behind <code>ready</code>, because the pane initiated the request and is already
+listening for the response. Post <code>ready</code> unconditionally, once your listener is attached: it is
+never acknowledged, so a pane that omits it is not refused but simply never served, and every
+IDE→pane request times out.</p><pre><code class="lang-text">pane  ──postMessage({ type:&quot;ready&quot; })────────────────────────────────▶  IDE
+IDE   ──(flush queued deliveries)────────────────────────────────────▶  pane
+pane  ──postMessage({ type:&quot;sourceAsm&quot;, payload })───────────────────▶  IDE
+pane  ──postMessage({ kind:&quot;rpc&quot;, id, target:&quot;ide&quot;, method, args })──▶  IDE
+IDE   ──postMessage({ kind:&quot;rpc-result&quot;, id, result })───────────────▶  pane
+IDE   ──postMessage({ kind:&quot;rpc-call&quot;, id, method, args })───────────▶  pane
+pane  ──postMessage({ kind:&quot;rpc-call-result&quot;, id, result })──────────▶  IDE
+</code></pre><p>On pane close or transfer, the connector tears down its listener; on restore, the persisted
+<a href="#options"><code>channel</code></a> contract reconstructs an identical connector.</p><h3 id="pane-ide-rpc">Pane → IDE RPC</h3><p>RPC requests use the same connector but never touch the IDE bus:</p><pre><code class="lang-typescript">// pane → IDE request
+{ v: 1, kind: &quot;rpc&quot;, id: number | string, target: string, method: string, args?: any[] }
+// IDE → pane response
+{ v: 1, kind: &quot;rpc-result&quot;, id, result: any }
+{ v: 1, kind: &quot;rpc-error&quot;,  id, error: string }
+</code></pre><p><code>target</code> addresses the RPC destination. It is required, and only <code>&quot;ide&quot;</code> is supported today;
+peer (pane-to-pane) targets are reserved for the future, so the field is part of the wire
+format now to keep it stable. Any other value is rejected with an <code>rpc-error</code>.</p><p>RPC is a coarse, opt-in capability. A pane may only call over RPC if its
+<a href="#communication-channel"><code>channel</code></a> contract declares <code>rpc: true</code>; otherwise every request
+is refused with an <code>rpc-error</code>.</p><p>Unlike the Plugin API exposed outward to a trusted embedding host, this inward-facing
+surface is deliberately bounded. It comprises two things: a couple of <em>pane-scoped</em> methods
+(which need the calling pane&#39;s identity, so they are not part of the Plugin API), plus a
+proxy to the safe subset of Plugin API <strong>operations</strong>.</p><p><strong>Pane-scoped methods:</strong></p><table>
+<thead>
+<tr>
+<th>method</th>
+<th>args</th>
+<th>result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>getContext</code></td>
+<td>—</td>
+<td>`{ mnemonic: string, params: object \</td>
+<td>null, theme: { dark: boolean } }<code>— the pane&#39;s registered</code>params<code>, its own assigned mnemonic (seldom needed once reserved — see [Mnemonics and uniquification](#mnemonics-and-uniquification)), and the IDE&#39;s current theme (thereafter tracked via the [</code>theme`](#first-party-events) event).</td>
+</tr>
+<tr>
+<td><code>setStatus</code></td>
+<td><code>[status: string]</code></td>
+<td><code>boolean</code> — sets <strong>this</strong> pane&#39;s own tab-status indicator. <code>status</code> is one of the generic values below; an unknown value is ignored (returns <code>false</code>).</td>
+</tr>
+<tr>
+<td><code>getCompileStatus</code></td>
+<td><code>[id: string]</code></td>
+<td>`{ id, model, sim, artifacts? } \</td>
+<td>null<code>— a compile&#39;s recorded per-stage outcome, where</code>model<code>(Verilog / SandPiper) and</code>sim<code>(simulation) are each</code>&quot;pending&quot; \</td>
+<td>&quot;success&quot; \</td>
+<td>&quot;fail&quot;<code>,</code>artifacts<code>is the model run&#39;s artifact manifest (present once</code>model<code>succeeds; see [</code>compile-result<code>](#first-party-events)), or</code>null<code>if</code>id<code>is unknown. The [</code>compile-result`](#first-party-events) event is live-only; this lets a pane opened <em>after</em> a compile reconstruct the state it missed instead of assuming success.</td>
+</tr>
+</tbody>
+</table><p>Accepted <code>setStatus</code> values are — <code>&quot;none&quot;</code>, <code>&quot;working&quot;</code>, <code>&quot;success&quot;</code>, <code>&quot;warning&quot;</code>,
+<code>&quot;error&quot;</code>, <code>&quot;fail&quot;</code>, <code>&quot;timeout&quot;</code>.</p><p><strong>Proxied Plugin API operations.</strong> Panes may also call a safe whitelisted subset of the Plugin API&#39;s
+<em>operations</em> (host→IDE commands): <code>loadCode</code>, <code>getCode</code>, <code>getChangeGeneration</code>,
+<code>getSettings</code>, <code>getCycle</code>, <code>setCycle</code>, <code>updatePlayState</code>, <code>highlight</code>, <code>clearHighlights</code>,
+<code>setDarkMode</code>, <code>setLiveMode</code>, <code>openPane</code>, <code>activatePane</code>, <code>reservePane</code>, <code>getVizImage</code>,
+<code>getKeyframe</code>, <code>getAvailablePanes</code>.</p><p>Each takes the same positional arguments as the corresponding Plugin API method.
+See <code>Plugin_API.md</code> (at the same path as this document) for details.</p><p>Two categories of Plugin API method are <strong>not</strong> exposed inward:</p><ul>
+<li>The inbound compile-result delivery callbacks (<code>compilationId</code>, <code>compilationError</code>,
+<code>compilationGraph</code>, <code>compilationVcdStream</code>, <code>exitStatus</code>, <code>setLockedVCD</code>, …) — trusted
+pipeline inputs, so a pane cannot inject forged results, waveforms, or diagrams.</li>
+<li>Cross-pane / cross-boundary operations (<code>getLayoutState</code>, <code>setLayoutState</code>,
+<code>openThirdPartyPane</code>, <code>extractPdfFigure</code>, <code>captureVideo</code>) — these would let a pane read or
+tear down <em>other</em> panes, spawn arbitrary panes, or use the IDE&#39;s fetch capabilities.</li>
+</ul>
+<h3 id="ide-pane-rpc">IDE → Pane RPC</h3><p>The same <code>rpc: true</code> opt-in also lets the <strong>IDE call the pane</strong> (host→pane) — the request/response
+complement to fire-and-forget bus events. The embedding host (e.g. an AI agent via the Plugin
+API&#39;s <code>callPane</code>) names a pane it opened and a method the pane exposes; the IDE forwards it over
+that pane&#39;s channel and returns the pane&#39;s result. The IDE interprets neither the method nor the
+arguments — the pane defines and implements the callable surface.</p><pre><code class="lang-typescript">// IDE → pane request
+{ v: 1, kind: &quot;rpc-call&quot;, id: number | string, method: string, args?: any[] }
+// pane → IDE response
+{ v: 1, kind: &quot;rpc-call-result&quot;, id, result: any }
+{ v: 1, kind: &quot;rpc-call-error&quot;,  id, error: string }
+</code></pre><p>A pane opts in by declaring <code>rpc: true</code> and implementing a handler; a request for an unknown
+method (or to a pane that never declared <code>rpc: true</code>) is answered with an <code>rpc-call-error</code>, and a
+pane that simply never replies is timed out on the caller&#39;s side. Requests are held until the pane
+posts <code>ready</code>, so nothing is lost at startup.</p><p><strong>A tiny client (optional, copy-paste).</strong> Nothing is injected into your pane; RPC and bus
+events are just documented <code>postMessage</code> protocols. This snippet provides convenient RPC and bus helpers.</p><pre><code class="lang-javascript">const V = 1;
+let _rpcSeq = 0; const _rpcPending = new Map();
+const _busHandlers = new Map();
+const _rpcServed = new Map();
+window.addEventListener(&quot;message&quot;, (e) =&gt; {
+  const m = e.data; if (!m || m.v !== V) return;
+  if (m.kind === &quot;rpc-result&quot;) { _rpcPending.get(m.id)?.resolve(m.result); _rpcPending.delete(m.id); }
+  else if (m.kind === &quot;rpc-error&quot;) { _rpcPending.get(m.id)?.reject(new Error(m.error)); _rpcPending.delete(m.id); }
+  else if (m.kind === &quot;rpc-call&quot;) {
+    const fn = _rpcServed.get(m.method);
+    Promise.resolve(fn ? fn(...(m.args ?? [])) : Promise.reject(new Error(`no handler: ${m.method}`)))
+      .then((result) =&gt; parent.postMessage({ v: V, kind: &quot;rpc-call-result&quot;, id: m.id, result }, &quot;*&quot;))
+      .catch((err) =&gt; parent.postMessage({ v: V, kind: &quot;rpc-call-error&quot;, id: m.id, error: String(err?.message ?? err) }, &quot;*&quot;));
+  }
+  else if (typeof m.type === &quot;string&quot;) { _busHandlers.get(m.type)?.forEach((fn) =&gt; fn(m)); }
+});
+function callIde(method, ...args) {
+  const id = ++_rpcSeq;
+  return new Promise((resolve, reject) =&gt; {
+    _rpcPending.set(id, { resolve, reject });
+    // target &quot;ide&quot; addresses the RPC destination; only &quot;ide&quot; is supported today.
+    parent.postMessage({ v: V, kind: &quot;rpc&quot;, id, target: &quot;ide&quot;, method, args }, &quot;*&quot;);
+  });
+}
+const emit = (type, payload, target) =&gt; parent.postMessage({ v: V, type, payload, target }, &quot;*&quot;);
+const on = (type, fn) =&gt; {
+  if (!_busHandlers.has(type)) _busHandlers.set(type, []);
+  _busHandlers.get(type).push(fn);
+};
+// Register a method the IDE (or an AI agent via the Plugin API) may call on this pane (rpc-call).
+const serve = (method, fn) =&gt; _rpcServed.set(method, fn);
+parent.postMessage({ v: V, type: &quot;ready&quot; }, &quot;*&quot;);
+
+// usage:
+const { params } = await callIde(&quot;getContext&quot;);
+on(&quot;sourceAsm&quot;, (env) =&gt; render(env.payload));
+emit(&quot;warpvConfig&quot;, { xlen: 32 });
+serve(&quot;runOnWarpV&quot;, async () =&gt; runAndReturnOutcome());
+</code></pre>
+<h3 id="wire-versioning-and-trust-stamps">Wire versioning and trust stamps</h3><p>These fields extend the <a href="#bus-events">envelope</a> and <a href="#lifecycle-and-wire-protocol">lifecycle</a>.</p><p><strong>Wire-version negotiation.</strong> <code>v</code> is the wire-framing version — today always <code>1</code>, the permanent
+floor. A pane advertises the range it supports on its <code>ready</code> message, and the IDE selects the
+highest common version and reports it in the pane&#39;s startup context:</p><pre><code class="lang-javascript">parent.postMessage({ v: 1, type: &quot;ready&quot;, versions: { min: 1, max: 1 } }, &quot;*&quot;);
+const { wire } = await callIde(&quot;getContext&quot;);   // { min, max, selected }
+</code></pre><p>Absence of <code>versions</code> means v1. If the ranges do not overlap the IDE degrades gracefully rather than
+delivering frames the pane cannot parse. Each connector then frames outbound messages at, and
+validates inbound messages against, the negotiated version; per-frame <code>v</code> remains as a redundant
+guard. Because bus events fan out to participants that may run different versions, the Bus reframes
+each event into the recipient&#39;s version at delivery (an L1 gasket), so a pane never sees a foreign
+<code>v</code> — a no-op while every participant is v1.</p><p><strong>Trust stamps.</strong> Two envelope fields, <code>origin</code> and <code>author</code>, establish provenance so a recipient can authenticate a sender. They characterize a &quot;responsible participant&quot; — the bus participant responsible for sending the message. This may be the sender itself, or — when the sender has no web origin of its own (a blob/opaque URL) — the nearest participant in its creation chain that does. The chase stops at that first origin, never crossing to a more-trusted ancestor, so a stamp can never attribute an event past an origin boundary; a purely first-party chain resolves instead to <code>ide</code>, <code>platform</code> or <code>platform.&lt;agent&gt;</code>. Both are
+resolved and stamped <strong>by the IDE</strong> and, like <code>source</code>, can never be set by a pane:</p><pre><code class="lang-typescript">{
+  // …
+  origin?: string,   // web origin of the responsible participant (or absent if first-party or origin-less)
+  author?: string    // responsible participant identifier, if different from source
+}
+</code></pre><p><strong>Recipient helpers.</strong> The optional <code>@rweda/makerchip-view-client</code> library exposes the stamps on each
+delivered message — <code>msg.origin</code> and <code>msg.sameOrigin()</code> (true when the sender shares the pane&#39;s own
+origin) — plus a static <code>sameOrigin(a, b)</code> for comparing two origins. Testing the sender&#39;s origin is
+the usual trust check, and the message already carries it, so no argument is needed.</p><p><strong>Identity namespaces (future).</strong> A sigil convention — <code>#</code>-prefixed mnemonics and <code>@</code>-prefixed
+reserved identities (<code>@ide</code>, <code>@platform</code>) — will carve the identity space and leave the bare
+namespace for registered identities. It is deferred to <code>issues/008-registered-pane-identities.md</code>;
+nothing above depends on it, since <code>author</code> already resolves to a reserved principal and <code>origin</code>
+carries the web origin.</p><h3 id="security-and-future-surface">Security and future surface</h3>
+<ul>
+<li><strong>Identity is stamped, not asserted</strong> — no pane can spoof <code>source</code>.</li>
+<li><strong><code>produces</code> bounds emission</strong> and <strong><code>subscribes</code> bounds reception</strong> — least privilege,
+enforced before messages cross the iframe boundary.</li>
+<li><strong>Origin/window validation</strong> on every inbound message (trivial for same-origin,
+IDE-hosted panes such as CE; the future registry records expected origins for external
+panes).</li>
+<li><strong>Origin &amp; author trust stamps</strong> let a recipient authenticate a sender&#39;s web origin,
+and wire-version negotiation lets the protocol evolve without breaking panes; see
+<a href="#wire-versioning-and-trust-stamps">Wire versioning and trust stamps</a>.</li>
+<li><strong>Versioned, structured-clone payloads</strong>; an optional size cap guards against abuse.</li>
+<li><strong>RPC exposes an explicit safe subset of the Plugin API</strong> — pane-scoped methods plus a subset of the
+Plugin API <em>operations</em>. It excludes both the inbound compile-result callbacks (trusted
+pipeline inputs) and cross-pane / cross-boundary operations (layout read/write, spawning
+panes, arbitrary fetches). Exposure is safe-by-default: a newly added Plugin API method is
+not pane-callable until added to the exposed operation list. Hardening the callbacks so they
+too could be exposed (e.g. via an IDE-minted compilation nonce) is future work.</li>
+</ul><p>More IDE state (e.g. highlights, pane arrival/departure) can be exposed the same way as the
+existing <a href="#first-party-events">first-party events</a>: published by the IDE under the <code>ide</code> source
+where the state changes.</p><h2 id="persistence">Persistence</h2><p>Transferrable third-party panes are represented in layout state as a <strong>third-party pane
+object</strong> (<code>{mnemonic, contentType, contentParams, channel?, params?}</code>); see the
+<a href="Plugin_API.md#pane-identifiers">Layout State structures</a> in the Plugin API data-structure
+doc. On restore, the IDE recreates the pane — including its persisted <code>channel</code> contract and
+<code>params</code> — via <code>initThirdPartyPane(mnemonic, contentType, contentParams, {channel, params})</code>.</p><h2 id="security-model">Security model</h2><p>Some third-party panes can execute arbitrary code within the IDE environment, similar to
+the existing VIZ pane which runs third-party JavaScript from libraries. The IDE will require
+user confirmation before opening third-party panes to establish trust (yet to be
+implemented).</p><p><strong>PDF panes (<code>contentType: &quot;pdf&quot;</code>)</strong> are relatively trustworthy:</p><ul>
+<li>Use the bundled PDF.js viewer (v5.4.624), modified to accept cross-origin PDFs and to host
+Makerchip&#39;s channel bridge.</li>
+<li>The bridge runs at the IDE&#39;s web origin while the content it presents is the untrusted PDF. A
+user-trust prompt must name the <strong>content</strong> origin, not the viewer&#39;s (TODO).</li>
+<li>Run in a sandboxed iframe with limited capabilities; cannot access sensitive IDE data,
+user credentials, or broader application state.</li>
+<li>Any PDF JavaScript is further sandboxed within PDF.js.</li>
+<li>Origin validation is disabled to support local files (<code>file://</code>, <code>vscode-webview://</code>) and
+external resources.</li>
+<li>Consistent with Makerchip&#39;s existing security model, which already executes arbitrary
+third-party JavaScript in VIZ panes.</li>
+</ul><p><strong>Iframe panes (<code>contentType: &quot;iframe&quot;</code>)</strong> have broader capabilities:</p><ul>
+<li>Subject to the browser same-origin policy and CSP restrictions.</li>
+<li>Can potentially interact with the IDE if not properly isolated; treat with caution when
+embedding untrusted content.</li>
+<li>When <em>connected</em>, a pane&#39;s privileges are <strong>explicitly bounded by its channel contract</strong>
+(see <a href="#security-and-robustness">Security and robustness</a>).</li>
+</ul><p><strong>Cross-origin support.</strong> The PDF.js viewer modification lets VS Code extensions and other
+platforms load local PDFs and external documentation without origin restrictions,
+facilitating seamless integration of reference material into the IDE workflow.</p>
+      </div>
+    </div>
+    <div id='footer'>
+  By
+  <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
+    Codo
+  </a>
+  2.1.2
+  &#10034;
+  Press H to see the keyboard shortcuts
+  &#10034;
+  <a href='http://twitter.com/netzpirat' target='_parent'>@netzpirat</a>
+  &#10034;
+  <a href='http://twitter.com/_inossidabile' target='_parent'>@_inossidabile</a>
+</div>
+<iframe id='search_frame'></iframe>
+<div id='fuzzySearch'>
+  <input type='text'>
+  <ol></ol>
+</div>
+<div id='help'>
+  <p>
+    Quickly fuzzy find classes, mixins, methods, file:
+  </p>
+  <ul>
+    <li>
+      <span>T</span>
+      Open fuzzy finder dialog
+    </li>
+  </ul>
+  <p>
+    Control the navigation frame:
+  </p>
+  <ul>
+    <li>
+      <span>L</span>
+      Toggle list view
+    </li>
+    <li>
+      <span>C</span>
+      Show class list
+    </li>
+    <li>
+      <span>I</span>
+      Show mixin list
+    </li>
+    <li>
+      <span>F</span>
+      Show file list
+    </li>
+    <li>
+      <span>M</span>
+      Show method list
+    </li>
+    <li>
+      <span>E</span>
+      Show extras list
+    </li>
+  </ul>
+  <p>
+    You can focus and blur the search input:
+  </p>
+  <ul>
+    <li>
+      <span>S</span>
+      Focus search input
+    </li>
+    <li>
+      <span>Esc</span>
+      Blur search input
+    </li>
+  </ul>
+</div>
+  </body>
+</html>

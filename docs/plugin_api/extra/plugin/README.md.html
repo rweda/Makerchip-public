@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset='UTF-8'>
+  <title>Makerchip Plugin API for Third-Party Integration</title>
+  <script src='../../javascript/application.js'></script>
+  <script src='../../javascript/search.js'></script>
+  <link rel='stylesheet' href='../../stylesheets/application.css' type='text/css'>
+</head>
+  <body>
+    <div id='base' data-path='../../'></div>
+<div id='header'>
+  <div id='menu'>
+    <a href='../../extra/plugin/README.md.html' title='Makerchip Plugin API'>
+      Makerchip Plugin API
+    </a>
+    &raquo;
+    <a href='../../alphabetical_index.html' title='Index'>
+      Index
+    </a>
+    &raquo;
+    <span class='title'>plugin</span>
+    &raquo;
+    <span class='title'>README.md</span>
+  </div>
+</div>
+    <div id='content'>
+      <nav class='toc'>
+        <p class='title'>
+          <a class='hide_toc' href='#'>
+            <strong>Table of Contents</strong>
+          </a>
+          <small>
+            (<a class='float_toc' href='#'>left</a>)
+          </small>
+        </p>
+      </nav>
+      <div id='filecontents'>
+        <h1 id="makerchip-plugin-api">Makerchip Plugin API</h1>
+<h2 id="overview">Overview</h2><p>The Makerchip Plugin API enables third-party platforms to embed the Makerchip IDE and interact with it programmatically. This allows you to integrate TL-Verilog circuit design, simulation, and visualization capabilities into your own web applications. It also enables AI agentic control of the IDE.</p><p>This documentation details the classes and methods available for integration.</p><p><strong>See also</strong></p><ul>
+<li>the <a href="../../../../../module/IDE/plugin_example.html" target="_blank">Example Use Page</a></li>
+<li>the <code>IdePlugin</code> class and its methods for detailed API</li>
+<li>the <strong>Release Notes</strong> (extra) for version history and migration notes</li>
+</ul>
+<h2 id="getting-started">Getting Started</h2><p>To embed Makerchip in your application:</p><ol>
+<li><p>Create a container element in your HTML for the IDE:</p><pre><code class="lang-html">&lt;div id=&quot;my-makerchip&quot;&gt;&lt;/div&gt;
+</code></pre>
+</li>
+<li><p>Use it out of the box:</p><pre><code class="lang-javascript">// Import the plugin code
+import IdePlugin from &#39;https://makerchip.com/dist/makerchip-plugin.js&#39;;
+
+// Initialize the IDE
+await IdePlugin.create(&#39;my-makerchip&#39;);
+</code></pre>
+</li>
+<li><p>Or, customize its behavior and interact with it:</p><pre><code class="lang-javascript">import IdePlugin from &#39;https://makerchip.com/dist/makerchip-plugin.js&#39;;
+
+// Extend IdePlugin with custom behavior
+class MyIDE extends IdePlugin {
+  onReady() {
+    // Your initialization
+    console.log(&quot;IDE ready!&quot;);
+    // Enable UI, set up event handlers, etc.
+  }
+
+  onCodeChange() {
+    // Save to localStorage, enable save button, etc.
+  }
+}
+
+// Initialize the IDE
+const ide = await MyIDE.create(&#39;my-makerchip&#39;);
+
+// Now you can interact with the IDE
+const { code } = await ide.getCode();  // Get current (default) code
+</code></pre>
+</li>
+<li><p>Create other derived IDEs and instantiate as many of them as you like:</p><pre><code class="lang-html">&lt;div id=&quot;my-makerchip-2&quot;&gt;&lt;/div&gt;
+&lt;div id=&quot;my-other-makerchip&quot;&gt;&lt;/div&gt;
+</code></pre>
+<pre><code class="lang-javascript">class MyOtherIDE extends IdePlugin {
+  onReady() {
+    console.log(&quot;Second IDE ready!&quot;);
+  }
+}
+
+const ide2 = await MyIDE.create(&#39;my-makerchip-2&#39;);
+const ide3 = await MyOtherIDE.create(&#39;my-other-makerchip&#39;);
+</code></pre>
+</li>
+</ol>
+
+      </div>
+    </div>
+    <div id='footer'>
+  By
+  <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
+    Codo
+  </a>
+  2.1.2
+  &#10034;
+  Press H to see the keyboard shortcuts
+  &#10034;
+  <a href='http://twitter.com/netzpirat' target='_parent'>@netzpirat</a>
+  &#10034;
+  <a href='http://twitter.com/_inossidabile' target='_parent'>@_inossidabile</a>
+</div>
+<iframe id='search_frame'></iframe>
+<div id='fuzzySearch'>
+  <input type='text'>
+  <ol></ol>
+</div>
+<div id='help'>
+  <p>
+    Quickly fuzzy find classes, mixins, methods, file:
+  </p>
+  <ul>
+    <li>
+      <span>T</span>
+      Open fuzzy finder dialog
+    </li>
+  </ul>
+  <p>
+    Control the navigation frame:
+  </p>
+  <ul>
+    <li>
+      <span>L</span>
+      Toggle list view
+    </li>
+    <li>
+      <span>C</span>
+      Show class list
+    </li>
+    <li>
+      <span>I</span>
+      Show mixin list
+    </li>
+    <li>
+      <span>F</span>
+      Show file list
+    </li>
+    <li>
+      <span>M</span>
+      Show method list
+    </li>
+    <li>
+      <span>E</span>
+      Show extras list
+    </li>
+  </ul>
+  <p>
+    You can focus and blur the search input:
+  </p>
+  <ul>
+    <li>
+      <span>S</span>
+      Focus search input
+    </li>
+    <li>
+      <span>Esc</span>
+      Blur search input
+    </li>
+  </ul>
+</div>
+  </body>
+</html>

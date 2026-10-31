@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset='UTF-8'>
+  <title>Classes for Redwood EDA, LLC&#39;s Visual Debug Feature</title>
+  <script src='../../javascript/application.js'></script>
+  <script src='../../javascript/search.js'></script>
+  <link rel='stylesheet' href='../../stylesheets/application.css' type='text/css'>
+</head>
+  <body>
+    <div id='base' data-path='../../'></div>
+<div id='header'>
+  <div id='menu'>
+    <a href='../../extra/public/README.md.html' title='VIZ Classes'>
+      VIZ Classes
+    </a>
+    &raquo;
+    <a href='../../alphabetical_index.html' title='Index'>
+      Index
+    </a>
+    &raquo;
+    <span class='title'>public</span>
+    &raquo;
+    <span class='title'>live_doc.md</span>
+  </div>
+</div>
+    <div id='content'>
+      <nav class='toc'>
+        <p class='title'>
+          <a class='hide_toc' href='#'>
+            <strong>Table of Contents</strong>
+          </a>
+          <small>
+            (<a class='float_toc' href='#'>left</a>)
+          </small>
+        </p>
+      </nav>
+      <div id='filecontents'>
+        <h1 id="live-doc">Live Doc</h1><p><strong>Live Doc</strong> is a set of capabilities that use Visual Debug (VIZ) to animate documents (currently, PDF). Live Doc supports a no-copy use model so new value can be added while honoring the document author&#39;s copyright.</p><!-- About these comments: the Makerchip VS Code extension drops each span from a "skill-omit"
+comment to the matching "/skill-omit" when it composes its agent skill (see its
+src/liveDocSkill.ts), keeping the skill to what authoring needs. Use these spans for detail an
+author can look up when needed. -->
+<h2 id="concept">Concept</h2>
+<h3 id="what-it-does">What it does</h3><p>A <code>\viz_js</code> block calls <code>this.global.pdf.extractToFabric(this, source, opts)</code> to fetch a PDF page, parse its vector drawing operators, and build the figure&#39;s geometry as <code>fabric.Path</code> and <code>fabric.Text</code> objects inside the VIZ canvas. <code>\viz_js</code> code can assign attributes to these based on simulation data and can provide live overlays so a static diagram comes alive to reflect simulation behavior.</p><h3 id="use-models">Use models</h3><p><strong>Supplemental course materials</strong> — Create companion visualizations that augment preexisting course materials. Animate a circuit diagram from a lecture slide or textbook page. Let AI generate illustrative stimulus.</p><p><strong>Live design documentation</strong> — Bring existing design specs to life to accurately relate project documentation with actual design simulations.</p><p><strong>VIZ development flow</strong> — Use your favorite drawing tools to seed your VIZ development. AI typically does well at connecting your static drawings with a hardware model.</p><p><strong>Concept video creator</strong> — Thinking outside the box, this same flow can be used outside the world of hardware to explain processes and concepts. Draw a static illustration, and instruct Copilot to render a video using VIZ.</p><h3 id="copyright-model">Copyright model</h3><p>In consideration of authors&#39; copyrights, Live Doc features support a clear separation between the referenced figure and the Live Doc simulation animation capabilities. Live Doc code may be written to contain <strong>no copy</strong> of the referenced figure. The browser fetches and parses the document content at runtime, holding it only within the browser context. The VIZ code may contain only a reference to the PDF (URL or view ID). This reference may provide explicit attribution. Additionally, <code>extractToFabric</code> attempts, by default, to draw the document&#39;s copyright notice below the figure (see <code>build.notice</code>). Further attribution <code>Text</code> in the VIZ code may be necessary. Simulation overlays encapsulated in the VIZ code (values, colors, annotations) may be original work, not copied expression. This may keep the use consistent with the accepted interpretation of fair use for programmatic reference.</p><p>While Live Doc features aim to assist in avoiding copyright infringement, the user is ultimately responsible for ensuring that their use of Live Doc features complies with copyright law. It is highly recommended to consult with legal counsel when using Live Doc with copyrighted content.</p><h3 id="using-the-makerchip-vs-code-extension-with-live-doc">Using the Makerchip VS Code extension with Live Doc</h3><p>The Makerchip VS Code/Cursor extension provides guidance for AI agents to author Live Docs. This is the primary authorship path.</p><p>Authoring a Live Doc using an LLM inherently shares PDF data with third-party LLMs, which the PDF&#39;s copyright terms may not permit. So the extension&#39;s tools give an agent only a PDF&#39;s document information (title, permissions, copyright notice), and capture no VIZ showing its content, until you tell the agent either that you may copy the PDF&#39;s content, or that your LLM provider neither retains nor trains on your chat (providers often have settings for both). Even then, they give and capture nothing from a PDF whose permissions deny copying. With only the latter answer, the agent is guided to save no captures to your files and build the overlay by reference, without copying content into your code.</p><p>While agents are given guidance to avoid copyright infringement, this guidance may be inadequate to ensure compliance.</p><h3 id="content-access-and-cors">Content Access and CORS</h3><p>The browser&#39;s same-origin policy applies to PDF requests inside <code>extractFigure</code>. A PDF server that sends <code>Access-Control-Allow-Origin: *</code> (e.g. GitHub Pages, many CDNs) is fetched directly. For unknown cross-origin hosts, the IDE probes with a <code>HEAD</code> request and caches the result per origin for the session. If that probe fails or times out, it routes the PDF requests through the configured CORS proxy. Nothing needs to be added to an allowlist.</p><!-- skill-omit -->
+<h3 id="large-documents">Large documents</h3><p>Live Doc requests PDF data by byte range when the server supports it, rather than downloading the whole file. It disables pdf.js&#39;s background streaming and automatic prefetch, so extraction reads only the document structure and the data needed for the requested page.</p><p>Range loading requires <strong><code>Content-Length</code></strong>, <strong><code>Accept-Ranges: bytes</code></strong>, and an uncompressed response. For cross-origin requests, the server must also expose the range-related response headers to browser code, for example with <code>Access-Control-Expose-Headers: Accept-Ranges, Content-Range, Content-Encoding</code>. If the needed headers are unavailable, or the PDF is served compressed, pdf.js falls back to fetching the entire file.</p><p>The CORS proxy rejects a response whose declared <code>Content-Length</code> exceeds <strong>64 MiB</strong>, returning an HTTP <code>413</code> rather than truncating it. Responses without a declared length are relayed in full. Direct requests have no proxy size ceiling.
+<!-- /skill-omit --></p><h2 id="code-flow">Code Flow</h2><p>This section describes how Live Doc works. The <a href="#api-reference">API Reference</a> that follows is the field-level specification; everything named here is specified there.</p><h3 id="flow-overview">Flow Overview</h3><p>Live Doc is a feature of the VIZ system. A <code>\viz_js</code> block contains an <code>init()</code> and a <code>render()</code> method which, for Live Doc, typically do the following.</p><p>The <code>init()</code> function calls <code>extractToFabric()</code> to convert the PDF figure into the Fabric.js objects that will be animated. It performs an &quot;extract&quot; stage and a &quot;build&quot; stage:</p><ul>
+<li>extract<ul>
+<li>fetches the PDF</li>
+<li>extracts and presents the specified page&#39;s vector drawing operators and text</li>
+<li>selects from them the desired figure&#39;s elements</li>
+</ul>
+</li>
+<li>build<ul>
+<li>converts them to Fabric.js objects, inserted into a <code>fabric.Group</code></li>
+<li>names these objects for later reference</li>
+</ul>
+</li>
+</ul><p><code>extractToFabric()</code> returns the group immediately, empty, so <code>init()</code> can return it for rendering by the VIZ system without waiting for the PDF. The group is populated asynchronously.</p><p>The <code>render()</code> function updates the properties of these named objects based on simulation data relative to the currently active cycle.</p><h3 id="reference-example">Reference example</h3><p>The following <code>\viz_js</code> block illustrates typical patterns using the gated D-latch figure from page 11 of <code>latches.pdf</code>. It uses the <code>$din</code>, <code>$wen</code>, and <code>$qlat</code> signals from <a href="#d_latchtlv"><code>d_latch.tlv</code></a>: two values already printed in the PDF are updated, and a new value chip is attached to the WE wire. The chip&#39;s anchor comes from the wire geometry inspected while authoring.</p><pre><code class="lang-js">\viz_js
+   box: {width: 235, height: 135, fill: &quot;#fff&quot;, strokeWidth: 0},
+   init() {
+      // Convert the PDF figure to a Fabric.js Group.
+      // this.liveDocElements is populated after init() returns, containing
+      // the named Group elements.
+      const figure = this.global.pdf.extractToFabric(this, {
+         url: &quot;https://cs2461-2020.github.io/lectures/latches.pdf&quot;
+      }, {
+         // the figure extraction parameters
+         extract: {page: 11, clip: true, select: {mode: &quot;region&quot;, rect: [188, 593, 397, 681]}},
+         // the build parameters which name wire value labels
+         build:   {labels: {d_val: 9, q_val: 3}},
+      })
+      // position the figure (left/top) in the box
+      figure.set({left: 8, top: 22})
+
+      // A new value chip on the WE wire, in figure coordinates. The figure arrives beneath it.
+      this._weChip = new fabric.Text(&quot;&quot;, {
+         left: 43, top: 12, fontSize: 8, originX: &quot;center&quot;, originY: &quot;center&quot;
+      })
+      figure.add(this._weChip)
+
+      // Status text, placed in the box (not the figure Group).
+      const status = new fabric.Text(&quot;&quot;, {left: 4, top: 120, fontSize: 8, fill: &quot;#1565c0&quot;})
+      // The chip is a child of figure; do not also return it as a sibling.
+      return {figure, status}  // note that figure contains _weChip
+   },
+   render() {
+      // render() also runs before the PDF arrives, when the elements are not yet set.
+      const el = this.liveDocElements
+      if (!el) return []
+      const d = &#39;$din&#39;.asInt(), we = &#39;$wen&#39;.asInt(), q = &#39;$qlat&#39;.asInt()
+      el.d_val.set({text: String(d), fill: d ? &quot;#2e7d32&quot; : &quot;#777&quot;})
+      el.q_val.set({text: String(q), fill: q ? &quot;#2e7d32&quot; : &quot;#777&quot;})
+      this._weChip.set({text: String(we), fill: we ? &quot;#e65100&quot; : &quot;#777&quot;})
+      this.obj.status.set({text: we ? &quot;TRANSPARENT (Q follows D)&quot; : &quot;HOLD (Q locked)&quot;})
+      return []
+   }
+</code></pre>
+<h3 id="completion">Completion</h3><p>The group shows &quot;Loading PDF...&quot; until the figure arrives. Then the named elements are assigned to <code>this.liveDocElements</code> (or the property named by <code>build.elementsAs</code>, for a second figure), which doubles as <code>render()</code>&#39;s readiness test. If extraction fails, the group&#39;s text reports the failure and the error is logged.</p><p>Once the group is populated, one of two optional callbacks, <code>build.onReady</code> or <code>build.onError</code>, is invoked, though the common case does not require them, and the example does not include them. Live Doc then calls <code>this.rerender()</code> (see the VIZ API docs) to apply the current cycle&#39;s simulation values and repaint.</p><h3 id="addressing-the-document">Addressing the document</h3><p>A source is either a URL or a document already open in a PDF view.</p><h4 id="addressing-by-url">Addressing by URL</h4><p>A <strong>URL</strong> is fetched by the browser, so the same-origin policy applies and the server&#39;s page-range support decides how many bytes move; both are covered under <a href="#content-access-and-cors">Content Access and CORS</a> and <a href="#large-documents">Large documents</a>. Documents fetched this way are cached per URL, so recompiling the same design does not re-fetch.</p><h4 id="addressing-by-view">Addressing by view</h4><p>A <strong>view</strong> (<code>{view: &quot;mybook&quot;}</code>) names a PDF the reader already has open, which is the route for a document no URL can reach — a licensed copy of a textbook or a spec. For example, <code>\viz_js</code> code might convert the PDF in the &quot;mybook&quot; view with:</p><pre><code class="lang-js">this.global.pdf.extractToFabric(this, {view: &quot;mybook&quot;}, {
+   extract: {page: 342, select: {mode: &quot;largest&quot;}},
+})
+</code></pre><p>There is no guarantee that the identified view contains the intended PDF. To address this, an optional <code>fingerprint</code> can be provided — the PDF&#39;s own identifier — which turns a wrong document into an error instead of an overlay landing on the wrong place. See <a href="#source"><code>source</code></a>.</p><p>The <code>.tlv</code> file may remain free of any copy of the figure: the source names a view, and the geometry is re-derived at runtime from whatever document the reader supplied.</p><h3 id="what-comes-out-primitives-and-labels">What comes out: primitives and labels</h3><p>Extraction returns two flat arrays, called <strong>pools</strong>: <code>primitives</code>, the vector geometry, and <code>labels</code>, the text. You address individual items by position in a pool, so it matters what counts as one item.</p><p>A <strong>primitive</strong> is, by default, a <strong>subpath</strong> — everything drawn from one move-to until the next, one pen-down stroke. It is deliberately <em>not</em> a whole PDF path, because a path is not necessarily a logical element. A PDF may emit numerous unrelated segments as one compound path, and drawing tools routinely do to batch same-styled strokes for efficiency. Live Doc may need to apply styling at a subpath granularity, e.g. to color one of many wires.</p><p>Sometimes, though, the path grouping can be meaningful. It might group a logic gate symbol, a meandering wire, etc. Flattening to subpaths risks losing that grouping information. To address this, each primitive records the <strong><code>path</code></strong> it came from, numbered by the pool position of that path&#39;s first primitive. Subpaths of one path share that <code>path</code> number, which makes the group addressable as a unit, and a path with a single primitive has <code>path</code> equal to its position. Treat a path as &quot;drawn together&quot;, not &quot;belongs together&quot;.</p><p>Two cases keep a whole path as a single primitive. A <strong>filled</strong> path is never split, because its rings subtract from each other to make holes and splitting would break that. And <code>splitSubpaths: false</code> is available to turn splitting off everywhere if preferred.</p><p>A <strong>label</strong> is one PDF text <em>item</em>. Kerning can split <code>&quot;CLK&quot;</code> into <code>&quot;C&quot;</code> and <code>&quot;LK&quot;</code>, which can affect matching on label text.</p><h3 id="choosing-the-figure">Choosing the figure</h3><p>The selection step identifies the elements of the desired figure from the page. The default does so by <strong>clustering</strong>: primitives whose bounding boxes lie within a few pixels of each other are joined, and the largest cluster wins. A diagram&#39;s parts are bridged by its own connectors, so the whole diagram forms one dense cluster while page rules and stray marks fall out as singletons. A frame would join the figures it surrounds, so it belongs to no cluster. A frame is a primitive covering 90% or more of the page, such as a background fill, or one whose removal (with any nested primitives each enclosing all the rest, such as a slide&#39;s border over its backdrop) leaves two or more multi-primitive parts lying wholly inside it, such as a slide around several figures. Anything else that joins figures together can be kept out of clustering with the <code>ignore</code> option.</p><p>It is typically important to use subpath granularity for clustering, as paths can contain disjointed subpaths with large bboxes. Grouped crop marks in opposite corners, for example, join the entire page as a single cluster.</p><p>Clustering is generally a starting point, used to determine the correct crop. It can omit output labels or figure titles sitting slightly apart from the diagram, which an explicit crop rectangle can catch. See <a href="#selectdescriptor"><code>select</code></a> for details.</p><h3 id="coordinates">Coordinates</h3><p>Three coordinate systems are in play. All are in pixels at scale 1, which are PDF points, with y pointing down:</p><table>
+<thead>
+<tr>
+<th>System</th>
+<th>Origin</th>
+<th>Used for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Page</strong></td>
+<td>Top-left of the page</td>
+<td><code>select</code>&#39;s <code>rect</code> and <code>at</code>; <code>ext.bbox</code></td>
+</tr>
+<tr>
+<td><strong>Figure</strong></td>
+<td>Top-left of the selected figure, <code>ext.bbox</code>&#39;s corner</td>
+<td>Everything extraction returns, and the figure&#39;s Fabric objects</td>
+</tr>
+<tr>
+<td><strong>Box</strong></td>
+<td>The <code>\viz_js</code> block&#39;s <code>box</code></td>
+<td>Your <code>init()</code> objects; see the VIZ documentation</td>
+</tr>
+</tbody>
+</table><p>Figure coordinates are page coordinates minus the figure&#39;s corner. For a <code>region</code> crop, figure <code>(0, 0)</code> is the corner of the rect you wrote; for a cluster, it is the corner of the cluster&#39;s extent, and a label sitting just outside the cluster can have small negative coordinates.</p><h3 id="placing-it-on-the-canvas">Placing it on the canvas</h3><p>The group returned by <code>extractToFabric</code> encapsulates the figure. Its children are in figure coordinates, and its own transform maps them into the box: by default, figure <code>(0, 0)</code> lands at box <code>(0, 0)</code>. Place, scale, or rotate the figure with ordinary Fabric properties, at any time — in <code>init()</code>, in <code>onReady</code> once the figure&#39;s size is known, or in <code>render()</code>:</p><pre><code class="lang-js">figure.set({left: 8, top: 22})              // figure (0, 0) at box (8, 22)
+figure.set({scaleX: 0.5, scaleY: 0.5})      // scales about figure (0, 0)
+</code></pre><p><code>left</code>/<code>top</code> are where figure <code>(0, 0)</code> lands. Leave the group&#39;s <code>originX</code>/<code>originY</code>, <code>width</code> and <code>height</code> alone; they are what makes that true.</p><p><strong>Overlays</strong> that should travel with the figure are added to the group in figure coordinates — the numbers you read off <code>primitive.bbox</code> while authoring. Add them in <code>init()</code>: the figure&#39;s own objects are inserted beneath them when the extraction lands.</p><pre><code class="lang-js">const chip = new fabric.Text(&quot;&quot;, {left: 43, top: 12, originX: &quot;center&quot;, originY: &quot;center&quot;})
+figure.add(chip)                            // WE wire in the reference example
+</code></pre><p>Use Fabric&#39;s <code>add</code> or <code>insertAt</code>, <strong>not <code>addWithUpdate</code></strong>, which re-derives a group&#39;s coordinate system from its contents. Take anchor coordinates from the <em>midpoint of a wire&#39;s bounding box</em>, not from a label&#39;s position: labels sit near their wires, not on them.</p><p>An object that should stay in box space instead — a legend beside the figure, say — is returned from <code>init()</code> as usual. <code>onReady</code>&#39;s <code>fig(x, y)</code> maps a figure coordinate to box coordinates through the group&#39;s current transform, for positioning it.</p><p>A backdrop is like an overlay, but inserted at the bottom once the group is populated and the figure&#39;s size is known:</p><pre><code class="lang-js">onReady: ({group, ext}) =&gt; {
+   group.insertAt(new fabric.Rect({left: -10, top: -10, fill: &quot;#fff8e1&quot;,
+      width: ext.figure.width + 20, height: ext.figure.height + 20}), 0)
+}
+</code></pre><p><code>onReady()</code> is also a good place to scale the figure to fit <code>box</code>-coordinate bounds because the figure&#39;s size is then known.</p><pre><code class="lang-js">onReady: ({group, ext}) =&gt; {
+   // Place figure, left/top-justified within these bounds:
+   const [bx, by, bw, bh] = [5, 20, 225, 110]
+   const s = Math.min(bw / ext.figure.width, bh / ext.figure.height)
+   group.set({scaleX: s, scaleY: s, left: bx, top: by})
+}
+</code></pre>
+<h3 id="driving-it-from-simulation">Driving it from simulation</h3><p>Animating the figure needs illustrative VCD trace data. Generating this requires a hardware model and stimulus. These could be provided in the same <code>.tlv</code> file(s) containing the VIZ code, run in Makerchip. Or they could come from any external tool flow, using any HDL, with VIZ code provided in a separate <code>.tlv</code> file, where <code>.vcd</code> and <code>.tlv</code> files are separately loaded into Makerchip for viewing.</p><p>The resulting visualization may contain <strong>named elements</strong> (sourced from the PDF, like D and Q in the <a href="#reference-example">reference example</a>) and <strong>overlays</strong> (added explicitly by the VIZ code, like the WE chip). Both are available to <code>render()</code> for updating each cycle to reflect the trace data.</p><h3 id="the-authoring-loop">The authoring loop</h3><p>When authoring a Live Doc (generally done by an agent), it is necessary to inspect the extracted PDF elements. For this, the extract stage performed by <code>extractToFabric</code> can be run in isolation, as can its build stage:</p><ul>
+<li>Extract: <code>extractFigure(source, opts)</code>: performs fetch, parse, and select, returning a <code>Promise&lt;ExtractResult&gt;</code> containing primitives and labels as plain data.</li>
+<li>Build: <code>toFabric(fabric, ext, opts)</code> builds that result into Fabric objects synchronously. For a faithful build, extract with <code>forBuild: true</code>, as <code>extractToFabric</code> does.</li>
+</ul><p>This separation enables inspection of the pools before deciding which elements to name and where to anchor overlays. <a href="#renderfiguresource-opts"><code>renderFigure()</code></a> shows the original to compare the build against.</p><p>The <code>extract</code> and <code>build</code> arguments passed to <code>extractToFabric()</code> become <code>opts</code> arguments of <code>extractFigure()</code> and <code>toFabric()</code>, listed above and called internally by <code>extractToFabric()</code>.</p><p><strong>Settle the selection first.</strong> Figure coordinates are relative to the selected figure, so changing <code>select</code> or <code>clip</code> moves the origin of every coordinate read so far, and can renumber the pools. Choose them first, reading page coordinates (<code>ext.bbox</code> gives the figure box; adding its corner converts any figure coordinate), then freeze them, and only then read anchor coordinates and pool indices.</p><p>For the D-latch reference example:</p><pre><code class="lang-js">// ext.labels for page 11, region [188,593,397,681], clip: true:
+//   1:&quot;1&quot;(s_bar)  2:&quot;1&quot;(q_bar out)  3:&quot;0&quot;(Q)  4:&quot;1&quot;(q_bar feedback)
+//   5:&quot;WE&quot;  6:&quot;D&quot;  7:&quot;Q&quot;  8:&quot;0&quot;(r_bar)  9:&quot;0&quot;(D)
+</code></pre><p>Those positions hold for the same PDF and the same <code>extract</code> options — and only those. They are positions in the returned arrays, so anything changing what is returned renumbers them, along with <code>path</code> numbers: <code>select</code>, <code>ignore</code>, <code>clip</code>, <code>gap</code>, <code>splitSubpaths</code>, and <code>text</code> for the label pool. For a frozen PDF and a finished call that never happens, which is what makes a bare index the cheapest and clearest way to name something.</p><p>When a bare index is not enough — a document that may see minor edits, or a name that should describe what it picks — a <a href="#elementselector">selector</a> matches on content or position instead.</p><p>The authored <code>.tlv</code> file generally need not inspect the figure, so it will simply use <code>extractToFabric()</code>. Or, if copyright is not a concern, programmatic extraction is not a requirement. The VIZ code can redraw the diagram outright if desired, using Live Doc for authoring only. The role of Live Doc, in this case, is complete after authoring the VIZ code.</p><!-- insert: agent-guidance — the Makerchip VS Code extension replaces this line with its
+agent-facing Live Doc guidance when it composes its skill (see its src/liveDocSkill.ts).
+Invisible when rendered; the extension falls back to appending if it is gone. -->
+<hr>
+<h2 id="api-reference">API Reference</h2><p>Live Doc is exposed to <code>\viz_js</code> code as <code>this.global.pdf</code>, which contains:</p><table>
+<thead>
+<tr>
+<th>Export</th>
+<th>Kind</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#extracttofabricctx-source-opts"><code>extractToFabric</code></a></td>
+<td>function</td>
+<td>extract and build in one call</td>
+</tr>
+<tr>
+<td><a href="#extractfiguresource-opts"><code>extractFigure</code></a></td>
+<td>function</td>
+<td>extract only → <a href="#extractresult"><code>ExtractResult</code></a></td>
+</tr>
+<tr>
+<td><a href="#tofabricfabric-ext-opts"><code>toFabric</code></a></td>
+<td>function</td>
+<td>build only, from an <code>ExtractResult</code></td>
+</tr>
+<tr>
+<td><a href="#loadfontsext-opts"><code>loadFonts</code></a></td>
+<td>function</td>
+<td>load the fonts an <code>ExtractResult</code>&#39;s labels use, before <code>toFabric</code></td>
+</tr>
+<tr>
+<td><a href="#renderfiguresource-opts"><code>renderFigure</code></a></td>
+<td>function</td>
+<td>a page region as pdf.js draws it → PNG</td>
+</tr>
+<tr>
+<td><a href="#loadpdfjs"><code>loadPdfjs</code></a></td>
+<td>function</td>
+<td>the underlying pdf.js library</td>
+</tr>
+<tr>
+<td><a href="#config"><code>config</code></a></td>
+<td>object</td>
+<td>pdf.js bundle URLs</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="functions">Functions</h3>
+<h4 id="extracttofabric-ctx-source-opts-"><code>extractToFabric(ctx, source, opts)</code></h4><p>→ <code>fabric.Group</code> — <strong>synchronously</strong></p><p>The entry point for <code>\viz_js</code>. Returns the figure&#39;s layer group immediately, empty, and inserts the figure into it when the extraction lands. That is what <code>init()</code> needs: it must return the objects VIZ places and cannot wait for a fetch. See <a href="#placing-it-on-the-canvas">Placing it on the canvas</a> for the group&#39;s coordinates.</p><table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ctx</code></td>
+<td>object</td>
+<td>The <code>\viz_js</code> context — <strong>pass <code>this</code></strong></td>
+</tr>
+<tr>
+<td><code>source</code></td>
+<td><a href="#source"><code>source</code></a></td>
+<td>Identifies the document</td>
+</tr>
+<tr>
+<td><code>opts.extract</code></td>
+<td><a href="#extractoptions"><code>ExtractOptions</code></a></td>
+<td>Parameters that control extraction</td>
+</tr>
+<tr>
+<td><code>opts.build</code></td>
+<td><a href="#buildoptions"><code>BuildOptions</code></a></td>
+<td>Parameters that control building to Fabric.js</td>
+</tr>
+</tbody>
+</table><p>In addition to <a href="#buildoptions"><code>BuildOptions</code></a>, <code>opts.build</code> provides two optional callbacks. <code>onReady()</code> is called once the figure has been inserted into the group, or <code>onError()</code> is called if extraction fails:</p><table>
+<thead>
+<tr>
+<th><code>opts.build</code></th>
+<th>Called with</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>onReady</code></td>
+<td><code>{group, parts, elements, notice, fig, ext}</code> — a <a href="#buildresult"><code>BuildResult</code></a> plus <code>group</code>, the copyright <code>notice</code>&#39;s <code>fabric.Text</code> (or <code>null</code>), <code>fig(x, y)</code> (figure → box coordinates, through the group&#39;s current transform) and the <code>ExtractResult</code></td>
+</tr>
+<tr>
+<td><code>onError</code></td>
+<td>the error</td>
+</tr>
+</tbody>
+</table><p>Related behavior is described in <a href="#completion">Completion</a>.</p><h4 id="extractfigure-source-opts-"><code>extractFigure(source, opts)</code></h4><p>→ <code>Promise&lt;</code><a href="#extractresult"><code>ExtractResult</code></a><code>&gt;</code></p><p>Fetches the PDF (or reuses the cache), parses the page, selects the figure, and returns primitives and labels in figure coordinates. No Fabric involvement.</p><table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>source</code></td>
+<td><a href="#source"><code>source</code></a></td>
+<td>Identifies the document</td>
+</tr>
+<tr>
+<td><code>opts</code></td>
+<td><a href="#extractoptions"><code>ExtractOptions</code></a></td>
+<td>The same options as <code>extractToFabric</code>&#39;s <code>extract</code> group, unnested</td>
+</tr>
+</tbody>
+</table>
+<h4 id="tofabric-fabric-ext-opts-"><code>toFabric(fabric, ext, opts)</code></h4><p>→ <a href="#buildresult"><code>BuildResult</code></a></p><p>Builds an <code>ExtractResult</code> into Fabric objects, in figure coordinates, and resolves named elements. No group and no placement: the objects can go into any container, including a <code>\viz_js</code> box directly, where figure coordinates are then box coordinates. Synchronous.</p><table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fabric</code></td>
+<td>object</td>
+<td>The per-canvas Fabric.js clone, available as <code>this.getFabric()</code> in <code>\viz_js</code></td>
+</tr>
+<tr>
+<td><code>ext</code></td>
+<td><a href="#extractresult"><code>ExtractResult</code></a></td>
+<td>From <code>extractFigure</code></td>
+</tr>
+<tr>
+<td><code>opts</code></td>
+<td><a href="#buildoptions"><code>BuildOptions</code></a></td>
+<td>The same options as <code>extractToFabric</code>&#39;s <code>build</code> group, unnested</td>
+</tr>
+</tbody>
+</table><p>Call it once <code>loadFonts(ext, opts)</code> resolves: Fabric measures a font&#39;s characters on first use.</p><h4 id="loadfonts-ext-opts-"><code>loadFonts(ext, opts)</code></h4><p>→ <code>Promise</code></p><p>Loads the fonts that <code>ext</code>&#39;s labels use, in the faces they use, given <code>toFabric</code>&#39;s <code>opts</code> (for <code>fonts</code>). <code>extractToFabric</code> calls it before building.</p><h4 id="renderfigure-source-opts-"><code>renderFigure(source, opts)</code></h4><p>→ <code>Promise&lt;string&gt;</code>, a PNG data URL</p><p>Renders a page region as pdf.js draws it, on white, e.g. to compare a build with its original while authoring. <code>opts</code>: <code>page</code> (default 1), <code>rect</code> (<code>[x0, y0, x1, y1]</code>, page coordinates, such as an <code>ExtractResult</code>&#39;s <code>bbox</code>; default the whole page) and <code>scale</code> (pixels per px, default 2). <code>marks</code>, an array of <code>{bbox, text, color}</code> (page coordinates; <code>color</code> default red), outlines boxes on the render, each tagged with its <code>text</code>: pool ids, say, while writing selectors.</p><h4 id="loadpdfjs-"><code>loadPdfjs()</code></h4><p>→ <code>Promise&lt;pdfjsLib&gt;</code></p><p>Escape hatch returning the underlying pdf.js library, for rendering a page to a canvas, reading document metadata, and other uses outside this API.</p><hr>
+<h3 id="types">Types</h3>
+<h4 id="source"><code>source</code></h4>
+<table>
+<thead>
+<tr>
+<th>Form</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&quot;https://...&quot;</code></td>
+<td>URL string — fetched by the browser (CORS applies)</td>
+</tr>
+<tr>
+<td><code>{url: &quot;https://...&quot;}</code></td>
+<td>Same, explicit object form</td>
+</tr>
+<tr>
+<td>`{data: ArrayBuffer \</td>
+<td>Uint8Array}`</td>
+<td>Raw PDF bytes (e.g. from an extension-host bridge for local files); copied before parsing and not cached</td>
+</tr>
+<tr>
+<td><code>{view: &quot;mnemonic&quot;, fingerprint}</code></td>
+<td>A PDF open in a PDF view — see below</td>
+</tr>
+<tr>
+<td><code>PDFDocumentProxy</code></td>
+<td>Already-opened pdf.js document, passed through unchanged</td>
+</tr>
+</tbody>
+</table><p>URL sources are cached across compilations, keyed by URL.</p><h5 id="view-naming-an-open-pdf"><code>view</code> — naming an open PDF</h5><p>The mnemonic is the view&#39;s tab label.</p><table>
+<thead>
+<tr>
+<th><code>view</code></th>
+<th>Resolves to</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&quot;latches.pdf&quot;</code></td>
+<td>that view, by exact name</td>
+</tr>
+<tr>
+<td><code>&quot;latch&quot;</code></td>
+<td>the one open PDF whose name starts with it — a unique prefix, like an abbreviated git SHA</td>
+</tr>
+<tr>
+<td><code>&quot;&quot;</code> (or omitted, given a <code>fingerprint</code>)</td>
+<td>the sole open PDF view</td>
+</tr>
+</tbody>
+</table><p>An exact match always wins outright, so <code>&quot;book&quot;</code> means <code>book</code> even when <code>book+2</code> is open. Prefix matching exists because a view&#39;s name is uniquified on collision (<code>book</code>, <code>book+2</code>), so the name a <code>.tlv</code> was authored against may not be the name it gets. Ambiguity is an error listing the candidates, never a guess.</p><h5 id="fingerprint-verifying-the-document"><code>fingerprint</code> — verifying the document</h5>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Source</td>
+<td>The PDF&#39;s trailer <code>/ID</code>, exposed as <code>fingerprints</code> — <code>[original, modified]</code>; either value matches</td>
+</tr>
+<tr>
+<td>Reading it</td>
+<td><code>fingerprints</code> in <code>extractFigure</code>&#39;s result, during authoring</td>
+</tr>
+<tr>
+<td>With <code>view</code> omitted or <code>&quot;&quot;</code></td>
+<td>Selects whichever open PDF it is</td>
+</tr>
+<tr>
+<td>With a <code>view</code> name</td>
+<td>Verifies that view, erroring on mismatch rather than overlaying a shifted layout</td>
+</tr>
+</tbody>
+</table><p>It matches a byte-identical publisher distribution for every reader, but not a per-purchaser watermarked copy. For example, <code>{fingerprint: &quot;...&quot;}</code> selects by document identity. The original identifier can be retained across revisions, so a matching fingerprint does not by itself guarantee unchanged geometry or pool indices.</p><h4 id="extractoptions"><code>ExtractOptions</code></h4>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>page</code></td>
+<td>number</td>
+<td><code>1</code></td>
+<td>1-based page number</td>
+</tr>
+<tr>
+<td><code>select</code></td>
+<td><a href="#selectdescriptor"><code>SelectDescriptor</code></a></td>
+<td><code>{mode:&quot;largest&quot;}</code></td>
+<td>Which part of the page is the figure</td>
+</tr>
+<tr>
+<td><code>gap</code></td>
+<td>number</td>
+<td><code>12</code></td>
+<td>Cluster-join proximity, px (cluster modes only)</td>
+</tr>
+<tr>
+<td><code>ignore</code></td>
+<td>number[]</td>
+<td><code>[]</code></td>
+<td>Primitives that join no cluster (used by the cluster modes only), by their position in a <code>{mode:&quot;all&quot;}</code> extraction (with the same <code>splitSubpaths</code>)</td>
+</tr>
+<tr>
+<td><code>text</code></td>
+<td><code>&quot;labels&quot;</code> \</td>
+<td><code>&quot;all&quot;</code> \</td>
+<td><code>&quot;none&quot;</code></td>
+<td><code>&quot;labels&quot;</code></td>
+<td>Text items to return: near the figure, page-wide, or none</td>
+</tr>
+<tr>
+<td><code>clip</code></td>
+<td>bool \</td>
+<td>number</td>
+<td><code>false</code></td>
+<td>Drop primitives whose bbox falls outside the figure, plus a pad. <code>true</code> uses pad 4; a number sets the pad</td>
+</tr>
+<tr>
+<td><code>splitSubpaths</code></td>
+<td>bool</td>
+<td><code>true</code></td>
+<td><code>false</code> keeps whole paths as single primitives</td>
+</tr>
+<tr>
+<td><code>forBuild</code></td>
+<td>bool</td>
+<td><code>false</code></td>
+<td>The result is for <code>toFabric</code>: include the paint-order fields <code>before</code> and <code>order</code> and the labels&#39; font and colour, and default <code>imageData</code> to <code>true</code>. <code>extractToFabric</code> sets it. Changes no pool positions</td>
+</tr>
+<tr>
+<td><code>imageData</code></td>
+<td>bool \</td>
+<td>number</td>
+<td><code>forBuild</code></td>
+<td>Also render the pixels of each image in <code>images</code>, as pdf.js paints it, into a <code>bitmap</code>. <code>true</code> renders at the image&#39;s own resolution, from 1 up to 4 pixels per px in each direction; a number sets the pixels per px in each direction. Costs one page render per <code>images</code> entry</td>
+</tr>
+</tbody>
+</table>
+<h4 id="selectdescriptor"><code>SelectDescriptor</code></h4>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Extra fields</th>
+<th>Selects</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>{mode:&quot;largest&quot;}</code></td>
+<td>—</td>
+<td>The cluster with the most primitives (default)</td>
+</tr>
+<tr>
+<td><code>{mode:&quot;cluster&quot;, index}</code></td>
+<td><code>index</code>, 0-based</td>
+<td>The Nth cluster, ranked by primitive count, larger area breaking ties</td>
+</tr>
+<tr>
+<td><code>{mode:&quot;clusterAt&quot;, at}</code></td>
+<td><code>at: [x,y]</code></td>
+<td>The cluster at, or nearest to, a point</td>
+</tr>
+<tr>
+<td><code>{mode:&quot;region&quot;, rect}</code></td>
+<td><code>rect: [x0,y0,x1,y1]</code></td>
+<td>Every primitive whose bbox <em>intersects</em> the rectangle</td>
+</tr>
+<tr>
+<td><code>{mode:&quot;all&quot;}</code></td>
+<td>—</td>
+<td>The entire page&#39;s vector content</td>
+</tr>
+</tbody>
+</table><p><code>at</code> and <code>rect</code> are in <a href="#coordinates">page coordinates</a>.</p><p><code>region</code> returns each intersecting primitive&#39;s <strong>full</strong> geometry, not a clipped version, and a full-page background rectangle intersects every region. Pair it with <code>clip: true</code> to drop what falls outside:</p><pre><code class="lang-js">extractFigure(source, {select: {mode: &quot;region&quot;, rect}, clip: true})
+</code></pre>
+<h4 id="buildoptions"><code>BuildOptions</code></h4>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>labels</code></td>
+<td><code>{name:</code><a href="#elementselector"><code>ElementSelector</code></a><code>}</code></td>
+<td>—</td>
+<td>Names label texts, adding them to <code>elements</code></td>
+</tr>
+<tr>
+<td><code>primitives</code></td>
+<td><code>{name:</code><a href="#elementselector"><code>ElementSelector</code></a><code>}</code></td>
+<td>—</td>
+<td>Names path primitives, adding them to <code>elements</code></td>
+</tr>
+<tr>
+<td><code>fonts</code></td>
+<td>`{family: string \</td>
+<td>{family, href}}`</td>
+<td>—</td>
+<td>Font replacements for labels, keyed (case-insensitively) by a family in labels&#39; <code>fontFamily</code> stacks (see <a href="#extractresult"><code>ExtractResult</code></a>): one the PDF names, like <code>&quot;Arial&quot;</code>, or a generic family, like <code>&quot;sans-serif&quot;</code>, which also reaches fonts the PDF leaves unnamed. A label takes the replacement for the first key in its stack. A value is a CSS family, or <code>{family, href}</code> with the URL of a stylesheet declaring it, e.g. <code>{&quot;sans-serif&quot;: {family: &quot;Comic Neue&quot;, href: &quot;https://fonts.googleapis.com/css2?family=Comic+Neue:ital,wght@0,400;0,700;1,400&quot;}}</code></td>
+</tr>
+<tr>
+<td><code>labelsOnTop</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Draw labels above all primitives and images, rather than in the PDF&#39;s paint order. A PDF often paints text before the unfilled shape around it, e.g. a state name inside its circle, so filling that shape in <code>render()</code> hides the text; this keeps it visible, at the cost of text the PDF deliberately covers. Alternatives: highlight with a translucent fill, or with stroke only</td>
+</tr>
+<tr>
+<td><code>elementsAs</code></td>
+<td>string</td>
+<td><code>&quot;liveDocElements&quot;</code></td>
+<td><code>extractToFabric</code> only: the property of <code>this</code> that receives <code>elements</code> once the figure is in the group. Must not already exist</td>
+</tr>
+<tr>
+<td><code>notice</code></td>
+<td>string \</td>
+<td><code>false</code></td>
+<td><code>ext.rights.notice</code></td>
+<td><code>extractToFabric</code> only: the copyright notice drawn as small text below the figure, replacing the document&#39;s own; <code>false</code> for none. Restyle or move it in <code>onReady</code></td>
+</tr>
+</tbody>
+</table><p>Additionally, <code>extractToFabric</code> accepts <code>build.onReady</code> and <code>build.onError</code>, described in <a href="#buildoptions"><code>BuildOptions</code></a>.</p><p>Names must not collide across <code>labels</code> and <code>primitives</code>, which share one <code>elements</code> object. To suppress labels entirely, drop them at extraction with <code>text: &quot;none&quot;</code> rather than omitting them here.</p><h4 id="elementselector"><code>ElementSelector</code></h4><p>Identifies one item, or several, within a pool. A bare integer is a pool position: <code>s_val: 6</code> ≡ <code>s_val: {nth: 6}</code>. The two pools are indexed independently — <code>labels: {x: 6}</code> is <code>ext.labels[6]</code>, <code>primitives: {y: 6}</code> is <code>ext.primitives[6]</code>. A primitive&#39;s <code>path</code> is the position of its path&#39;s first primitive, so <code>{path: 6, all: true}</code> is <code>ext.primitives[6]</code> and any sibling subpaths that follow it.</p><p>An object selector has keys with two roles. Keys that <strong>narrow</strong> apply first and are AND-combined, leaving a set of <em>candidates</em>; the key that <strong>picks</strong> then chooses from those candidates.</p><pre><code class="lang-js">primitives: { q_wire: {path: 16, near: [32, 48.8]} }
+//                     ^^^^^^^^  narrows to the subpaths of the path starting at primitive 16
+//                               ^^^^^^^^^^^^^^^^^^  picks the one nearest that point
+</code></pre><p>Narrowing keys:</p><table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Pool</th>
+<th>Keeps</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>text: &quot;...&quot;</code></td>
+<td>labels</td>
+<td>Labels whose text is exactly this. A label is one PDF text item, not always a whole visible label, so check the pool before relying on a match</td>
+</tr>
+<tr>
+<td><code>path: N</code></td>
+<td>primitives</td>
+<td>Primitives of the PDF path whose first primitive is at position <code>N</code></td>
+</tr>
+<tr>
+<td><code>path: {from, to}</code></td>
+<td>primitives</td>
+<td>Primitives of the PDF paths starting at positions <code>from</code> through <code>to</code>, inclusive. Either bound may be omitted. Unlike an <code>nth</code> range, it never cuts a path short</td>
+</tr>
+</tbody>
+</table><p>A narrowing key the pool does not carry matches nothing: <code>text</code> against <code>primitives</code> leaves no candidates.</p><p>Picking keys:</p><table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Picks</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nth: N</code></td>
+<td>The Nth candidate in pool order (default <code>0</code>)</td>
+</tr>
+<tr>
+<td><code>nth: {from, to}</code></td>
+<td>Candidates <code>from</code> through <code>to</code>, inclusive, in pool order → array. Either bound may be omitted; positions past the end are dropped, not <code>null</code></td>
+</tr>
+<tr>
+<td><code>nth: [a, {from, to}, …]</code></td>
+<td>A list of the above, concatenated in the order given → array. An index past the end gives <code>null</code></td>
+</tr>
+<tr>
+<td><code>near: [x, y]</code></td>
+<td>The candidate nearest this point, measured to the candidate&#39;s bbox centre. In figure coordinates</td>
+</tr>
+<tr>
+<td><code>all: true</code></td>
+<td>Every candidate, in pool order → array</td>
+</tr>
+</tbody>
+</table><p>Use one. Where more than one appears, <code>all</code> wins, then <code>near</code>, then <code>nth</code>. Narrowing keys <em>alone</em> still pick a single element, because <code>nth</code> defaults to <code>0</code>: <code>{text: &quot;0&quot;}</code> is the first <code>&quot;0&quot;</code> label, not all of them.</p><p>Three forms give an array result rather than a single reference:</p><pre><code class="lang-js">labels:     { in_vals: [2, 4, 8] },                                   // an array of selectors
+labels:     { input_vals: [{text: &quot;0&quot;, nth: 0}, {text: &quot;1&quot;, nth: 1}] },  // ...of object selectors too
+primitives: { gate_paths: {nth: [3, 4, 5, 7]} },                      // one selector, nth list
+primitives: { states: {nth: {from: 3, to: 10}} },                    // ...range
+primitives: { wires: {nth: [{from: 3, to: 10}, 14]} },                // ...or both
+primitives: { bundle: {path: 16, all: true} },                        // all: true
+primitives: { arc: {path: {from: 120, to: 164}, all: true} },         // ...of a path range
+</code></pre><p>Iterate the result directly: <code>this.liveDocElements.in_vals.forEach((t, i) =&gt; t.set({text: String(vals[i])}))</code>.</p><p>Arrays of selectors and <code>nth</code> lists preserve the order written; ranges and <code>all: true</code> are in pool order.</p><p>Nothing throws when a selector matches nothing. A single-element selector yields <code>null</code>, an unmatched index in an <code>nth</code> list yields <code>null</code>, and an empty range or <code>all: true</code> yields an empty array. A mistyped <code>text</code>, an <code>nth</code> past the end, or a narrowing key aimed at the wrong pool therefore surfaces in <code>render()</code> rather than at build time.</p><h4 id="extractresult"><code>ExtractResult</code></h4>
+<pre><code class="lang-js">{
+  primitives,   // array of primitive records, below
+  labels,       // array of label records, below
+  images,       // [{bbox, before, order?, bitmap?}]: raster images meeting the figure box, which are not vectors, below
+  fingerprints, // the document&#39;s [original, modified] identifiers — see `fingerprint`
+  rights: {copyDenied, notice, usageTerms?, webStatement?},  // the document&#39;s copyright information, below
+  figure: {width, height},  // the selected figure&#39;s size
+  bbox: [x0, y0, x1, y1],   // the figure box, page coordinates
+  page: {width, height},    // the page&#39;s size
+  meta,         // counts, below
+}
+</code></pre><p>A <strong>primitive</strong> record, in figure coordinates:</p><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>string</td>
+<td><code>&quot;p0&quot;</code>, <code>&quot;p1&quot;</code>, … — the index, so it tracks pool position</td>
+</tr>
+<tr>
+<td><code>d</code></td>
+<td>string</td>
+<td>SVG path data (<code>M</code>/<code>L</code>/<code>C</code>/<code>Q</code>/<code>Z</code>), ready for <code>new fabric.Path</code></td>
+</tr>
+<tr>
+<td><code>bbox</code></td>
+<td><code>[minX, minY, maxX, maxY]</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>path</code></td>
+<td>number</td>
+<td>The PDF path this came from, numbered by the position of its first primitive, so shared by its sibling subpaths</td>
+</tr>
+</tbody>
+</table><p><strong>Style</strong> belongs to a PDF path, so it appears only on the <strong>first primitive of each path</strong>, <code>ext.primitives[p.path]</code>. A path&#39;s subpaths are always consecutive in the pool, whatever the selection. A single-subpath path, the common case, is one primitive carrying its own style.</p><p>Style fields are <code>fabric.Path</code> properties, named and valued as in Fabric, which <code>toFabric</code> spreads straight on: always <code>fill</code> and <code>stroke</code> (<code>&quot;&quot;</code> for none; <code>rgba(...)</code> when the PDF paints with partial opacity) and <code>strokeWidth</code> (<code>0</code> when unstroked); and, only when they differ from Fabric&#39;s default, <code>fillRule</code>, <code>strokeLineCap</code>, <code>strokeLineJoin</code>, <code>strokeMiterLimit</code>, <code>strokeDashArray</code> and <code>strokeDashOffset</code>. Lengths are in px.</p><p>A <strong>label</strong> record is <code>fabric.Text</code> properties, in figure coordinates, plus <code>id</code> (<code>&quot;t0&quot;</code>, <code>&quot;t1&quot;</code>, …) and <code>bbox</code> (approximate, as for a primitive): <code>text</code>, <code>left</code>, <code>top</code>, <code>fontSize</code> (approximate), and <code>angle</code> when the text is rotated. With <code>forBuild</code>, it also has the PDF font&#39;s <code>fontFamily</code>, <code>fontWeight</code> and <code>fontStyle</code> (each omitted when <code>&quot;normal&quot;</code>) and <code>fill</code>. <code>fontFamily</code> is a CSS font stack: the PDF&#39;s family; a web font with the same metrics (Arimo for Arial and Helvetica, Tinos for Times, Cousine for Courier, Carlito for Calibri, Caladea for Cambria), else of the same generic family; then the generic family. Fonts embedded without a family name (<code>Type3</code>, <code>MSTT…</code>) get only the generic family&#39;s web font, and normal weight and style. <code>before</code> gives the position of the first primitive painted over it if <code>forBuild</code> is set; omitted if no primitive is on top.</p><p>An <strong>image</strong> record covers a run of PDF images painted with no selected primitive or label between them (a brush stroke may be hundreds of strips). It has <code>bbox</code> in figure coordinates. With <code>forBuild</code>, it has <code>before</code>, indicating the position of the first primitive painted over it (<code>primitives.length</code> if none), and <code>order</code>, indicating how many labels with the same <code>before</code> are painted under it, omitted at 0. And, with <code>imageData</code>, it has <code>bitmap</code>, an <code>ImageBitmap</code> of its pixels, transparent where it paints nothing.</p><p><code>rights</code> is what the document says of its copyright: <code>copyDenied</code>, whether its permissions deny copying; <code>notice</code>, its copyright notice (from its XMP <code>dc:rights</code>, else an Info <code>Copyright</code> entry, else the first notice-like line of text on its first, selected or last page), or <code>null</code>; and, where its XMP has them, <code>usageTerms</code> and <code>webStatement</code> (a URL). A detected notice is a best effort, not a determination of the document&#39;s terms.</p><!-- skill-omit --><p><code>meta</code>:</p><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>selectMode</code></td>
+<td>The mode that was used</td>
+</tr>
+<tr>
+<td><code>clusterCount</code></td>
+<td>Clusters found, or <code>null</code> for <code>region</code> and <code>all</code></td>
+</tr>
+<tr>
+<td><code>droppedPrims</code></td>
+<td>Primitives discarded by the selection</td>
+</tr>
+<tr>
+<td><code>clippedPrims</code></td>
+<td>Selected primitives subsequently discarded by <code>clip</code> (also counted in <code>droppedPrims</code>)</td>
+</tr>
+<tr>
+<td><code>imageCount</code></td>
+<td>Raster images on the page, which are not extractable as vectors; those meeting the figure box are in <code>images</code></td>
+</tr>
+<tr>
+<td><code>totalPrims</code></td>
+<td>Vector primitives on the page, before selection</td>
+</tr>
+<tr>
+<td><code>numPages</code></td>
+<td>Pages in the document</td>
+</tr>
+</tbody>
+</table>
+<!-- /skill-omit -->
+<h4 id="buildresult"><code>BuildResult</code></h4>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>parts</code></td>
+<td>Array</td>
+<td>The <code>fabric.Path</code>s for <code>primitives</code>, a <code>fabric.Image</code> for each image with a <code>bitmap</code>, and the <code>fabric.Text</code>s for <code>labels</code>, in paint order</td>
+</tr>
+<tr>
+<td><code>elements</code></td>
+<td>`{name: fabric.Text \</td>
+<td>fabric.Path \</td>
+<td>Array}`</td>
+<td>The references named by <code>labels</code> and <code>primitives</code>, merged flat. Mutate them in <code>render()</code> with <code>el.set({...})</code> — the repaint after <code>render()</code> is automatic</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<!-- skill-omit -->
+<h3 id="config"><code>config</code></h3>
+<pre><code class="lang-js">this.global.pdf.config.pdfjsUrl    // override the pdf.js bundle URL
+this.global.pdf.config.workerUrl   // override the pdf.worker.mjs URL
+</code></pre>
+<!-- /skill-omit -->
+<hr>
+<h2 id="examples">Examples</h2><p>Examples live in <code>makerchip_examples/live_doc/</code>.</p><h3 id="pdf_viz_mux_demo-tlv"><code>pdf_viz_mux_demo.tlv</code></h3><p>2:1 MUX and AND gate from <a href="https://cs2461-2020.github.io/lectures/logic2.pdf">logic2.pdf</a> page 12 (Apache-licensed; served with <code>Access-Control-Allow-Origin: *</code>), region crop. A counter drives all input combinations; value chips overlay each wire and a ring marks the selected MUX input.</p><h3 id="rs_latch-tlv"><code>rs_latch.tlv</code></h3><p>NAND R-S latch from <a href="https://cs2461-2020.github.io/lectures/latches.pdf">latches.pdf</a> page 9, region <code>[242, 456, 350, 540]</code>. Stimulus cycles HOLD → SET → HOLD → RESET; named PDF labels show S, R, Q and ~Q, with a status label.</p><h3 id="d_latch-tlv"><code>d_latch.tlv</code></h3><p>Gated D-latch from <a href="https://cs2461-2020.github.io/lectures/latches.pdf">latches.pdf</a> page 11, region <code>[188, 593, 397, 681]</code>, the <a href="#reference-example">reference example</a>&#39;s figure. HOLD and TRANSPARENT phases alternate; named PDF labels show the latch&#39;s values and a ring on the WE wire marks transparent mode.</p><h2 id="attribution">Attribution</h2><p>If attribution is required by the license, or even if it isn&#39;t, it is good practice to provide a clear attribution to the original content in the visualization as well as in the VIZ code. For example, overlay <code>fabric.Text(&quot;Extracted from: &lt;URL&gt;&quot;, ...)</code> or a license-compliant attribution positioned in the lower right of the diagram.</p>
+      </div>
+    </div>
+    <div id='footer'>
+  By
+  <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
+    Codo
+  </a>
+  2.1.2
+  &#10034;
+  Press H to see the keyboard shortcuts
+  &#10034;
+  <a href='http://twitter.com/netzpirat' target='_parent'>@netzpirat</a>
+  &#10034;
+  <a href='http://twitter.com/_inossidabile' target='_parent'>@_inossidabile</a>
+</div>
+<iframe id='search_frame'></iframe>
+<div id='fuzzySearch'>
+  <input type='text'>
+  <ol></ol>
+</div>
+<div id='help'>
+  <p>
+    Quickly fuzzy find classes, mixins, methods, file:
+  </p>
+  <ul>
+    <li>
+      <span>T</span>
+      Open fuzzy finder dialog
+    </li>
+  </ul>
+  <p>
+    Control the navigation frame:
+  </p>
+  <ul>
+    <li>
+      <span>L</span>
+      Toggle list view
+    </li>
+    <li>
+      <span>C</span>
+      Show class list
+    </li>
+    <li>
+      <span>I</span>
+      Show mixin list
+    </li>
+    <li>
+      <span>F</span>
+      Show file list
+    </li>
+    <li>
+      <span>M</span>
+      Show method list
+    </li>
+    <li>
+      <span>E</span>
+      Show extras list
+    </li>
+  </ul>
+  <p>
+    You can focus and blur the search input:
+  </p>
+  <ul>
+    <li>
+      <span>S</span>
+      Focus search input
+    </li>
+    <li>
+      <span>Esc</span>
+      Blur search input
+    </li>
+  </ul>
+</div>
+  </body>
+</html>
