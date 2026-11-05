@@ -38,57 +38,57 @@
       <div id='filecontents'>
         <h1 id="makerchip-plugin-api-data-structures">Makerchip Plugin API Data Structures</h1><p>This document specifies the data structures used by the <strong><a href="README.md.html">Makerchip Plugin API</a></strong> —
 the API by which an external host embeds and controls the IDE. It augments the
-<a href="README.md.html">Plugin API README</a> and the Codo-generated API documentation.</p><blockquote><p><strong>Looking for third-party <em>panes</em>?</strong> Creating panes that live <em>inside</em> the IDE, and the
-event channel by which they communicate with the IDE and other panes, are documented
-separately in the <strong><a href="Third_Party_Pane_API.md.html">Third-Party Pane API</a></strong>. See that document
+<a href="README.md.html">Plugin API README</a> and the Codo-generated API documentation.</p><blockquote><p><strong>Looking for third-party <em>views</em>?</strong> Creating views that live <em>inside</em> the IDE, and the
+event channel by which they communicate with the IDE and other views, are documented
+separately in the <strong><a href="Third_Party_View_API.md.html">Third-Party View API</a></strong>. See that document
 for the distinction between the two integration surfaces.</p></blockquote>
 <h2 id="api-overview">API Overview</h2><p>The Makerchip Plugin API provides programmatic control over the IDE, enabling:</p><ul>
 <li><strong>Code Management</strong>: Load, retrieve, and compile TL-Verilog code</li>
 <li><strong>Layout State</strong>: Save, restore, and transfer IDE layout configurations between instances</li>
-<li><strong>Third-Party Panes</strong>: Inject custom content (PDFs, web pages) into the tabbed interface
-(see the <a href="Third_Party_Pane_API.md.html">Third-Party Pane API</a>)</li>
-<li><strong>Pane Control</strong>: Open, activate, and manage IDE panes</li>
-<li><strong>Visualization Export</strong>: Export VIZ pane diagrams as images</li>
+<li><strong>Third-Party Views</strong>: Inject custom content (PDFs, web pages) into the tabbed interface
+(see the <a href="Third_Party_View_API.md.html">Third-Party View API</a>)</li>
+<li><strong>View Control</strong>: Open, activate, and manage IDE views</li>
+<li><strong>Visualization Export</strong>: Export VIZ view diagrams as images</li>
 <li><strong>Navigation Integration</strong>: Handle line navigation requests from the IDE</li>
 </ul><p>This document focuses on the data structures for <strong>layout state</strong>, which require detailed
 specification. For other API capabilities, see the Codo-generated documentation and the
-<a href="README.md.html">README</a> for usage examples.</p><h2 id="third-party-panes">Third-Party Panes</h2><p>Third-party panes (custom content injected into the IDE&#39;s tabbed interface, created via
-<code>openThirdPartyPane()</code>) have their own dedicated documentation:
-<strong><a href="Third_Party_Pane_API.md.html">Third-Party Pane API</a></strong>. It covers construction parameters,
-content types, uniquification, the security model, and the inter-pane communication
-channel. The layout-state structures below reference the third-party pane <em>object</em> used to
-persist such panes.</p><h2 id="layout-state-structure">Layout State Structure</h2>
-<h3 id="overview">Overview</h3><p>In the Makerchip IDE TabbedViews hold panes, and a binary tree of FlexSplits defines the layout of these TabbedViews. The layout state can be programmatically manipulated.</p><p>To save and restore or transfer layouts:</p><pre><code class="lang-javascript">// Save layout for cross-instance recovery (includes third-party panes)
+<a href="README.md.html">README</a> for usage examples.</p><h2 id="third-party-views">Third-Party Views</h2><p>Third-party views (custom content injected into the IDE&#39;s tabbed interface, created via
+<code>openThirdPartyView()</code>) have their own dedicated documentation:
+<strong><a href="Third_Party_View_API.md.html">Third-Party View API</a></strong>. It covers construction parameters,
+content types, uniquification, the security model, and the inter-view communication
+channel. The layout-state structures below reference the third-party view <em>object</em> used to
+persist such views.</p><h2 id="layout-state-structure">Layout State Structure</h2>
+<h3 id="overview">Overview</h3><p>In the Makerchip IDE TabbedViews hold views, and a binary tree of FlexSplits defines the layout of these TabbedViews. The layout state can be programmatically manipulated.</p><p>To save and restore or transfer layouts:</p><pre><code class="lang-javascript">// Save layout for cross-instance recovery (includes third-party views)
 const state = await ide.api.getLayoutState({ forTransfer: true });
 localStorage.setItem(&#39;savedLayout&#39;, JSON.stringify(state));
 
 // Later, restore the saved layout
 const saved = JSON.parse(localStorage.getItem(&#39;savedLayout&#39;));
 await ide.api.setLayoutState(saved);
-// Transferrable third-party panes will be recreated automatically
+// Transferrable third-party views will be recreated automatically
 
 // Transfer layout between IDE instances
 const layout = await ide1.api.getLayoutState({ forTransfer: true });
 await ide2.api.setLayoutState(layout);
-// Only transferrable third-party panes transfer to the new instance
+// Only transferrable third-party views transfer to the new instance
 </code></pre>
-<h3 id="restoring">Restoring</h3><p><code>setLayoutState()</code> detaches the current layout, then walks the given state to ensure every pane it
+<h3 id="restoring">Restoring</h3><p><code>setLayoutState()</code> detaches the current layout, then walks the given state to ensure every view it
 names is present before rebuilding the tree:</p><ul>
-<li><strong>Built-in and static panes</strong> are opened on demand if they are not already open.</li>
-<li><strong>Third-party panes</strong> are recreated from their construction data (<code>contentParams</code>, together with
-<code>channel</code> and <code>params</code>). A pane already open under the same mnemonic is reused as-is, unless its
+<li><strong>Built-in and static views</strong> are opened on demand if they are not already open.</li>
+<li><strong>Third-party views</strong> are recreated from their construction data (<code>contentParams</code>, together with
+<code>channel</code> and <code>params</code>). A view already open under the same mnemonic is reused as-is, unless its
 <code>contentType</code> or <code>contentParams</code> differ from the state&#39;s — then it is closed and recreated.</li>
-<li><strong>A third-party entry carrying no construction data</strong> (<code>contentParams: null</code>, i.e. a pane opened
-<code>nonTransferrable</code>) cannot be recreated. It is honored only where a pane of that mnemonic is
+<li><strong>A third-party entry carrying no construction data</strong> (<code>contentParams: null</code>, i.e. a view opened
+<code>nonTransferrable</code>) cannot be recreated. It is honored only where a view of that mnemonic is
 already open; otherwise it is dropped.</li>
-</ul><p>A pane that cannot be reconstructed is dropped rather than failing the restore: the layout is built
-from whatever remains, and the user is alerted once with the list of panes that were dropped.</p><p>Recreating a pane is an <em>open</em>, so the participant calling <code>setLayoutState()</code> becomes the <code>creator</code>
-of every pane restored by that call — at the Plugin API boundary, <code>platform</code>, or <code>platform.&lt;agent&gt;</code>
+</ul><p>A view that cannot be reconstructed is dropped rather than failing the restore: the layout is built
+from whatever remains, and the user is alerted once with the list of views that were dropped.</p><p>Recreating a view is an <em>open</em>, so the participant calling <code>setLayoutState()</code> becomes the <code>creator</code>
+of every view restored by that call — at the Plugin API boundary, <code>platform</code>, or <code>platform.&lt;agent&gt;</code>
 when the platform restores on an agent&#39;s behalf. Provenance is never copied out of captured state: a
-restored pane&#39;s <code>creator</code> records who restored it rather than who opened it in the captured session,
+restored view&#39;s <code>creator</code> records who restored it rather than who opened it in the captured session,
 and its <code>origin</code>/<code>author</code> stamps are re-derived from the restored <code>contentUrl</code> (see
-<a href="Third_Party_Pane_API.md#wire-versioning-and-trust-stamps">Wire versioning and trust stamps</a> in the
-Third-Party Pane API).</p><h3 id="node-types">Node Types</h3><p>The layout tree consists of:</p><h4 id="flexsplit-node">FlexSplit Node</h4><p>Represents a resizable split (horizontal or vertical):</p><pre><code class="lang-typescript">{
+<a href="Third_Party_View_API.md#wire-versioning-and-trust-stamps">Wire versioning and trust stamps</a> in the
+Third-Party View API).</p><h3 id="node-types">Node Types</h3><p>The layout tree consists of:</p><h4 id="flexsplit-node">FlexSplit Node</h4><p>Represents a resizable split (horizontal or vertical):</p><pre><code class="lang-typescript">{
   sides: {
     left: LayoutNode,      // For horizontal splits
     right: LayoutNode,
@@ -107,64 +107,64 @@ Third-Party Pane API).</p><h3 id="node-types">Node Types</h3><p>The layout tree 
 </li>
 <li><strong><code>splitAt</code></strong>: Normalized position of the splitter (0.0 = far left/top, 1.0 = far right/bottom)</li>
 </ul>
-<h4 id="tabbedview-leaf-node">TabbedView (Leaf) Node</h4><p>Represents a tabbed container of panes:</p><pre><code class="lang-typescript">{
-  panes: Array&lt;string | ThirdPartyPaneObject&gt;,
-  activePane: string
+<h4 id="tabbedview-leaf-node">TabbedView (Leaf) Node</h4><p>Represents a tabbed container of views:</p><pre><code class="lang-typescript">{
+  views: Array&lt;string | ThirdPartyViewObject&gt;,
+  activeView: string
 }
 </code></pre>
 <ul>
-<li><strong><code>panes</code></strong>: Array of pane identifiers (see <a href="#pane-identifiers">Pane Identifiers</a>)</li>
-<li><strong><code>activePane</code></strong>: Mnemonic of the currently visible pane</li>
+<li><strong><code>views</code></strong>: Array of view identifiers (see <a href="#view-identifiers">View Identifiers</a>)</li>
+<li><strong><code>activeView</code></strong>: Mnemonic of the currently visible view</li>
 </ul>
-<h3 id="pane-identifiers">Pane Identifiers</h3><p>Entries in the <code>panes</code> array can be:</p><h4 id="string-mnemonic">String Mnemonic</h4><p>A pane mnemonic (string):</p><ul>
-<li>Built-in panes: <code>&quot;Log&quot;</code>, <code>&quot;Nav-TLV&quot;</code>, <code>&quot;Diagram&quot;</code>, <code>VIZ</code>, <code>&quot;Waveform&quot;</code></li>
-<li>Static panes: <code>&quot;Examples&quot;</code>, <code>&quot;Courses&quot;</code>, etc.</li>
-<li>Third-party panes accessed with <code>nonTransferrable: true</code>.</li>
+<h3 id="view-identifiers">View Identifiers</h3><p>Entries in the <code>views</code> array can be:</p><h4 id="string-mnemonic">String Mnemonic</h4><p>A view mnemonic (string):</p><ul>
+<li>Built-in views: <code>&quot;Log&quot;</code>, <code>&quot;Nav-TLV&quot;</code>, <code>&quot;Diagram&quot;</code>, <code>VIZ</code>, <code>&quot;Waveform&quot;</code></li>
+<li>Static views: <code>&quot;Examples&quot;</code>, <code>&quot;Courses&quot;</code>, etc.</li>
+<li>Third-party views accessed with <code>nonTransferrable: true</code>.</li>
 </ul>
-<h4 id="third-party-pane-object">Third-Party Pane Object</h4><p>A third-party pane accessed with a <code>forTransfer: true</code> option provides:</p><pre><code class="lang-typescript">{
+<h4 id="third-party-view-object">Third-Party View Object</h4><p>A third-party view accessed with a <code>forTransfer: true</code> option provides:</p><pre><code class="lang-typescript">{
   mnemonic: string,
   contentType: &quot;pdf&quot; | &quot;iframe&quot;,
   contentParams: {
     contentUrl: string
   } | null,
-  channel?: ChannelContract,   // present for a connected pane
-  params?: object              // present for a parameterized pane
+  channel?: ChannelContract,   // present for a connected view
+  params?: object              // present for a parameterized view
 }
 </code></pre>
 <ul>
-<li><strong><code>mnemonic</code></strong>: Unique pane identifier (may include <code>+XXX</code> suffix for uniquification)</li>
+<li><strong><code>mnemonic</code></strong>: Unique view identifier (may include <code>+XXX</code> suffix for uniquification)</li>
 <li><strong><code>contentType</code></strong>: Content renderer type</li>
-<li><strong><code>contentParams</code></strong>: Content-type-specific parameters (see <a href="Third_Party_Pane_API.md#content-parameters">Content parameters</a> in the Third-Party Pane API)<ul>
-<li><strong><code>null</code></strong> for non-transferrable panes (see <a href="Third_Party_Pane_API.md#options">Options</a>). Such an
-entry records the pane&#39;s position, but carries nothing to rebuild it from — see
+<li><strong><code>contentParams</code></strong>: Content-type-specific parameters (see <a href="Third_Party_View_API.md#content-parameters">Content parameters</a> in the Third-Party View API)<ul>
+<li><strong><code>null</code></strong> for non-transferrable views (see <a href="Third_Party_View_API.md#options">Options</a>). Such an
+entry records the view&#39;s position, but carries nothing to rebuild it from — see
 <a href="#restoring">Restoring</a></li>
 </ul>
 </li>
-<li><strong><code>channel</code></strong> / <strong><code>params</code></strong> (optional): the pane&#39;s persisted communication contract and pane-specific parameters (see <a href="Third_Party_Pane_API.md#options">Options</a> in the Third-Party Pane API)</li>
+<li><strong><code>channel</code></strong> / <strong><code>params</code></strong> (optional): the view&#39;s persisted communication contract and view-specific parameters (see <a href="Third_Party_View_API.md#options">Options</a> in the Third-Party View API)</li>
 </ul>
 <h3 id="layout-state-structure-example">Layout State Structure Example</h3>
 <pre><code class="lang-javascript">{
   sides: {
     left: {
-      panes: [&quot;Editor&quot;, &quot;Nav-TLV&quot;],
-      activePane: &quot;Editor&quot;
+      views: [&quot;Editor&quot;, &quot;Nav-TLV&quot;],
+      activeView: &quot;Editor&quot;
     },
     right: {
       sides: {
         top: {
-          panes: [
+          views: [
             &quot;Diagram&quot;,
-            { // transferrable third-party pane with construction data:
+            { // transferrable third-party view with construction data:
               mnemonic: &quot;User Guide&quot;,
               contentType: &quot;pdf&quot;,
               contentParams: {contentUrl: &quot;https://example.com/guide.pdf&quot;}
             }
           ],
-          activePane: &quot;Diagram&quot;
+          activeView: &quot;Diagram&quot;
         },
         bottom: {
-          panes: [&quot;Waveform&quot;, &quot;Log&quot;],
-          activePane: &quot;Waveform&quot;
+          views: [&quot;Waveform&quot;, &quot;Log&quot;],
+          activeView: &quot;Waveform&quot;
         }
       },
       splitAt: 0.6
@@ -176,7 +176,7 @@ entry records the pane&#39;s position, but carries nothing to rebuild it from �
 <li>Root horizontal split at 30%</li>
 <li>Left side: Tabs with Editor and Nav-TLV (Editor active)</li>
 <li>Right side: Vertical split at 60%<ul>
-<li>Top: Tabs with Diagram and third-party PDF pane (Diagram active)</li>
+<li>Top: Tabs with Diagram and third-party PDF view (Diagram active)</li>
 <li>Bottom: Tabs with Waveform and Log (Waveform active)</li>
 </ul>
 </li>

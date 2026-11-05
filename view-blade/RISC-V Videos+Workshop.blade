@@ -1,6 +1,6 @@
-include "pane_lib.blade"
+include "view_lib.blade"
 
-.mc-auto-pane-contents.mc-markdown#riscv-course
+.mc-auto-view-contents.mc-markdown#riscv-course
   h1
     | Building a Pipelined RISC-V CPU Core
   br
@@ -67,8 +67,8 @@ include "pane_lib.blade"
     p
       | You should set aside 20-30 hours to this course, depending on your
       | background. Shorter course options can be found in the
-      <a(href="#" onclick="ide.openPane('Courses', $(this))")
-        | "Courses" pane
+      <a(href="#" onclick="ide.openView('Courses', $(this))")
+        | "Courses" view
       | .
     
     h3
@@ -77,9 +77,9 @@ include "pane_lib.blade"
     .mc-tutorial-note
       .mc-note-body
         p
-          | The slides are available for reference in a separate pane. Note that slide numbers in the
+          | The slides are available for reference in a separate view. Note that slide numbers in the
           | videos are approximate.
-        button.btn.mc-tutorial-btn2(type="button" onclick="ide.openPane('RISC-V Slides+Workshop', $(this))")
+        button.btn.mc-tutorial-btn2(type="button" onclick="ide.openView('RISC-V Slides+Workshop', $(this))")
           | Open Slides
         p
 

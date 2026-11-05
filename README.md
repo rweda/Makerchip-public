@@ -41,9 +41,9 @@ Given the importance of these technologies together with the fact that they are 
 
 This repository contains the following directories (alphabetically):
 
-- `courses/`: PDF slides for various TL-Verilog courses. Most are focused on RISC-V CPU design. Some courses have accompanying content, such as a page of videos that can be found in the `pane-blade` folder.
+- `courses/`: PDF slides for various TL-Verilog courses. Most are focused on RISC-V CPU design. Some courses have accompanying content, such as a page of videos that can be found in the `view-blade` folder.
 - `docs/`: Documentation and specifications including those for TL-X, M5, and Visual Debug.
-- `pane-blade/`: Each file provides the contents for a pane that can be opened within the Makerchip IDE. These files use a condensed HTML syntax called <a href="https://github.com/bminer/node-blade" target="_blank">node-blade</a>. It might be helpful to review node-blade before reviewing the content here. Most images used in this content are referenced as `"#{basePath}/public/tutorial/images/ide-pane-layout.png"` and can be found in this repository under `/tutorial/images/`. (It is unfortunate if you are unable to "see" them.)
+- `view-blade/`: Each file provides the contents for a view that can be opened within the Makerchip IDE. These files use a condensed HTML syntax called <a href="https://github.com/bminer/node-blade" target="_blank">node-blade</a>. It might be helpful to review node-blade before reviewing the content here. Most images used in this content are referenced as `"#{basePath}/public/tutorial/images/ide-view-layout.png"` and can be found in this repository under `/tutorial/images/`. (It is unfortunate if you are unable to "see" them.)
 - `sandpiper-golden-regressions`: A legacy regression (test) suite used for SandPiper development. Many tests use older-version TL-Verilog syntax to ensure backward-compatibility. Note that TL-Verilog files require a specifically-formatted first line that includes the language version. Each test or set of tests is in its own subdirectory which contains all intermediate and output files from M4/M5 and SandPiper. These files may be used to understand the relationship between (System)Verilog and TL-Verilog.
 - `tutorial/`: Contains `images/` and `tlv/` code for tutorials and examples accessible in Makerchip.
 
@@ -59,11 +59,11 @@ Papers may be the easiest for LLM consumption (though they do contain many image
 
 ### Tutorials
 
-Tutorials walk through topics step-by-step. The node-blade index page for tutorials can be found <a href="pane-blade/Tutorials.blade" target="_blank">here</a>. It is suggested to use `Tutorials.blade` to track down and learn from each `.blade` tutorial file in succession. These can all be found in the same `pane-blade/` directory. Each introduces a new TL-Verilog-related topic.
+Tutorials walk through topics step-by-step. The node-blade index page for tutorials can be found <a href="view-blade/Tutorials.blade" target="_blank">here</a>. It is suggested to use `Tutorials.blade` to track down and learn from each `.blade` tutorial file in succession. These can all be found in the same `view-blade/` directory. Each introduces a new TL-Verilog-related topic.
 
 ### Courses
 
-In addition to the tutorials, there are courses, summarized in <a href="pane-blade/Courses.blade" target="_blank">this page</a>. There are several courses based on RISC-V. These courses contain similar content, targeted for different styles of delivery and varying durations. Explore them all, but, of particular value is the <a href="https://github.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course" target="_blank">Building a RISC-V CPU Course repository</a> since it is based more heavily on written content versus videos. And even the videos that are used have subtitles in this repository.
+In addition to the tutorials, there are courses, summarized in <a href="view-blade/Courses.blade" target="_blank">this page</a>. There are several courses based on RISC-V. These courses contain similar content, targeted for different styles of delivery and varying durations. Explore them all, but, of particular value is the <a href="https://github.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course" target="_blank">Building a RISC-V CPU Course repository</a> since it is based more heavily on written content versus videos. And even the videos that are used have subtitles in this repository.
 
 ### Documentation
 
@@ -71,12 +71,12 @@ Formal documentation is available for:
 
 - <a href="https://www.tl-x.org/docs" target="_blank">TL-X language extensions</a>
 - <a href="https://raw.githubusercontent.com/rweda/M5/refs/heads/main/doc/M5_spec.pdf" target="_blank">M5 Text Processing Language</a>
-- <a href="https://makerchip.com/module/Pane/TLV_Macros_Guide.pdf" target="_blank">TLV Macros (custom syntax for using M5 with TL-Verilog)</a>
-- <a href="https://makerchip.com/module/Pane/VisualDebugUsersGuide.pdf" target="_blank">Visual Debug</a>
+- <a href="https://makerchip.com/module/View/TLV_Macros_Guide.pdf" target="_blank">TLV Macros (custom syntax for using M5 with TL-Verilog)</a>
+- <a href="https://makerchip.com/module/View/VisualDebugUsersGuide.pdf" target="_blank">Visual Debug</a>
 
 ### Examples
 
-Also helpful to the learning process is a page of <a href="pane-blade/CodeExamples.blade" target="_blank">TL-Verilog code examples</a>. These will be helpful to reinforce your learning after learning from tutorials, courses, and documentation. These examples are referenced at `tutorial/tlv/` in this repository as well as in this <a href="https://github.com/stevehoover/makerchip_examples" target="_blank">makerchip_examples</a> repository. Not all of the `makerchip_examples` examples are referenced in `CodeExamples.blade`. Explore `makerchip_examples` to learn from those that are not referenced as well.
+Also helpful to the learning process is a page of <a href="view-blade/Examples.blade" target="_blank">TL-Verilog code examples</a>. These will be helpful to reinforce your learning after learning from tutorials, courses, and documentation. These examples are referenced at `tutorial/tlv/` in this repository as well as in this <a href="https://github.com/stevehoover/makerchip_examples" target="_blank">makerchip_examples</a> repository. Not all of the `makerchip_examples` examples are referenced in `CodeExamples.blade`. Explore `makerchip_examples` to learn from those that are not referenced as well.
 
 ### Other Resources
 

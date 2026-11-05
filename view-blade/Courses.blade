@@ -1,6 +1,6 @@
-include "pane_lib.blade"
+include "view_lib.blade"
 
-.mc-auto-pane-contents.mc-markdown.mc-dragover
+.mc-auto-view-contents.mc-markdown.mc-dragover
   a(name="top")
   h1
     | TL-Verilog Online Courses
@@ -72,7 +72,7 @@ include "pane_lib.blade"
   a(name="riscv")
   h2
     | RISC-V CPU Design Courses
-  img.mc-figure-body(src="#{basePath}/module/Pane/risc-v_impl.png", style="width: 50%")
+  img.mc-figure-body(src="#{basePath}/module/View/risc-v_impl.png", style="width: 50%")
   a(name="riscv-overview")
   h3
     | Overview
@@ -183,7 +183,7 @@ include "pane_lib.blade"
     | .
   p
     a(href="https://www.youtube.com/watch?v=EeHK3Jbgv2s", target="_blank", style="display: block; text-align: center")
-      img(src="#{basePath}/module/Pane/FEDEVEL_CPU_walkthrough.png", alt="How Does a CPU Work and How To Create Your Own Processor", style="max-width: 560px; width: 100%; cursor: pointer")
+      img(src="#{basePath}/module/View/FEDEVEL_CPU_walkthrough.png", alt="How Does a CPU Work and How To Create Your Own Processor", style="max-width: 560px; width: 100%; cursor: pointer")
 
   a(name="vsdopen")
   h3
@@ -201,7 +201,7 @@ include "pane_lib.blade"
       | course videos in YouTube
     | .)
   p
-    button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV('#{mnemonic}', 1, '#{basePath}/module/IDE/default.tlv'); ide.openPane('VSDOpen Slides+2020', true); ide.openPane('VSDOpen Videos+2020', $(this))")
+    button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV('#{mnemonic}', 1, '#{basePath}/module/IDE/default.tlv'); ide.openView('VSDOpen Slides+2020', true); ide.openView('VSDOpen Videos+2020', $(this))")
       | Start Course
   
   a(name="chipexpo")
@@ -219,14 +219,14 @@ include "pane_lib.blade"
       | course videos in YouTube
     | .)
   p
-    button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV('#{mnemonic}', 1, '#{basePath}/module/IDE/default.tlv'); ide.openPane('ChipEXPO Slides+2021', true); ide.openPane('ChipEXPO Videos+2021', $(this))")
+    button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV('#{mnemonic}', 1, '#{basePath}/module/IDE/default.tlv'); ide.openView('ChipEXPO Slides+2021', true); ide.openView('ChipEXPO Videos+2021', $(this))")
       | Start Course
   
   a(name="edx")
   h3
     | Building a RISC-V CPU Core
   p
-    img.mc-figure-body(src="#{basePath}/module/Pane/LF_EdX_course.png", style="width: 40%")
+    img.mc-figure-body(src="#{basePath}/module/View/LF_EdX_course.png", style="width: 40%")
   p
     | In this EdX Course offered by the Linux Foundation and RISC-V International, you can build a single-cycle CPU that nearly implements the complete RV32I
     | (baseline RISC-V) instruction set. While the other courses are based on video content, this one
@@ -239,7 +239,7 @@ include "pane_lib.blade"
   h3
     | Microprocessor for You in Thirty Hours (MYTH) Workshop
   p
-    img.mc-figure-body(src="#{basePath}/module/Pane/myth_banner.png", style="width: 55%")
+    img.mc-figure-body(src="#{basePath}/module/View/myth_banner.png", style="width: 55%")
   p
     | The
     <a>.mc-extern(href="https://www.vlsisystemdesign.com/riscv-based-myth/", target="_blank")
@@ -299,7 +299,7 @@ include "pane_lib.blade"
       | (then come back to this tab).
     li
       | Click to
-      button.btn.mc-tutorial-btn(type="button" onclick="ide.openPane('MYTH Slides+Workshop', true); ide.openPane('MYTH Videos+Workshop', $(this))")
+      button.btn.mc-tutorial-btn(type="button" onclick="ide.openView('MYTH Slides+Workshop', true); ide.openView('MYTH Videos+Workshop', $(this))")
         | Open Slides and Videos
       | , and start watching.
 
@@ -311,7 +311,7 @@ include "pane_lib.blade"
     i
       | This course is under development. But you can explore its interactive environment below, in early preview.
   p
-    img.mc-figure-body(src="#{basePath}/module/Pane/CE_WARP-V.png", style="width: 70%")
+    img.mc-figure-body(src="#{basePath}/module/View/CE_WARP-V.png", style="width: 70%")
   p
     | This course connects four stages of a program's journey from software to silicon, all within
     | Makerchip:
@@ -389,7 +389,7 @@ include "pane_lib.blade"
   h3
     | Pipelining RISC-V with Transaction-Level Verilog
   p
-    img.mc-figure-body(src="#{basePath}/module/Pane/udemy.jpg", style="width: 50%")
+    img.mc-figure-body(src="#{basePath}/module/View/udemy.jpg", style="width: 50%")
   p
     a>.mc-extern(href="https://www.udemy.com/course/1549918", target="_blank")
       | Pipelining RISC-V with Transaction-Level Verilog:
@@ -401,7 +401,7 @@ include "pane_lib.blade"
   p
     | Set in the context of RISC-V, this training covers various topics of TL-Verilog with lab exercises.
   p
-    button.btn.mc-tutorial-btn(type="button" onclick="ide.openPane('Course Slides+Udemy', $(this))")
+    button.btn.mc-tutorial-btn(type="button" onclick="ide.openView('Course Slides+Udemy', $(this))")
       | Open Slides
 
   a(name="texas-am")
@@ -412,7 +412,7 @@ include "pane_lib.blade"
     | highlighting the benefits of timing abstraction and transaction-level design for simplifying test harness
     | construction and for making verification collateral more resilient to design changes.
   p
-    button.btn.mc-tutorial-btn(type="button" onclick="ide.openPane('Verif Slides+TAMU', $(this))")
+    button.btn.mc-tutorial-btn(type="button" onclick="ide.openView('Verif Slides+TAMU', $(this))")
       | Open Slides
   call video_media("TL-Verilog_for_Verification_1hr.mp4", "https://www.youtube.com/watch?v=BIwpN7za95M")
   p
@@ -435,7 +435,7 @@ include "pane_lib.blade"
     | In this 2-hour tutorial session in Silicon Institute of Technology's NES 2020 Conference, Steve Hoover introduces TL-Verilog and Makerchip.
   p
     a(href="https://www.youtube.com/watch?v=_FFmJZPz6aM&t=1456s", target="_blank", style="display: block; text-align: center")
-      img(src="#{basePath}/module/Pane/NES-2020.png", alt="NES 2020 Tutorial Session", style="max-width: 560px; width: 100%; cursor: pointer")
+      img(src="#{basePath}/module/View/NES-2020.png", alt="NES 2020 Tutorial Session", style="max-width: 560px; width: 100%; cursor: pointer")
   p
     i
       | Note: The original session starts at 24:16.
@@ -447,7 +447,7 @@ include "pane_lib.blade"
     i
       | Invited Session, 57th Design Automation Conference, July 2020
   p
-    img.mc-figure-body(src="#{basePath}/module/Pane/DAC_heads.png", style="width: 50%")
+    img.mc-figure-body(src="#{basePath}/module/View/DAC_heads.png", style="width: 50%")
   p
     | For this session, Steve Hoover called upon fellow innovators, Jan Kuper and Jose Renau, to showcase to
     | the industry the breadth of opportunity that exists between RTL and high-level synthesis. The session

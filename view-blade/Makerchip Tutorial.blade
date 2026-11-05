@@ -1,4 +1,4 @@
-.mc-auto-pane-contents.mc-markdown
+.mc-auto-view-contents.mc-markdown
   a(name="top")
   :markdown
     # Intro to #{appConfig.product}
@@ -61,7 +61,7 @@
   a(name="ide")
   h2 IDE
   p
-    | The IDE contains multiple panels, each containing tabbed panes. Panes can be moved
+    | The IDE contains multiple panels, each containing tabbed views. Views can be moved
     | between panels or into new panels by dragging their tabs over tab bars or panels. Drag
     | to a panel's edge to split the panel. Drag tabs out of a panel to auto-close it.
   .mc-tutorial-step
@@ -69,7 +69,7 @@
       p
         | Create the layout below by dragging tabs.
   .mc-tutorial-figure
-    img.mc-figure-body(width="400" src="#{basePath}/public/tutorial/images/ide-pane-layout.png")
+    img.mc-figure-body(width="400" src="#{basePath}/public/tutorial/images/ide-view-layout.png")
     .mc-figure-caption
       span
         i Figure 1
@@ -79,7 +79,7 @@
       p
         | Resize the panels by dragging the splitter bars between the panels.
   p
-    | You have the following panes:
+    | You have the following views:
   ul
     li
       b Editor
@@ -108,7 +108,7 @@
   .mc-tutorial-step
     .mc-step-body
       p
-        | Re-compile and simulate your model from the "Editor" pane under the "E" dropdown menu.
+        | Re-compile and simulate your model from the "Editor" view under the "E" dropdown menu.
         | (or Ctrl-Enter while editing).
   p
     | You'll see symbols like the following in the tabs, indicating the status of the compilation/simulation.
@@ -119,7 +119,7 @@
       i.fa.fa-circle(style="color: #2853ff; font-size: 8px; position: relative; top: -3px")
       | : Outdated. Unsaved changes in Editor.
   p
-    | Debug pane tabs (Nav-TLV, Diagram, Waveform, Viz) show:
+    | Debug view tabs (Nav-TLV, Diagram, Waveform, Viz) show:
   ul
     li
       i.fa.fa-spinner(style="color: #000090")
@@ -129,10 +129,10 @@
       | : Success. Compilation/simulation passed.
     li
       i.fa.fa-times(style="color: #b00808")
-      | : Failure. This pane's result could not be produced by the last compilation/simulation.
+      | : Failure. This view's result could not be produced by the last compilation/simulation.
     li
       i.fa.fa-ban(style="color: #888")
-      | : Irrelevant. This pane doesn't apply to the last compilation, so any content shown is stale.
+      | : Irrelevant. This view doesn't apply to the last compilation, so any content shown is stale.
       |  (e.g. Verilog compilation does not produce NAV-TLV, DIAGRAM, or VIZ.)
     li
       i.fa.fa-regular.fa-clock(style="color: #b00808")
@@ -170,12 +170,12 @@
   p
     | After compilation, check for LOG errors/warnings first. If compilation was successful,
     | you can navigate the design you have created in the "Nav TLV" and "Diagram"
-    | panes. You can debug simulation with the Waveform pane. Various TL-Verilog design elements of these
-    | panes are selectable and will highlight across panes to help correlate design elements.
+    | views. You can debug simulation with the Waveform view. Various TL-Verilog design elements of these
+    | views are selectable and will highlight across views to help correlate design elements.
     | Use Ctrl-click to highlight multiple elements.
 
   a(name="features")
-  h2 The Panes
+  h2 The Views
 
   h3 Editor
   p
@@ -190,7 +190,7 @@
       | : Compile and simulate the design. This can also be invoked with Ctrl-Enter.
     li
       b Show Verilog
-      | : Shows the last compiled Verilog results in a new browser pane, along with some
+      | : Shows the last compiled Verilog results in a new browser view, along with some
       | statistics about your TL-Verilog and Verilog code.
   .mc-tutorial-step
     .mc-step-body
@@ -215,10 +215,10 @@
       p
         | Glance through the MIPS example. Within the 
         <span>.tlv_ident_keyword1.mc-ident-font \TLV 
-        | section, click design elements to see them highlight across panes.
+        | section, click design elements to see them highlight across views.
   p
     | TL-Verilog supports parameterization and code construction using macro preprocessing
-    | using the M5 macro preprocessor. The Nav TLV pane shows the TL-Verilog after macro expansion.
+    | using the M5 macro preprocessor. The Nav TLV view shows the TL-Verilog after macro expansion.
   .mc-tutorial-step
     .mc-step-body
       p
@@ -231,11 +231,11 @@
   .mc-tutorial-step
     .mc-step-body
       p
-        | Zoom and pan in the Diagram. Click elements of the diagram to highlight across panes.
+        | Zoom and pan in the Diagram. Click elements of the diagram to highlight across views.
   
   h3 Waveform Viewer
   p
-    | The waveform pane lists the signals (actually “pipesignals” as you’ll see in
+    | The waveform view lists the signals (actually “pipesignals” as you’ll see in
     | the next tutorial) of your design in their hierarchy. Hierarchy levels can be collapsed and expanded.
     | (Signals cannot currently be reordered.)
   .mc-tutorial-step
@@ -250,21 +250,21 @@
     <i(class="fa fa-video-camera")
 
   p
-    | The Waveform pane and the VIZ pane (if in use) present simulation data. The Nav TLV and Diagram
-    | panes support a "live" mode. When enable (using the
+    | The Waveform view and the VIZ view (if in use) present simulation data. The Nav TLV and Diagram
+    | views support a "live" mode. When enable (using the
     <i>(class="fa fa-video-camera")
     | icon) these views are annotated with
-    | simulation data, representing the state of the model at a particular cycle. The VIZ pane
+    | simulation data, representing the state of the model at a particular cycle. The VIZ view
     | is always a live view of the simulation state.
   p
-    | Live panes are linked to a common simulation time, each with their own slider to control the
-    | time, and play/pause buttons. This time is also reflected in the Waveform pane as a white
+    | Live views are linked to a common simulation time, each with their own slider to control the
+    | time, and play/pause buttons. This time is also reflected in the Waveform view as a white
     | vertical line, or "cursor". This cursor can be dragged by its handle in the ruler area.
   .mc-tutorial-step
     .mc-step-body
       p
-        | Try live mode and controls in the Nav-TLV, Diagram, and VIZ panes as well as dragging
-        | the cursor in the Waveform pane.
+        | Try live mode and controls in the Nav-TLV, Diagram, and VIZ views as well as dragging
+        | the cursor in the Waveform view.
 
   a(name="tools")
   h2 Tools
@@ -293,17 +293,17 @@
       | : Simulation in Verilator generally runs faster than popular commercial simulators.
     li
       b Navigation
-      | : "Diagram" and "Nav TLV" panes are produced by SandPiper with the help of an
+      | : "Diagram" and "Nav TLV" views are produced by SandPiper with the help of an
       | open source tool called
       <a.mc-extern(href="http://www.graphviz.org", target="_blank")
         | graphviz
       | .
     li
       b Waveform viewing
-      | : The waveform pane is a custom viewer specifically for #{appConfig.product} that
+      | : The waveform view is a custom viewer specifically for #{appConfig.product} that
       | is aware of TL-Verilog constructs.
   .mc-tutorial-figure
-    img.mc-figure-body(width="600px" src="#{basePath}/module/Pane/MakerchipFlow.svg")
+    img.mc-figure-body(width="600px" src="#{basePath}/module/View/MakerchipFlow.svg")
     .mc-figure-caption
       span
         | Makerchip Tool Flow
@@ -324,7 +324,7 @@
     .mc-note-body
       p
         | Some pipesignals are replicated multiple times in the design. These multiple values may not
-        | be visible in the Nav TLV and Diagram panes.
+        | be visible in the Nav TLV and Diagram views.
   .mc-tutorial-step
     .mc-step-body
       p

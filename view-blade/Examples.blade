@@ -1,6 +1,6 @@
-include "pane_lib.blade"
+include "view_lib.blade"
 
-.mc-auto-pane-contents.mc-markdown.mc-dragover
+.mc-auto-view-contents.mc-markdown.mc-dragover
   a(name="top")
   h1
     | Examples
@@ -403,9 +403,9 @@ include "pane_lib.blade"
       | warp-v.org
     | .
   p
-    img(width=300 src="#{basePath}/module/Pane/WARP-V.png")
+    img(width=300 src="#{basePath}/module/View/WARP-V.png")
   .mc-tutorial-figure
-    img.mc-figure-body.resize-300(src="#{basePath}/module/Pane/WARP-V_4stage.png")
+    img.mc-figure-body.resize-300(src="#{basePath}/module/View/WARP-V_4stage.png")
     .mc-figure-caption
   button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"https://cdn.jsdelivr.net/gh/stevehoover/warp-v@master/warp-v.tlv\")")
     | Latest WARP-V (VIZ)

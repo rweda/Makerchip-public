@@ -1,6 +1,6 @@
-include "pane_lib.blade"
+include "view_lib.blade"
 
-.mc-auto-pane-contents.mc-markdown#riscv-course
+.mc-auto-view-contents.mc-markdown#riscv-course
   a(name="top")
   
   h1
@@ -217,7 +217,7 @@ include "pane_lib.blade"
         | Your challenge is simply to reproduce the screenshot below (or close to it).
 
       .mc-tutorial-figure
-        img.mc-figure-body(width="512" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/Makerchip_IDE.png" alt="A screenshot of the Makerchip IDE with four panes showing: NAV-TLV, LOG, DIAGRAM, and WAVEFORM. The circuit is a pipelined Pythagorean theorem implementation with pipesignal $bb_sq highlighted.")
+        img.mc-figure-body(width="512" src="https://raw.githubusercontent.com/stevehoover/LF-Building-a-RISC-V-CPU-Core-Course/main/images/Makerchip_IDE.png" alt="A screenshot of the Makerchip IDE with four views showing: NAV-TLV, LOG, DIAGRAM, and WAVEFORM. The circuit is a pipelined Pythagorean theorem implementation with pipesignal $bb_sq highlighted.")
         .mc-figure-caption
           span
             i Makerchip Screenshot
@@ -240,7 +240,7 @@ include "pane_lib.blade"
       .mc-tutorial-step
         .mc-step-body
           p
-            | Split panes and move tabs between panes.
+            | Split tabbed views and move tabs between them.
 
       .mc-tutorial-step
         .mc-step-body
@@ -496,7 +496,7 @@ include "pane_lib.blade"
           .mc-step-body
             p
               | Find the logic expression for your inverter in the DIAGRAM in a mouse-over pop-up. Select the
-              | expression in the DIAGRAM and observe the highlighting in other panes.
+              | expression in the DIAGRAM and observe the highlighting in other views.
         
         call tutorial_subsubsubsection("Lab Solution", "lab-inverter-solution")
         .collapse#lab-inverter-solution
@@ -1283,7 +1283,7 @@ include "pane_lib.blade"
         .mc-tutorial-step
           .mc-step-body
             p
-              | You should now see a calculator in the VIZ pane. If necessary, debug the LOG. In NAV-TLV the 
+              | You should now see a calculator in the VIZ view. If necessary, debug the LOG. In NAV-TLV the 
               code m4_include_lib
               |  line should have turned into a comment, and the 
               code m4+calc_viz()
@@ -1308,7 +1308,7 @@ include "pane_lib.blade"
           | Typically, you would create your own custom visualizations as you develop your circuit, so you
           | can see the big picture simulation behavior more easily. In this course, you will focus on the
           | hardware logic, and we provide visualization for you. If you are curious, though, you can see the
-          | visualization code in the NAV-TLV pane, where macros are expanded.
+          | visualization code in the NAV-TLV view, where macros are expanded.
         
         call tutorial_subsubsubsection("Lab Solution", "lab-visual-debug-solution")
         .collapse#lab-visual-debug-solution
@@ -1383,7 +1383,7 @@ include "pane_lib.blade"
             |       // LOG.
             |       //
             |       // To see the expansion of this macro, look in the NAV-TLV
-            |       // pane. This macro also provides a random vector that can
+            |       // view. This macro also provides a random vector that can
             |       // be used for stimulus and it provides some Verilator
             |       // configuration.
             | \TLV
@@ -2231,7 +2231,7 @@ include "pane_lib.blade"
         | is our assumption.
       p
         | We’ll start by implementing enough of the CPU to execute our test program. As you add each new
-        | piece of functionality, you will see in the VIZ pane the behavior you implemented, with more
+        | piece of functionality, you will see in the VIZ view the behavior you implemented, with more
         | and more of the test program executing correctly until it is successfully summing numbers from
         | one to nine. Then we’ll go back to implement support for the bulk of the RV32I instruction set.
       p

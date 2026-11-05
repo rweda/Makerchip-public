@@ -38,7 +38,11 @@
       <div id='filecontents'>
         <h1 id="release-notes">Release Notes</h1><p>Version history for the Makerchip Plugin API, tracked by the static
 <code>IdePlugin.version</code> property. The API follows semantic versioning: the major
-version is bumped for breaking (backward-incompatible) changes.</p><h2 id="2-0-0">2.0.0</h2><p><strong>Breaking:</strong> instances are now created with the static <code>IdePlugin.create()</code>
+version is bumped for breaking (backward-incompatible) changes.</p><h2 id="2-1-0">2.1.0</h2><p>&quot;Panes&quot; are now <strong>views</strong>, matching common IDE terminology. Methods and layout-state keys are renamed
+accordingly: <code>openPane</code> → <code>openView</code>, <code>activatePane</code> → <code>activateView</code>, <code>openThirdPartyPane</code> →
+<code>openThirdPartyView</code>, <code>reservePane</code> → <code>reserveView</code>, <code>getAvailablePanes</code> → <code>getAvailableViews</code>,
+<code>fitPane</code> → <code>fitView</code>, <code>callPane</code> → <code>callView</code>, and <code>panes</code>/<code>activePane</code> → <code>views</code>/<code>activeView</code>.
+The old names remain as deprecated aliases, and layout state using the old keys is still accepted.</p><h2 id="2-0-0">2.0.0</h2><p><strong>Breaking:</strong> instances are now created with the static <code>IdePlugin.create()</code>
 factory instead of a promise-returning constructor.</p><pre><code class="lang-javascript">// Before (1.x)
 const ide = await new MyIDE(&#39;my-makerchip&#39;);
 

@@ -52,6 +52,7 @@
         <dd class='desc'>
           Semantic version of the IdePlugin API. 2.0.0: instances are created via the static <a href='../class/IdePlugin.html#create-static'>IdePlugin.create</a> factory; the
 constructor no longer returns a Promise (breaking change from 1.x).
+2.1.0: &quot;pane&quot; methods and layout-state keys renamed to &quot;view&quot; (old names deprecated).
 
         </dd>
         <dt id='API_METHODS-property'>
@@ -103,6 +104,29 @@ are described as &quot;Public API method to...&quot; in their descriptions.
 
         </dd>
       </dl>
+      <h2>Variables Summary</h2>
+      <dl class='constants'>
+  <dt id='LEGACY_API_NAMES-variable'>
+    LEGACY_API_NAMES
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>{
+  openPane: &#39;openView&#39;,
+  activatePane: &#39;activateView&#39;,
+  openThirdPartyPane: &#39;openThirdPartyView&#39;,
+  reservePane: &#39;reserveView&#39;,
+  getAvailablePanes: &#39;getAvailableViews&#39;,
+  fitPane: &#39;fitView&#39;,
+  callPane: &#39;callView&#39;
+}</code></pre>
+    <div class='docstring'>
+  <p>Remove per issues/035-view-nomenclature.md.</p>
+</div>
+<div class='tags'>
+</div>
+  </dd>
+</dl>
       <h2>Class Method Summary</h2>
       <ul class='summary'>
   <li>
@@ -171,50 +195,50 @@ are described as &quot;Public API method to...&quot; in their descriptions.
   </li>
   <li>
     <span class='signature'>
-      <a href='#openPane-dynamic'>
+      <a href='#openView-dynamic'>
         #
 (Promise&lt;boolean&gt;)
-<b>openPane</b><span>(name, background = false)</span>
+<b>openView</b><span>(name, background = false)</span>
       </a>
     </span>
     <span class='desc'>
-      Public API method to open a static pane by name. 
+      Public API method to open a static view by name. 
     </span>
   </li>
   <li>
     <span class='signature'>
-      <a href='#activatePane-dynamic'>
+      <a href='#activateView-dynamic'>
         #
 (Promise&lt;void&gt;)
-<b>activatePane</b><span>(name)</span>
+<b>activateView</b><span>(name)</span>
       </a>
     </span>
     <span class='desc'>
-      Public API method to activate an existing pane by its name/mnemonic. 
+      Public API method to activate an existing view by its name/mnemonic. 
     </span>
   </li>
   <li>
     <span class='signature'>
-      <a href='#openThirdPartyPane-dynamic'>
+      <a href='#openThirdPartyView-dynamic'>
         #
 (Promise&lt;String&gt;)
-<b>openThirdPartyPane</b><span>(mnemonic, contentType, contentParams, options)</span>
+<b>openThirdPartyView</b><span>(mnemonic, contentType, contentParams, options)</span>
       </a>
     </span>
     <span class='desc'>
-      Public API method to open a third-party-provided pane with external content. 
+      Public API method to open a third-party-provided view with external content. 
     </span>
   </li>
   <li>
     <span class='signature'>
-      <a href='#reservePane-dynamic'>
+      <a href='#reserveView-dynamic'>
         #
 (Promise&lt;String&gt;)
-<b>reservePane</b><span>(mnemonic)</span>
+<b>reserveView</b><span>(mnemonic)</span>
       </a>
     </span>
     <span class='desc'>
-      Public API method to reserve a (uniquified) pane mnemonic ahead of opening it. 
+      Public API method to reserve a (uniquified) view mnemonic ahead of opening it. 
     </span>
   </li>
   <li>
@@ -231,14 +255,14 @@ are described as &quot;Public API method to...&quot; in their descriptions.
   </li>
   <li>
     <span class='signature'>
-      <a href='#callPane-dynamic'>
+      <a href='#callView-dynamic'>
         #
 (Promise)
-<b>callPane</b><span>(mnemonic, method, args, timeoutMs)</span>
+<b>callView</b><span>(mnemonic, method, args, timeoutMs)</span>
       </a>
     </span>
     <span class='desc'>
-      Public API method to call a method on a connected third-party pane and await its result (host-&gt;pane RPC).
+      Public API method to call a method on a connected third-party view and await its result (host-&gt;view RPC).
 
     </span>
   </li>
@@ -275,7 +299,7 @@ are described as &quot;Public API method to...&quot; in their descriptions.
       </a>
     </span>
     <span class='desc'>
-      Public API method to export the VIZ pane visualization as an image. 
+      Public API method to export the VIZ view visualization as an image. 
     </span>
   </li>
   <li>
@@ -312,32 +336,32 @@ are described as &quot;Public API method to...&quot; in their descriptions.
       </a>
     </span>
     <span class='desc'>
-      Compute an absolute contain-fit keyframe that frames the whole design for a target recording size (fits the design&#39;s bounding box to width x height, centered), WITHOUT changing the current view.
+      Compute an absolute contain-fit keyframe that frames the whole design for a target recording size (fits the design&#39;s bounding box to width x height, centered), WITHOUT changing the current camera.
 
     </span>
   </li>
   <li>
     <span class='signature'>
-      <a href='#getAvailablePanes-dynamic'>
+      <a href='#getAvailableViews-dynamic'>
         #
 (Promise&lt;Array&lt;Object&gt;&gt;)
-<b>getAvailablePanes</b><span>()</span>
+<b>getAvailableViews</b><span>()</span>
       </a>
     </span>
     <span class='desc'>
-      Public API method to get all available panes. 
+      Public API method to get all available views. 
     </span>
   </li>
   <li>
     <span class='signature'>
-      <a href='#fitPane-dynamic'>
+      <a href='#fitView-dynamic'>
         #
 (Promise&lt;Boolean&gt;)
-<b>fitPane</b><span>(mnemonic)</span>
+<b>fitView</b><span>(mnemonic)</span>
       </a>
     </span>
     <span class='desc'>
-      Public API method to fit the content of a named pane to its viewport. 
+      Public API method to fit the content of a named view to its viewport. 
     </span>
   </li>
   <li>
@@ -421,7 +445,7 @@ are described as &quot;Public API method to...&quot; in their descriptions.
       </a>
     </span>
     <span class='desc'>
-      Public API method to enable or disable live mode for a specific pane. 
+      Public API method to enable or disable live mode for a specific view. 
     </span>
   </li>
   <li>
@@ -519,7 +543,7 @@ are described as &quot;Public API method to...&quot; in their descriptions.
       </a>
     </span>
     <span class='desc'>
-      Called when user clicks on a line number in Nav-TLV or ErrorLog panes. 
+      Called when user clicks on a line number in Nav-TLV or ErrorLog views. 
     </span>
   </li>
 </ul>
@@ -654,7 +678,7 @@ Note that contruction should be done via the <code>create()</code> factory, whic
         )
       </span>
       &mdash;
-      <span class='desc'>Whether to include Editor pane (default: true). When false, platform provides code via compile() calls. </span>
+      <span class='desc'>Whether to include Editor view (default: true). When false, platform provides code via compile() calls. </span>
     </li>
     <li>
       <span class='name'>defaultDarkMode</span>
@@ -853,20 +877,20 @@ If the code hasn&#39;t changed since that generation, the method returns null fo
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='openPane-dynamic'>
+    <p class='signature' id='openView-dynamic'>
       #
 (Promise&lt;boolean&gt;)
-<b>openPane</b><span>(name, background = false)</span>
+<b>openView</b><span>(name, background = false)</span>
       <br>
     </p>
     <div class='docstring'>
-  <p>Public API method to open a static pane by name.
-Static panes include documentation, tutorials, and reference materials.</p><p>Available panes include:</p><ul>
+  <p>Public API method to open a static view by name.
+Static views include documentation, tutorials, and reference materials.</p><p>Available views include:</p><ul>
 <li>&quot;About&quot;, &quot;Help&quot; - General information</li>
 <li>&quot;Tutorials&quot;, &quot;Code-Examples&quot; - Learning resources</li>
 <li>&quot;Courses&quot; - Course materials</li>
 <li>&quot;Settings&quot; - IDE settings</li>
-<li>Various tutorial-specific panes and PDF documents</li>
+<li>Various tutorial-specific views and PDF documents</li>
 </ul>
 
 </div>
@@ -881,7 +905,7 @@ Static panes include documentation, tutorials, and reference materials.</p><p>Av
         )
       </span>
       &mdash;
-      <span class='desc'>The name/mnemonic of the static pane </span>
+      <span class='desc'>The name/mnemonic of the static view </span>
     </li>
     <li>
       <span class='name'>background</span>
@@ -908,16 +932,16 @@ Static panes include documentation, tutorials, and reference materials.</p><p>Av
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='activatePane-dynamic'>
+    <p class='signature' id='activateView-dynamic'>
       #
 (Promise&lt;void&gt;)
-<b>activatePane</b><span>(name)</span>
+<b>activateView</b><span>(name)</span>
       <br>
     </p>
     <div class='docstring'>
-  <p>Public API method to activate an existing pane by its name/mnemonic.
-This only works for panes that are already opened. The pane will be brought to the front
-in its tabbed view.</p><p>Common pane names include:</p><ul>
+  <p>Public API method to activate an existing view by its name/mnemonic.
+This only works for views that are already opened. The view will be brought to the front
+in its tabbed view.</p><p>Common view names include:</p><ul>
 <li>&quot;Editor&quot; - Code editor</li>
 <li>&quot;Diagram&quot; - Block diagram visualization</li>
 <li>&quot;Viz&quot; - Visual debug</li>
@@ -938,7 +962,7 @@ in its tabbed view.</p><p>Common pane names include:</p><ul>
         )
       </span>
       &mdash;
-      <span class='desc'>The name of the pane as it appears in the panes&#39;s tab (though case-sensitive) </span>
+      <span class='desc'>The name of the view as it appears in the views&#39;s tab (though case-sensitive) </span>
     </li>
   </ul>
   <h3>Throws:</h3>
@@ -949,7 +973,7 @@ in its tabbed view.</p><p>Common pane names include:</p><ul>
         <tt>Error</tt>
       )
       &mdash;
-      <span class='desc'>If pane not found or not opened </span>
+      <span class='desc'>If view not found or not opened </span>
     </li>
   </ul>
   <h3>Returns:</h3>
@@ -960,28 +984,28 @@ in its tabbed view.</p><p>Common pane names include:</p><ul>
         <tt>Promise&lt;void&gt;</tt>
       )
       &mdash;
-      <span class='desc'>Promise that resolves when pane is activated </span>
+      <span class='desc'>Promise that resolves when view is activated </span>
     </li>
   </ul>
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='openThirdPartyPane-dynamic'>
+    <p class='signature' id='openThirdPartyView-dynamic'>
       #
 (Promise&lt;String&gt;)
-<b>openThirdPartyPane</b><span>(mnemonic, contentType, contentParams, options)</span>
+<b>openThirdPartyView</b><span>(mnemonic, contentType, contentParams, options)</span>
       <br>
     </p>
     <div class='docstring'>
-  <p>Public API method to open a third-party-provided pane with external content.
-This enables platforms to inject custom panes into the IDE.
-Panes are provided by the embedding platform (e.g., VS Code extension, web app).</p><p>Currently supports:</p><ul>
-<li>&quot;pdf&quot; - Display a PDF document via URL. The viewer&#39;s own origin check is disabled, but the sandbox CSP still governs the fetch (<code>connect-src &#39;self&#39; https: blob:</code>), so <code>https:</code>, <code>blob:</code> and same-origin URLs work. <code>file://</code> does NOT: browsers block local-file loads from an <code>http(s)</code> document beneath CSP, so no CSP change can enable it (see <code>doc-src/plugin/Third_Party_Pane_API.md</code>). Pass a <code>blob:</code> URL to present local bytes.</li>
+  <p>Public API method to open a third-party-provided view with external content.
+This enables platforms to inject custom views into the IDE.
+Views are provided by the embedding platform (e.g., VS Code extension, web app).</p><p>Currently supports:</p><ul>
+<li>&quot;pdf&quot; - Display a PDF document via URL. The viewer&#39;s own origin check is disabled, but the sandbox CSP still governs the fetch (<code>connect-src &#39;self&#39; https: blob:</code>), so <code>https:</code>, <code>blob:</code> and same-origin URLs work. <code>file://</code> does NOT: browsers block local-file loads from an <code>http(s)</code> document beneath CSP, so no CSP change can enable it (see <code>doc-src/plugin/Third_Party_View_API.md</code>). Pass a <code>blob:</code> URL to present local bytes.</li>
 <li>&quot;iframe&quot; - Embed external web content via URL</li>
-</ul><p>All third-party panes are closable by default.</p><p>The mnemonic is automatically uniquified if there&#39;s a collision with existing
-panes (based on sanitized HTML ID). Uniquification appends +# or -#</p><p>Third-party panes are always included in layout state. Recoverable panes (default)
-include full creation data and can be automatically recreated. Non-recoverable panes
-are tracked with null (position visible, but can&#39;t be recreated if not present).</p><pre><code>Recoverable panes retain the contentParams and can provide it in layout state (see `getLayoutState()`)
+</ul><p>All third-party views are closable by default.</p><p>The mnemonic is automatically uniquified if there&#39;s a collision with existing
+views (based on sanitized HTML ID). Uniquification appends +# or -#</p><p>Third-party views are always included in layout state. Recoverable views (default)
+include full creation data and can be automatically recreated. Non-recoverable views
+are tracked with null (position visible, but can&#39;t be recreated if not present).</p><pre><code>Recoverable views retain the contentParams and can provide it in layout state (see `getLayoutState()`)
 to enable automatic recreation in another IDE instance.
 </code></pre>
   <div class='examples'>
@@ -990,12 +1014,12 @@ to enable automatic recreation in another IDE instance.
       
     </h4>
     <pre><code class='coffeescript'># Open a PDF document
-ide.api.openThirdPartyPane(&quot;My Guide&quot;, &quot;pdf&quot;, {
+ide.api.openThirdPartyView(&quot;My Guide&quot;, &quot;pdf&quot;, {
   contentUrl: &quot;https:&#47;&#47;example.com&#47;guide.pdf&quot;
 })
 
 # Open external documentation in iframe
-ide.api.openThirdPartyPane(&quot;External Docs&quot;, &quot;iframe&quot;, {
+ide.api.openThirdPartyView(&quot;External Docs&quot;, &quot;iframe&quot;, {
   contentUrl: &quot;https:&#47;&#47;docs.example.com&quot;
 }, {
   background: true  # Don&#39;t activate immediately
@@ -1013,7 +1037,7 @@ ide.api.openThirdPartyPane(&quot;External Docs&quot;, &quot;iframe&quot;, {
         )
       </span>
       &mdash;
-      <span class='desc'>Requested identifier for the pane (used as tab title, auto-uniquified if needed) </span>
+      <span class='desc'>Requested identifier for the view (used as tab title, auto-uniquified if needed) </span>
     </li>
     <li>
       <span class='name'>contentType</span>
@@ -1043,7 +1067,7 @@ ide.api.openThirdPartyPane(&quot;External Docs&quot;, &quot;iframe&quot;, {
         )
       </span>
       &mdash;
-      <span class='desc'>Control options (optional): @option options {Boolean} background If true, don&#39;t activate pane after opening (default: false) @option options {Boolean} nonTransferrable If true, mark as non-transferrable to optimize memory (default: false) </span>
+      <span class='desc'>Control options (optional): @option options {Boolean} background If true, don&#39;t activate view after opening (default: false) @option options {Boolean} nonTransferrable If true, mark as non-transferrable to optimize memory (default: false) </span>
     </li>
   </ul>
   <h3>Returns:</h3>
@@ -1060,24 +1084,24 @@ ide.api.openThirdPartyPane(&quot;External Docs&quot;, &quot;iframe&quot;, {
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='reservePane-dynamic'>
+    <p class='signature' id='reserveView-dynamic'>
       #
 (Promise&lt;String&gt;)
-<b>reservePane</b><span>(mnemonic)</span>
+<b>reserveView</b><span>(mnemonic)</span>
       <br>
     </p>
     <div class='docstring'>
-  <p>Public API method to reserve a (uniquified) pane mnemonic ahead of opening it.
-A later openThirdPartyPane() call with the returned mnemonic is guaranteed to use it unchanged,
-which lets callers wire up channel contracts that reference the mnemonic before the pane exists
-(e.g. reserve both panes, then open each subscribing to the other&#39;s reserved mnemonic).</p>
+  <p>Public API method to reserve a (uniquified) view mnemonic ahead of opening it.
+A later openThirdPartyView() call with the returned mnemonic is guaranteed to use it unchanged,
+which lets callers wire up channel contracts that reference the mnemonic before the view exists
+(e.g. reserve both views, then open each subscribing to the other&#39;s reserved mnemonic).</p>
   <div class='examples'>
     <h3>Examples:</h3>
     <h4>
       
     </h4>
-    <pre><code class='coffeescript'>ce    = await ide.api.reservePane(&quot;Compiler Explorer&quot;)
-warpv = await ide.api.reservePane(&quot;WARP-V&quot;)</code></pre>
+    <pre><code class='coffeescript'>ce    = await ide.api.reserveView(&quot;Compiler Explorer&quot;)
+warpv = await ide.api.reserveView(&quot;WARP-V&quot;)</code></pre>
   </div>
 </div>
 <div class='tags'>
@@ -1116,10 +1140,10 @@ warpv = await ide.api.reservePane(&quot;WARP-V&quot;)</code></pre>
     </p>
     <div class='docstring'>
   <p>Public API method to emit an application event onto the IDE bus as a <code>platform</code> participant.
-Panes (and the IDE) receive it through their subscriptions, filtered by <code>type</code> and <code>source</code>;
+Views (and the IDE) receive it through their subscriptions, filtered by <code>type</code> and <code>source</code>;
 the source is always within the reserved <code>platform</code> namespace, so it cannot be spoofed as
-&quot;ide&quot; or a pane. This is a fire-and-forget broadcast onto the same <code>ext/&lt;type&gt;</code> channel panes
-use — an existing pane whose contract names &quot;platform&quot; in a subscription&#39;s <code>sources</code> receives
+&quot;ide&quot; or a view. This is a fire-and-forget broadcast onto the same <code>ext/&lt;type&gt;</code> channel views
+use — an existing view whose contract names &quot;platform&quot; in a subscription&#39;s <code>sources</code> receives
 it with no change.
 TRUST: the <code>platform</code> namespace is only <em>mostly</em> trusted — anyone can host a Makerchip Plugin,
 and the host may relay this API to AI agents — so recipients opt in per source. Omit <code>agent</code>
@@ -1195,25 +1219,25 @@ await ide.api.busEmit(&quot;sourceAsm&quot;, { source, asm }, null, &quot;ai&quo
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='callPane-dynamic'>
+    <p class='signature' id='callView-dynamic'>
       #
 (Promise)
-<b>callPane</b><span>(mnemonic, method, args, timeoutMs)</span>
+<b>callView</b><span>(mnemonic, method, args, timeoutMs)</span>
       <br>
     </p>
     <div class='docstring'>
-  <p>Public API method to call a method on a connected third-party pane and await its result
-(host-&gt;pane RPC). Names a pane the caller opened (by its reserved/uniquified mnemonic) and
-forwards <code>method</code>/<code>args</code> over that pane&#39;s channel; the pane must have declared <code>rpc: true</code> and
+  <p>Public API method to call a method on a connected third-party view and await its result
+(host-&gt;view RPC). Names a view the caller opened (by its reserved/uniquified mnemonic) and
+forwards <code>method</code>/<code>args</code> over that view&#39;s channel; the view must have declared <code>rpc: true</code> and
 implemented a handler for <code>method</code>. This is the request/response complement to {busEmit}&#39;s
-fire-and-forget broadcast: use it when you need a value back (e.g. tell a pane to run and wait
+fire-and-forget broadcast: use it when you need a value back (e.g. tell a view to run and wait
 for its outcome). The IDE is a pass-through — it interprets neither the method nor the arguments.</p>
   <div class='examples'>
     <h3>Examples:</h3>
     <h4>
       
     </h4>
-    <pre><code class='coffeescript'>result = await ide.api.callPane(&quot;Compiler Explorer+2&quot;, &quot;runOnWarpV&quot;, [])</code></pre>
+    <pre><code class='coffeescript'>result = await ide.api.callView(&quot;Compiler Explorer+2&quot;, &quot;runOnWarpV&quot;, [])</code></pre>
   </div>
 </div>
 <div class='tags'>
@@ -1227,7 +1251,7 @@ for its outcome). The IDE is a pass-through — it interprets neither the method
         )
       </span>
       &mdash;
-      <span class='desc'>The target pane&#39;s mnemonic (as returned by reservePane/openThirdPartyPane). </span>
+      <span class='desc'>The target view&#39;s mnemonic (as returned by reserveView/openThirdPartyView). </span>
     </li>
     <li>
       <span class='name'>method</span>
@@ -1237,7 +1261,7 @@ for its outcome). The IDE is a pass-through — it interprets neither the method
         )
       </span>
       &mdash;
-      <span class='desc'>The pane method to invoke. </span>
+      <span class='desc'>The view method to invoke. </span>
     </li>
     <li>
       <span class='name'>[args]</span>
@@ -1268,7 +1292,7 @@ for its outcome). The IDE is a pass-through — it interprets neither the method
         <tt>Promise</tt>
       )
       &mdash;
-      <span class='desc'>Resolves with the pane&#39;s result; rejects on pane error, timeout, or if the pane is unknown or did not opt into RPC. </span>
+      <span class='desc'>Resolves with the view&#39;s result; rejects on view error, timeout, or if the view is unknown or did not opt into RPC. </span>
     </li>
   </ul>
 </div>
@@ -1282,13 +1306,13 @@ for its outcome). The IDE is a pass-through — it interprets neither the method
     </p>
     <div class='docstring'>
   <p>Public API method to get the current layout state of the IDE.
-The state includes the arrangement of panes, splits, and active tabs.
-It may include recovery data for reconstructing third-party panes.
+The state includes the arrangement of views, splits, and active tabs.
+It may include recovery data for reconstructing third-party views.
 This can be used to save and restore user&#39;s layout preferences, transfer to a different IDE instance,
 or to inspect (then modify) the layout.</p><p>The returned state is a recursive tree representing the split layout hierarchy. Each node is either
-a FlexSplit (has &#39;sides&#39; property with left/right or top/bottom children) or a TabbedView (has &#39;panes&#39;
-array). Split direction is inferred from which children exist (left+right = horizontal, top+bottom = vertical).</p><p>TabbedView panes array contains mnemonic strings, or, for transferrable third-party panes with forTransfer: true,
-objects containing: {mnemonic, contentType, contentParams}</p><p>See Plugin_API.md (in Extras) for complete layout state and third-party pane documentation.</p>
+a FlexSplit (has &#39;sides&#39; property with left/right or top/bottom children) or a TabbedView (has &#39;views&#39;
+array). Split direction is inferred from which children exist (left+right = horizontal, top+bottom = vertical).</p><p>TabbedView views array contains mnemonic strings, or, for transferrable third-party views with forTransfer: true,
+objects containing: {mnemonic, contentType, contentParams}</p><p>See Plugin_API.md (in Extras) for complete layout state and third-party view documentation.</p>
   <div class='examples'>
     <h3>Examples:</h3>
     <h4>
@@ -1311,13 +1335,13 @@ await ide.setLayoutState(saved);</code></pre>
     <pre><code class='coffeescript'>{
   sides: {
     left: {
-      panes: [&quot;Editor&quot;, &quot;Nav-TLV&quot;],
-      activePane: &quot;Editor&quot;
+      views: [&quot;Editor&quot;, &quot;Nav-TLV&quot;],
+      activeView: &quot;Editor&quot;
     },
     right: {
       sides: {
         top: {
-          panes: [
+          views: [
             &quot;Diagram&quot;,
             {
               mnemonic: &quot;User Guide&quot;,
@@ -1325,11 +1349,11 @@ await ide.setLayoutState(saved);</code></pre>
               contentParams: {contentUrl: &quot;https:&#47;&#47;example.com&#47;guide.pdf&quot;}
             }
           ],
-          activePane: &quot;Diagram&quot;
+          activeView: &quot;Diagram&quot;
         },
         bottom: {
-          panes: [&quot;Waveform&quot;, &quot;Log&quot;],
-          activePane: &quot;Waveform&quot;
+          views: [&quot;Waveform&quot;, &quot;Log&quot;],
+          activeView: &quot;Waveform&quot;
         }
       },
       splitAt: 0.6
@@ -1366,7 +1390,7 @@ await ide.setLayoutState(saved);</code></pre>
         )
       </span>
       &mdash;
-      <span class='desc'>If true, include third-party panes for cross-instance transfer (default: false). Set to true when saving state that may be restored in a different IDE instance that may not have the panes. Set to false (default) when rearranging within the same instance where panes already exist. </span>
+      <span class='desc'>If true, include third-party views for cross-instance transfer (default: false). Set to true when saving state that may be restored in a different IDE instance that may not have the views. Set to false (default) when rearranging within the same instance where views already exist. </span>
     </li>
   </ul>
   <h3>Returns:</h3>
@@ -1391,9 +1415,9 @@ await ide.setLayoutState(saved);</code></pre>
     </p>
     <div class='docstring'>
   <p>Public API method to set the layout state of the IDE.
-This will close the current layout and rebuild it from the provided state.</p><p>Third-party panes named by the state that are not already open are recreated, with the platform
+This will close the current layout and rebuild it from the provided state.</p><p>Third-party views named by the state that are not already open are recreated, with the platform
 as their <code>creator</code> (the restoring participant, not whoever opened them in the captured session).
-A pane whose state carries no construction data (opened <code>nonTransferrable</code>) is dropped from the
+A view whose state carries no construction data (opened <code>nonTransferrable</code>) is dropped from the
 restored layout unless it is already open in this IDE.</p>
 </div>
 <div class='tags'>
@@ -1437,9 +1461,9 @@ restored layout unless it is already open in this IDE.</p>
       <br>
     </p>
     <div class='docstring'>
-  <p>Public API method to export the VIZ pane visualization as an image.
+  <p>Public API method to export the VIZ view visualization as an image.
 Returns a data URL containing the image in the specified format.
-Returns null if the VIZ pane is not available or has no content.</p>
+Returns null if the VIZ view is not available or has no content.</p>
 </div>
 <div class='tags'>
   <h3>Parameters:</h3>
@@ -1504,7 +1528,7 @@ Returns null if the VIZ pane is not available or has no content.</p>
     <div class='docstring'>
   <p>Capture the VIZ simulation as a video (APNG, GIF, MP4, or WebM) and resolve to a Blob,
 optionally downloading it. Rendering is performed headlessly (via the VIZ
-pane&#39;s VizRecorder + FFmpeg) blocking in the foreground process. The output format is chosen
+view&#39;s VizRecorder + FFmpeg) blocking in the foreground process. The output format is chosen
 from the <code>format</code> option if given, else the <code>filename</code> extension (.apng, .gif, .mp4, .webm),
 else a frames-based default (GIF for a single-frame capture, MP4 for animated captures). Because
 <code>format</code> is independent of <code>filename</code>, a caller can request a format while returning the blob
@@ -1512,14 +1536,14 @@ only (no download). Throws an error if the simulation data is not available or h
 data.</p><p>Video capture steps through cycles like VIZ playback, with flexible camera control via
 keyframes. Each keyframe specifies:</p><ul>
 <li><code>cycle</code>: may be fractional; monotonically increasing from earlier keyframes, spanning at least startCyc..endCyc across all keyframe cycles.</li>
-<li><code>scale</code> and <code>focus</code>: the zoom and center point of the view.</li>
-<li><code>width</code>/<code>height</code>: the reference view within which scale/focus are interpreted.
-The keyframe view is fit within the recording dimensions, so framing stays consistent at any
+<li><code>scale</code> and <code>focus</code>: the zoom and center point of the camera.</li>
+<li><code>width</code>/<code>height</code>: the reference viewport within which scale/focus are interpreted.
+The keyframe&#39;s reference viewport is fit within the recording dimensions, so framing stays consistent at any
 recording size (when width/height are provided).</li>
 </ul><p>Keyframes are interpreted according to the <code>mode</code> option:</p><ul>
-<li>&#39;viz-relative&#39; (default): scale is a multiplier on the current VIZ scale (0.5 = zoom out 2x, 2.0 = zoom in 2x) and focus is an offset as a fraction of the current view&#39;s visible width/height. <code>keyframes</code> may be omitted to record the current view (a single default keyframe).</li>
-<li>&#39;fit-relative&#39;: like viz-relative, but the base is the whole-design contain-fit AT THE RECORDING SIZE rather than the current pane view (scale 1 = whole design framed, 2 = 2x zoom in; focus is a fraction of the fit&#39;s visible area). This is the reliable way to frame a recording without hand-tuning scale, since it is independent of the pane&#39;s aspect and scroll position. <code>keyframes</code> may be omitted to record the whole-design fit. Equivalent to using <a href='../class/IdePlugin.html#fitKeyframe-dynamic'>IdePlugin#fitKeyframe</a> as the base keyframe.</li>
-<li>&#39;absolute&#39;: scale/focus are absolute VIZ coordinates, with the reference view given by each keyframe&#39;s width/height (or <code>default.width</code>/<code>height</code>). The current view is NOT used, so <code>keyframes</code> is REQUIRED (at least one entry); <code>default</code> only supplies values for properties an individual keyframe omits and does not substitute for the array.</li>
+<li>&#39;viz-relative&#39; (default): scale is a multiplier on the current VIZ scale (0.5 = zoom out 2x, 2.0 = zoom in 2x) and focus is an offset as a fraction of the current viewport&#39;s width/height. <code>keyframes</code> may be omitted to record the current camera (a single default keyframe).</li>
+<li>&#39;fit-relative&#39;: like viz-relative, but the base is the whole-design contain-fit AT THE RECORDING SIZE rather than the current VIZ camera (scale 1 = whole design framed, 2 = 2x zoom in; focus is a fraction of the fit&#39;s visible area). This is the reliable way to frame a recording without hand-tuning scale, since it is independent of the view&#39;s aspect and scroll position. <code>keyframes</code> may be omitted to record the whole-design fit. Equivalent to using <a href='../class/IdePlugin.html#fitKeyframe-dynamic'>IdePlugin#fitKeyframe</a> as the base keyframe.</li>
+<li>&#39;absolute&#39;: scale/focus are absolute VIZ coordinates, with the reference viewport given by each keyframe&#39;s width/height (or <code>default.width</code>/<code>height</code>). The current camera is NOT used, so <code>keyframes</code> is REQUIRED (at least one entry); <code>default</code> only supplies values for properties an individual keyframe omits and does not substitute for the array.</li>
 </ul>
 <h2 id="frame-capture-behavior">Frame capture behavior</h2>
 <ul>
@@ -1534,10 +1558,10 @@ recording size (when width/height are provided).</li>
           from `filename`, else GIF for a single frame / MP4 for animation). Independent of
           `filename`, so it selects the codec even when returning the blob without download.
           true for an auto-generated name; omit/false to return the blob only
-          current VIZ view), &#39;fit-relative&#39; (relative to the whole-design fit at the recording
+          current VIZ camera), &#39;fit-relative&#39; (relative to the whole-design fit at the recording
           size — best for reliable framing), or &#39;absolute&#39; (absolute VIZ scale/coordinates)
           Required in &#39;absolute&#39; mode; in the relative modes may be omitted (records the current
-          view, or the whole-design fit for &#39;fit-relative&#39;). First/last keyframe cycles auto-fill
+          camera, or the whole-design fit for &#39;fit-relative&#39;). First/last keyframe cycles auto-fill
           from startCyc/endCyc; interpolated with Catmull-Rom splines.
 </code></pre></li>
 </ul>
@@ -1553,7 +1577,7 @@ recording size (when width/height are provided).</li>
     </h4>
     <pre><code class='coffeescript'>await ide.api.captureVideo(0, 50, {filename: true});</code></pre>
     <h4>
-      Download a high-quality MP4, based on current VIZ view
+      Download a high-quality MP4, based on current VIZ camera
     </h4>
     <pre><code class='coffeescript'>await ide.api.captureVideo(0, 20, {
   fps: 25,                  &#47;&#47; 25 frames per second
@@ -1580,12 +1604,12 @@ recording size (when width/height are provided).</li>
   filename: &#39;animated.mp4&#39;
 });</code></pre>
     <h4>
-      Absolute VIZ coordinates relative to a 1200x1200 reference view
+      Absolute VIZ coordinates relative to a 1200x1200 reference viewport
     </h4>
     <pre><code class='coffeescript'>await ide.api.captureVideo(0, 100, {
   width: 600, height: 600,                &#47;&#47; record at half size; framing stays consistent
   mode: &#39;absolute&#39;,
-  default: {width: 1200, height: 1200},   &#47;&#47; reference view the absolute scale is relative to
+  default: {width: 1200, height: 1200},   &#47;&#47; reference viewport the absolute scale is relative to
   keyframes: [{scale: 0.1, focus: {x: 250, y: -100}}],
   filename: &#39;absolute.mp4&#39;
 });</code></pre>
@@ -1815,7 +1839,7 @@ const kf1 = await ide.api.getKeyframe();
 
 &#47;&#47; Navigate to end position
 await ide.api.setCycle(100);
-&#47;&#47; ... manually zoom&#47;pan in VIZ to desired end view ...
+&#47;&#47; ... manually zoom&#47;pan in VIZ to desired end framing ...
 const kf2 = await ide.api.getKeyframe();
 
 &#47;&#47; Capture video with animated camera
@@ -1863,20 +1887,20 @@ await ide.api.captureVideo(0, 100, {
     </p>
     <div class='docstring'>
   <p>Compute an absolute contain-fit keyframe that frames the whole design for a target recording
-size (fits the design&#39;s bounding box to width x height, centered), WITHOUT changing the current view.</p><p>Rarely needed. For a whole-design capture, or a zoom into it, prefer captureVideo&#39;s
+size (fits the design&#39;s bounding box to width x height, centered), WITHOUT changing the current camera.</p><p>Rarely needed. For a whole-design capture, or a zoom into it, prefer captureVideo&#39;s
 <code>mode: &#39;fit-relative&#39;</code>, which frames the fit automatically with no keyframe. Reach for fitKeyframe
 only when you need the fit as an <em>absolute</em> keyframe: to interpolate a whole-design frame together
-with <a href='../class/IdePlugin.html#getKeyframe-dynamic'>IdePlugin#getKeyframe</a> views in one <code>mode: &#39;absolute&#39;</code> path, or when you want its concrete
+with <a href='../class/IdePlugin.html#getKeyframe-dynamic'>IdePlugin#getKeyframe</a> cameras in one <code>mode: &#39;absolute&#39;</code> path, or when you want its concrete
 numeric scale/focus. The returned keyframe&#39;s width/height equal the requested size, so pass the
 same width/height to captureVideo.</p><pre><code>                            or null if VIZ is not available
 </code></pre>
   <div class='examples'>
     <h3>Examples:</h3>
     <h4>
-      Glide from the whole-design frame to a hand-positioned getKeyframe view (absolute)
+      Glide from the whole-design frame to a hand-positioned getKeyframe camera (absolute)
     </h4>
     <pre><code class='coffeescript'>const fit = await ide.api.fitKeyframe(350, 250);
-await ide.api.setCycle(100);                  &#47;&#47; ...zoom&#47;pan to a detail view...
+await ide.api.setCycle(100);                  &#47;&#47; ...zoom&#47;pan to a detail framing...
 const detail = await ide.api.getKeyframe();
 await ide.api.captureVideo(fit.cycle, detail.cycle, {
   width: 350, height: 250,
@@ -1924,21 +1948,21 @@ await ide.api.captureVideo(fit.cycle, detail.cycle, {
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='getAvailablePanes-dynamic'>
+    <p class='signature' id='getAvailableViews-dynamic'>
       #
 (Promise&lt;Array&lt;Object&gt;&gt;)
-<b>getAvailablePanes</b><span>()</span>
+<b>getAvailableViews</b><span>()</span>
       <br>
     </p>
     <div class='docstring'>
-  <p>Public API method to get all available panes.
-Returns an array of pane metadata including main IDE panes and static panes.
-Useful for discovering what panes can be opened via openPane() or activatePane().</p><p>Each pane object contains:</p><ul>
-<li>mnemonic: Unique identifier for the pane</li>
+  <p>Public API method to get all available views.
+Returns an array of view metadata including main IDE views and static views.
+Useful for discovering what views can be opened via openView() or activateView().</p><p>Each view object contains:</p><ul>
+<li>mnemonic: Unique identifier for the view</li>
 <li>displayName: Human-readable name</li>
-<li>description: Explanation of the pane&#39;s purpose</li>
-<li>isStatic: true for static panes (tutorials, docs), false for main IDE panes</li>
-<li>available: true if the pane can be opened (false for main panes not included in this IDE instance)</li>
+<li>description: Explanation of the view&#39;s purpose</li>
+<li>isStatic: true for static views (tutorials, docs), false for main IDE views</li>
+<li>available: true if the view can be opened (false for main views not included in this IDE instance)</li>
 </ul>
 
   <div class='examples'>
@@ -1946,8 +1970,8 @@ Useful for discovering what panes can be opened via openPane() or activatePane()
     <h4>
       
     </h4>
-    <pre><code class='coffeescript'>const panes = await ide.api.getAvailablePanes();
-console.log(panes.filter(p =&gt; p.available));</code></pre>
+    <pre><code class='coffeescript'>const views = await ide.api.getAvailableViews();
+console.log(views.filter(p =&gt; p.available));</code></pre>
   </div>
 </div>
 <div class='tags'>
@@ -1959,21 +1983,21 @@ console.log(panes.filter(p =&gt; p.available));</code></pre>
         <tt>Promise&lt;Array&lt;Object&gt;&gt;</tt>
       )
       &mdash;
-      <span class='desc'>Promise resolving to array of pane metadata objects </span>
+      <span class='desc'>Promise resolving to array of view metadata objects </span>
     </li>
   </ul>
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='fitPane-dynamic'>
+    <p class='signature' id='fitView-dynamic'>
       #
 (Promise&lt;Boolean&gt;)
-<b>fitPane</b><span>(mnemonic)</span>
+<b>fitView</b><span>(mnemonic)</span>
       <br>
     </p>
     <div class='docstring'>
-  <p>Public API method to fit the content of a named pane to its viewport.
-This forwards to the IDE&#39;s pane-level fit handler, which is implemented by panes that
+  <p>Public API method to fit the content of a named view to its viewport.
+This forwards to the IDE&#39;s view-level fit handler, which is implemented by views that
 opt in (for example VIZ, Diagram, and Waveform).</p><pre><code>                      false otherwise
 </code></pre>
   <div class='examples'>
@@ -1981,7 +2005,7 @@ opt in (for example VIZ, Diagram, and Waveform).</p><pre><code>                 
     <h4>
       
     </h4>
-    <pre><code class='coffeescript'>await ide.api.fitPane(&#39;Viz&#39;);</code></pre>
+    <pre><code class='coffeescript'>await ide.api.fitView(&#39;Viz&#39;);</code></pre>
   </div>
 </div>
 <div class='tags'>
@@ -1995,7 +2019,7 @@ opt in (for example VIZ, Diagram, and Waveform).</p><pre><code>                 
         )
       </span>
       &mdash;
-      <span class='desc'>The pane mnemonic to fit </span>
+      <span class='desc'>The view mnemonic to fit </span>
     </li>
   </ul>
   <h3>Returns:</h3>
@@ -2006,7 +2030,7 @@ opt in (for example VIZ, Diagram, and Waveform).</p><pre><code>                 
         <tt>Promise&lt;Boolean&gt;</tt>
       )
       &mdash;
-      <span class='desc'>Promise resolving to true if the pane exists and acted on the fit request, </span>
+      <span class='desc'>Promise resolving to true if the view exists and acted on the fit request, </span>
     </li>
   </ul>
 </div>
@@ -2054,7 +2078,7 @@ console.log(&#39;Current cycle:&#39;, currentCycle);</code></pre>
     </p>
     <div class='docstring'>
   <p>Public API method to set the current cycle value.
-This updates the waveform viewer and visualization panes to display the specified time step.
+This updates the waveform viewer and visualization views to display the specified time step.
 The cycle value is clamped to the valid range [0, endCycle] where endCycle is determined
 by the available waveform data from the most recent simulation.</p>
   <div class='examples'>
@@ -2192,7 +2216,7 @@ await ide.api.updatePlayState(true, undefined, 0);</code></pre>
     <div class='docstring'>
   <p>Public API method to highlight a logical entity across all IDE views.
 Logical entities are circuit elements identified by their TL-Verilog paths.
-Highlights appear in the Diagram, Waveform, and Nav-TLV panes.</p>
+Highlights appear in the Diagram, Waveform, and Nav-TLV views.</p>
   <div class='examples'>
     <h3>Examples:</h3>
     <h4>
@@ -2258,7 +2282,7 @@ await ide.api.highlight(&#39;|fetch@1&#39;, true);</code></pre>
     </p>
     <div class='docstring'>
   <p>Public API method to clear all highlighted logical entities across all IDE views.
-Removes all highlights from Diagram, Waveform, and Nav-TLV panes.</p>
+Removes all highlights from Diagram, Waveform, and Nav-TLV views.</p>
   <div class='examples'>
     <h3>Examples:</h3>
     <h4>
@@ -2339,18 +2363,18 @@ await ide.api.setDarkMode(false);</code></pre>
       <br>
     </p>
     <div class='docstring'>
-  <p>Public API method to enable or disable live mode for a specific pane.
-Live mode causes the pane to update automatically as the cycle changes during waveform playback or stepping.
-Supported panes: Diagram, Nav-TLV. VIZ is always live and cannot be changed.</p>
+  <p>Public API method to enable or disable live mode for a specific view.
+Live mode causes the view to update automatically as the cycle changes during waveform playback or stepping.
+Supported views: Diagram, Nav-TLV. VIZ is always live and cannot be changed.</p>
   <div class='examples'>
     <h3>Examples:</h3>
     <h4>
       
     </h4>
-    <pre><code class='coffeescript'>&#47;&#47; Enable live mode for Diagram pane
+    <pre><code class='coffeescript'>&#47;&#47; Enable live mode for Diagram view
 await ide.api.setLiveMode(&quot;Diagram&quot;, true);
 
-&#47;&#47; Disable live mode for Nav-TLV pane (freeze at current cycle)
+&#47;&#47; Disable live mode for Nav-TLV view (freeze at current cycle)
 await ide.api.setLiveMode(&quot;Nav-TLV&quot;, false);</code></pre>
   </div>
 </div>
@@ -2365,7 +2389,7 @@ await ide.api.setLiveMode(&quot;Nav-TLV&quot;, false);</code></pre>
         )
       </span>
       &mdash;
-      <span class='desc'>The mnemonic of the pane to control (e.g., &quot;Diagram&quot;, &quot;Nav-TLV&quot;) </span>
+      <span class='desc'>The mnemonic of the view to control (e.g., &quot;Diagram&quot;, &quot;Nav-TLV&quot;) </span>
     </li>
     <li>
       <span class='name'>enabled</span>
@@ -2386,7 +2410,7 @@ await ide.api.setLiveMode(&quot;Nav-TLV&quot;, false);</code></pre>
         <tt>Promise&lt;Boolean&gt;</tt>
       )
       &mdash;
-      <span class='desc'>Promise that resolves to true if successful, false if pane not found or doesn&#39;t support live mode </span>
+      <span class='desc'>Promise that resolves to true if successful, false if view not found or doesn&#39;t support live mode </span>
     </li>
   </ul>
 </div>
@@ -2685,7 +2709,7 @@ it. Fires for every compile accepted by the server whether triggered by the IDE 
     <strong>Note:</strong>
     Override to handle line navigation requests from IDE 
   </div>
-  <p>Called when user clicks on a line number in Nav-TLV or ErrorLog panes.
+  <p>Called when user clicks on a line number in Nav-TLV or ErrorLog views.
 This is useful when using hasEditor: false mode with an external editor.</p>
 </div>
 <div class='tags'>

@@ -1,7 +1,7 @@
 // Pythagora's Theorem in SystemVerilog.
 
 // This is just an example to show that you can code Verilog/SystemVerilog in the IDE.
-// Note that "NavTLV" and "Diagram" panes represent TL-Verilog, and will display "X" for a pure Verilog design.
+// Note that "NavTLV" and "Diagram" views represent TL-Verilog, and will display "X" for a pure Verilog design.
 
 // This code is essentially the SystemVerilog that SandPiper(TM) generates for the
 // three-stage Pythagorean Theorem example that can be found elsewhere.

@@ -4,6 +4,14 @@ Version history for the Makerchip Plugin API, tracked by the static
 `IdePlugin.version` property. The API follows semantic versioning: the major
 version is bumped for breaking (backward-incompatible) changes.
 
+## 2.1.0
+
+"Panes" are now **views**, matching common IDE terminology. Methods and layout-state keys are renamed
+accordingly: `openPane` → `openView`, `activatePane` → `activateView`, `openThirdPartyPane` →
+`openThirdPartyView`, `reservePane` → `reserveView`, `getAvailablePanes` → `getAvailableViews`,
+`fitPane` → `fitView`, `callPane` → `callView`, and `panes`/`activePane` → `views`/`activeView`.
+The old names remain as deprecated aliases, and layout state using the old keys is still accepted.
+
 ## 2.0.0
 
 **Breaking:** instances are now created with the static `IdePlugin.create()`
