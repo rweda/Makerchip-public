@@ -941,7 +941,7 @@ Static views include documentation, tutorials, and reference materials.</p><p>Av
     <div class='docstring'>
   <p>Public API method to activate an existing view by its name/mnemonic.
 This only works for views that are already opened. The view will be brought to the front
-in its tabbed view.</p><p>Common view names include:</p><ul>
+in its tabbed pane.</p><p>Common view names include:</p><ul>
 <li>&quot;Editor&quot; - Code editor</li>
 <li>&quot;Diagram&quot; - Block diagram visualization</li>
 <li>&quot;Viz&quot; - Visual debug</li>
@@ -1310,8 +1310,8 @@ The state includes the arrangement of views, splits, and active tabs.
 It may include recovery data for reconstructing third-party views.
 This can be used to save and restore user&#39;s layout preferences, transfer to a different IDE instance,
 or to inspect (then modify) the layout.</p><p>The returned state is a recursive tree representing the split layout hierarchy. Each node is either
-a FlexSplit (has &#39;sides&#39; property with left/right or top/bottom children) or a TabbedView (has &#39;views&#39;
-array). Split direction is inferred from which children exist (left+right = horizontal, top+bottom = vertical).</p><p>TabbedView views array contains mnemonic strings, or, for transferrable third-party views with forTransfer: true,
+a FlexSplit (has &#39;sides&#39; property with left/right or top/bottom children) or a TabbedPane (has &#39;views&#39;
+array). Split direction is inferred from which children exist (left+right = horizontal, top+bottom = vertical).</p><p>TabbedPane views array contains mnemonic strings, or, for transferrable third-party views with forTransfer: true,
 objects containing: {mnemonic, contentType, contentParams}</p><p>See Plugin_API.md (in Extras) for complete layout state and third-party view documentation.</p>
   <div class='examples'>
     <h3>Examples:</h3>

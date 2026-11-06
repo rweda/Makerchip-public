@@ -58,7 +58,7 @@ specification. For other API capabilities, see the Codo-generated documentation 
 content types, uniquification, the security model, and the inter-view communication
 channel. The layout-state structures below reference the third-party view <em>object</em> used to
 persist such views.</p><h2 id="layout-state-structure">Layout State Structure</h2>
-<h3 id="overview">Overview</h3><p>In the Makerchip IDE TabbedViews hold views, and a binary tree of FlexSplits defines the layout of these TabbedViews. The layout state can be programmatically manipulated.</p><p>To save and restore or transfer layouts:</p><pre><code class="lang-javascript">// Save layout for cross-instance recovery (includes third-party views)
+<h3 id="overview">Overview</h3><p>In the Makerchip IDE TabbedPanes hold views, and a binary tree of FlexSplits defines the layout of these TabbedPanes. The layout state can be programmatically manipulated.</p><p>To save and restore or transfer layouts:</p><pre><code class="lang-javascript">// Save layout for cross-instance recovery (includes third-party views)
 const state = await ide.api.getLayoutState({ forTransfer: true });
 localStorage.setItem(&#39;savedLayout&#39;, JSON.stringify(state));
 
@@ -107,7 +107,7 @@ Third-Party View API).</p><h3 id="node-types">Node Types</h3><p>The layout tree 
 </li>
 <li><strong><code>splitAt</code></strong>: Normalized position of the splitter (0.0 = far left/top, 1.0 = far right/bottom)</li>
 </ul>
-<h4 id="tabbedview-leaf-node">TabbedView (Leaf) Node</h4><p>Represents a tabbed container of views:</p><pre><code class="lang-typescript">{
+<h4 id="tabbedpane-leaf-node">TabbedPane (Leaf) Node</h4><p>Represents a tabbed container of views:</p><pre><code class="lang-typescript">{
   views: Array&lt;string | ThirdPartyViewObject&gt;,
   activeView: string
 }

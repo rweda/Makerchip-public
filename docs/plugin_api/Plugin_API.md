@@ -38,7 +38,7 @@ persist such views.
 
 ### Overview
 
-In the Makerchip IDE TabbedViews hold views, and a binary tree of FlexSplits defines the layout of these TabbedViews. The layout state can be programmatically manipulated.
+In the Makerchip IDE TabbedPanes hold views, and a binary tree of FlexSplits defines the layout of these TabbedPanes. The layout state can be programmatically manipulated.
 
 To save and restore or transfer layouts:
 
@@ -108,7 +108,7 @@ Represents a resizable split (horizontal or vertical):
   - `top` + `bottom`: Vertical split
 - **`splitAt`**: Normalized position of the splitter (0.0 = far left/top, 1.0 = far right/bottom)
 
-#### TabbedView (Leaf) Node
+#### TabbedPane (Leaf) Node
 
 Represents a tabbed container of views:
 
