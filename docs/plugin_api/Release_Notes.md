@@ -10,7 +10,7 @@ version is bumped for breaking (backward-incompatible) changes.
 accordingly: `openPane` → `openView`, `activatePane` → `activateView`, `openThirdPartyPane` →
 `openThirdPartyView`, `reservePane` → `reserveView`, `getAvailablePanes` → `getAvailableViews`,
 `fitPane` → `fitView`, `callPane` → `callView`, and `panes`/`activePane` → `views`/`activeView`.
-The old names remain as deprecated aliases, and layout state using the old keys is still accepted.
+The old names remain as deprecated `ide.api` aliases, and layout state using the old keys is still accepted.
 
 ## 2.0.0
 
