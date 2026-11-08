@@ -165,7 +165,7 @@ configurator's default settings. An iframe view pulls its `params` on demand (e.
 **`getContext` RPC** (see [View → IDE RPC](#view--ide-rpc)):
 
 ```javascript
-const { params } = await callIde("getContext");  // Assuming callIde() definition below.
+const { params } = await callIde("getContext");  // callIde() as in "A tiny client" below.
 ```
 
 `params` are persisted automatically across layout save/restore for transferrable views. The reloaded view repeats its initialization using `getContext`.
@@ -321,14 +321,15 @@ stamped with the reserved `ide` source. A view opts in by subscribing with
 
 - **`which`** names the event: `"start"` when a new compile begins, or the stage that just
   finished — `"sandpiper"` (Verilog / model generation) or `"vcd"` (simulation waveform, only if "sandpiper" succeeds).
-- **`id`** is the compile id (stable per compile; the same id appears in `/compile/<id>/…` URLs).
+- **`id`** is the compile id (stable per compile).
 - **`success`** accompanies the stage events (except `"start"`) and is `true` if that stage
   succeeded. A failed `"sandpiper"` stage skips simulation, so no `"vcd"` event follows.
 - **`artifacts`** accompanies a successful `"sandpiper"` stage: a map of model-run artifact
   filename → `boolean` (present) reporting which intermediates the compile actually produced —
   e.g. `top.m4.pre`/`top.m4` exist only when M5/M4 preprocessing ran, and `top_gen.sv` is absent
-  when Verilog generation is inlined. Use it to offer only the `/compile/<id>/results/<file>` links
-  that exist instead of guessing (and 404-ing).
+  when Verilog generation is inlined. The files themselves are not currently accessible to
+  third-party views.
+  <!-- TODO(issues/040-compile-results-under-versioned-path.md): expose a supported way to fetch them. -->
 
 ```javascript
 on("compile-result", (env) => {
@@ -342,7 +343,7 @@ on("compile-result", (env) => {
 
 The connector attaches its receive-listener synchronously when the view is created, before
 the iframe loads. A view may emit immediately. Before the IDE delivers events **to** a view,
-the view posts `{v:1, type:"ready"}`; the IDE queues inbound deliveries until that control
+the view posts `{v:1, type:"ready", …}`; the IDE queues inbound deliveries until that control
 message arrives. `ready` is handled locally and is never relayed onto the bus. RPC replies
 are not gated behind `ready`, because the view initiated the request and is already
 listening for the response. Post `ready` unconditionally, once your listener is attached: it is
@@ -350,7 +351,7 @@ never acknowledged, so a view that omits it is not refused but simply never serv
 IDE→view request times out.
 
 ```text
-view  ──postMessage({ type:"ready" })────────────────────────────────▶  IDE
+view  ──postMessage({ type:"ready", … })─────────────────────────────▶  IDE
 IDE   ──(flush queued deliveries)────────────────────────────────────▶  view
 view  ──postMessage({ type:"sourceAsm", payload })───────────────────▶  IDE
 view  ──postMessage({ kind:"rpc", id, target:"ide", method, args })──▶  IDE
@@ -358,6 +359,9 @@ IDE   ──postMessage({ kind:"rpc-result", id, result })───────�
 IDE   ──postMessage({ kind:"rpc-call", id, method, args })───────────▶  view
 view  ──postMessage({ kind:"rpc-call-result", id, result })──────────▶  IDE
 ```
+
+Every message also carries `v` (elided above); see
+[Wire versioning and trust stamps](#wire-versioning-and-trust-stamps).
 
 On view close or transfer, the connector tears down its listener; on restore, the persisted
 [`channel`](#options) contract reconstructs an identical connector.
@@ -391,7 +395,7 @@ proxy to the safe subset of Plugin API **operations**.
 
 | method | args | result |
 | --- | --- | --- |
-| `getContext` | — | `{ mnemonic: string, params: object \| null, theme: { dark: boolean } }` — the view's registered `params`, its own assigned mnemonic (seldom needed once reserved — see [Mnemonics and uniquification](#mnemonics-and-uniquification)), and the IDE's current theme (thereafter tracked via the [`theme`](#first-party-events) event). |
+| `getContext` | — | `{ mnemonic: string, params: object \| null, theme: { dark: boolean }, wire: { min, max, selected } }` — the view's registered `params`, its own assigned mnemonic (seldom needed once reserved — see [Mnemonics and uniquification](#mnemonics-and-uniquification)), the IDE's current theme (thereafter tracked via the [`theme`](#first-party-events) event), and the negotiated [wire version](#wire-versioning-and-trust-stamps). |
 | `setStatus` | `[status: string]` | `boolean` — sets **this** view's own tab-status indicator. `status` is one of the generic values below; an unknown value is ignored (returns `false`). |
 | `getCompileStatus` | `[id: string]` | `{ id, model, sim, artifacts? } \| null` — a compile's recorded per-stage outcome, where `model` (Verilog / SandPiper) and `sim` (simulation) are each `"pending" \| "success" \| "fail"`, `artifacts` is the model run's artifact manifest (present once `model` succeeds; see [`compile-result`](#first-party-events)), or `null` if `id` is unknown. The [`compile-result`](#first-party-events) event is live-only; this lets a view opened *after* a compile reconstruct the state it missed instead of assuming success. |
 
@@ -437,8 +441,57 @@ method (or to a view that never declared `rpc: true`) is answered with an `rpc-c
 view that simply never replies is timed out on the caller's side. Requests are held until the view
 posts `ready`, so nothing is lost at startup.
 
-**A tiny client (optional, copy-paste).** Nothing is injected into your view; RPC and bus
-events are just documented `postMessage` protocols. This snippet provides convenient RPC and bus helpers.
+### Wire versioning and trust stamps
+
+These fields extend the [envelope](#bus-events) and [lifecycle](#lifecycle-and-wire-protocol).
+
+**Wire-version negotiation.** `v` is the wire-framing version — today always `1`, the permanent
+floor. Every message carries it, and a message whose `v` the receiver does not understand is
+dropped. `ready` precedes negotiation, so frame it at `v: 1`, which every IDE understands. In
+`ready`, a view advertises the range it supports, and the IDE selects the highest common version
+and reports it in the view's startup context:
+
+```javascript
+parent.postMessage({ v: 1, type: "ready", versions: { min: 1, max: 1 } }, "*");
+const { wire } = await callIde("getContext");   // { min, max, selected }
+```
+
+Absence of `versions` means v1. If the ranges do not overlap, the IDE delivers no bus events to the
+view (rather than frames it cannot parse). Each connector then frames outbound messages at, and
+validates inbound messages against, the negotiated version; per-frame `v` remains as a redundant
+guard. Because bus events fan out to participants that may run different versions, the Bus reframes
+each event into the recipient's version at delivery (an L1 gasket), so a view never sees a foreign
+`v` — a no-op while every participant is v1.
+
+**Trust stamps.** Two envelope fields, `origin` and `author`, establish provenance so a recipient can authenticate a sender. They characterize a "responsible participant" — the bus participant responsible for sending the message. This may be the sender itself, or — when the sender has no web origin of its own (a blob/opaque URL) — the nearest participant in its creation chain that does. The chase stops at that first origin, never crossing to a more-trusted ancestor, so a stamp can never attribute an event past an origin boundary; a purely first-party chain resolves instead to `ide`, `platform` or `platform.<agent>`. Both are
+resolved and stamped **by the IDE** and, like `source`, can never be set by a view:
+
+```typescript
+{
+  // …
+  origin?: string,   // web origin of the responsible participant (or absent if first-party or origin-less)
+  author?: string    // responsible participant identifier, if different from source
+}
+```
+
+**Recipient helpers.** The optional `@rweda/makerchip-view-client` library exposes the stamps on each
+delivered message — `msg.origin` and `msg.sameOrigin()` (true when the sender shares the view's own
+origin) — plus a static `sameOrigin(a, b)` for comparing two origins. Testing the sender's origin is
+the usual trust check, and the message already carries it, so no argument is needed.
+
+**Identity namespaces (future).** A sigil convention — `#`-prefixed mnemonics and `@`-prefixed
+reserved identities (`@ide`, `@platform`) — will carve the identity space and leave the bare
+namespace for registered identities. It is deferred to `issues/008-registered-view-identities.md`;
+nothing above depends on it, since `author` already resolves to a reserved principal and `origin`
+carries the web origin.
+
+### A tiny client
+
+Nothing is injected into your view; RPC and bus events are just the `postMessage` protocols
+above. Most views should use the
+[`@rweda/makerchip-view-client`](https://www.npmjs.com/package/@rweda/makerchip-view-client)
+library, which implements them. Alternatively, this copy-paste snippet provides minimal RPC and
+bus helpers.
 
 ```javascript
 const V = 1;
@@ -472,7 +525,7 @@ const on = (type, fn) => {
 };
 // Register a method the IDE (or an AI agent via the Plugin API) may call on this view (rpc-call).
 const serve = (method, fn) => _rpcServed.set(method, fn);
-parent.postMessage({ v: V, type: "ready" }, "*");
+parent.postMessage({ v: V, type: "ready", versions: { min: V, max: V } }, "*");
 
 // usage:
 const { params } = await callIde("getContext");
@@ -480,48 +533,6 @@ on("sourceAsm", (env) => render(env.payload));
 emit("warpvConfig", { xlen: 32 });
 serve("runOnWarpV", async () => runAndReturnOutcome());
 ```
-
-### Wire versioning and trust stamps
-
-These fields extend the [envelope](#bus-events) and [lifecycle](#lifecycle-and-wire-protocol).
-
-**Wire-version negotiation.** `v` is the wire-framing version — today always `1`, the permanent
-floor. A view advertises the range it supports on its `ready` message, and the IDE selects the
-highest common version and reports it in the view's startup context:
-
-```javascript
-parent.postMessage({ v: 1, type: "ready", versions: { min: 1, max: 1 } }, "*");
-const { wire } = await callIde("getContext");   // { min, max, selected }
-```
-
-Absence of `versions` means v1. If the ranges do not overlap the IDE degrades gracefully rather than
-delivering frames the view cannot parse. Each connector then frames outbound messages at, and
-validates inbound messages against, the negotiated version; per-frame `v` remains as a redundant
-guard. Because bus events fan out to participants that may run different versions, the Bus reframes
-each event into the recipient's version at delivery (an L1 gasket), so a view never sees a foreign
-`v` — a no-op while every participant is v1.
-
-**Trust stamps.** Two envelope fields, `origin` and `author`, establish provenance so a recipient can authenticate a sender. They characterize a "responsible participant" — the bus participant responsible for sending the message. This may be the sender itself, or — when the sender has no web origin of its own (a blob/opaque URL) — the nearest participant in its creation chain that does. The chase stops at that first origin, never crossing to a more-trusted ancestor, so a stamp can never attribute an event past an origin boundary; a purely first-party chain resolves instead to `ide`, `platform` or `platform.<agent>`. Both are
-resolved and stamped **by the IDE** and, like `source`, can never be set by a view:
-
-```typescript
-{
-  // …
-  origin?: string,   // web origin of the responsible participant (or absent if first-party or origin-less)
-  author?: string    // responsible participant identifier, if different from source
-}
-```
-
-**Recipient helpers.** The optional `@rweda/makerchip-view-client` library exposes the stamps on each
-delivered message — `msg.origin` and `msg.sameOrigin()` (true when the sender shares the view's own
-origin) — plus a static `sameOrigin(a, b)` for comparing two origins. Testing the sender's origin is
-the usual trust check, and the message already carries it, so no argument is needed.
-
-**Identity namespaces (future).** A sigil convention — `#`-prefixed mnemonics and `@`-prefixed
-reserved identities (`@ide`, `@platform`) — will carve the identity space and leave the bare
-namespace for registered identities. It is deferred to `issues/008-registered-view-identities.md`;
-nothing above depends on it, since `author` already resolves to a reserved principal and `origin`
-carries the web origin.
 
 ### Security and future surface
 

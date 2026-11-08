@@ -130,7 +130,7 @@ resolves a view&#39;s mnemonic ahead of creating the view:</p><pre><code class="
 <strong>unchanged</strong> — the reservation is consumed as the view is created.</p><p>An unused reservation persists for the session. (TODO: a future <code>closeThirdPartyView()</code> will release reservations as well as close open views).</p><h3 id="view-parameters">View parameters</h3><p><code>params</code> is an opaque, structured-clone-safe, and (because it is persisted)
 JSON-serializable object of view-specific configuration — for example, a WARP-V
 configurator&#39;s default settings. An iframe view pulls its <code>params</code> on demand (e.g., for initialization) via the
-<strong><code>getContext</code> RPC</strong> (see <a href="#view--ide-rpc">View → IDE RPC</a>):</p><pre><code class="lang-javascript">const { params } = await callIde(&quot;getContext&quot;);  // Assuming callIde() definition below.
+<strong><code>getContext</code> RPC</strong> (see <a href="#view--ide-rpc">View → IDE RPC</a>):</p><pre><code class="lang-javascript">const { params } = await callIde(&quot;getContext&quot;);  // callIde() as in &quot;A tiny client&quot; below.
 </code></pre><p><code>params</code> are persisted automatically across layout save/restore for transferrable views. The reloaded view repeats its initialization using <code>getContext</code>.</p><p>For example, a Compiler Explorer view is opened pre-set to emit RISC-V assembly:</p><pre><code class="lang-javascript">ide.openThirdPartyView(&quot;Compiler Explorer&quot;, &quot;iframe&quot;,
   { contentUrl: &quot;https://compiler-explorer.example/&quot; },
   { channel: { produces: [&quot;sourceAsm&quot;], subscribes: [], rpc: true },
@@ -241,14 +241,15 @@ stamped with the reserved <code>ide</code> source. A view opts in by subscribing
 </table><p><code>compile-result</code> reports Makerchip&#39;s build pipeline so a view can follow it live:</p><ul>
 <li><strong><code>which</code></strong> names the event: <code>&quot;start&quot;</code> when a new compile begins, or the stage that just
 finished — <code>&quot;sandpiper&quot;</code> (Verilog / model generation) or <code>&quot;vcd&quot;</code> (simulation waveform, only if &quot;sandpiper&quot; succeeds).</li>
-<li><strong><code>id</code></strong> is the compile id (stable per compile; the same id appears in <code>/compile/&lt;id&gt;/…</code> URLs).</li>
+<li><strong><code>id</code></strong> is the compile id (stable per compile).</li>
 <li><strong><code>success</code></strong> accompanies the stage events (except <code>&quot;start&quot;</code>) and is <code>true</code> if that stage
 succeeded. A failed <code>&quot;sandpiper&quot;</code> stage skips simulation, so no <code>&quot;vcd&quot;</code> event follows.</li>
 <li><strong><code>artifacts</code></strong> accompanies a successful <code>&quot;sandpiper&quot;</code> stage: a map of model-run artifact
 filename → <code>boolean</code> (present) reporting which intermediates the compile actually produced —
 e.g. <code>top.m4.pre</code>/<code>top.m4</code> exist only when M5/M4 preprocessing ran, and <code>top_gen.sv</code> is absent
-when Verilog generation is inlined. Use it to offer only the <code>/compile/&lt;id&gt;/results/&lt;file&gt;</code> links
-that exist instead of guessing (and 404-ing).</li>
+when Verilog generation is inlined. The files themselves are not currently accessible to
+third-party views.<!-- TODO(issues/040-compile-results-under-versioned-path.md): expose a supported way to fetch them. -->
+</li>
 </ul>
 <pre><code class="lang-javascript">on(&quot;compile-result&quot;, (env) =&gt; {
   const p = env.payload;
@@ -258,19 +259,20 @@ that exist instead of guessing (and 404-ing).</li>
 </code></pre>
 <h3 id="lifecycle-and-wire-protocol">Lifecycle and wire protocol</h3><p>The connector attaches its receive-listener synchronously when the view is created, before
 the iframe loads. A view may emit immediately. Before the IDE delivers events <strong>to</strong> a view,
-the view posts <code>{v:1, type:&quot;ready&quot;}</code>; the IDE queues inbound deliveries until that control
+the view posts <code>{v:1, type:&quot;ready&quot;, …}</code>; the IDE queues inbound deliveries until that control
 message arrives. <code>ready</code> is handled locally and is never relayed onto the bus. RPC replies
 are not gated behind <code>ready</code>, because the view initiated the request and is already
 listening for the response. Post <code>ready</code> unconditionally, once your listener is attached: it is
 never acknowledged, so a view that omits it is not refused but simply never served, and every
-IDE→view request times out.</p><pre><code class="lang-text">view  ──postMessage({ type:&quot;ready&quot; })────────────────────────────────▶  IDE
+IDE→view request times out.</p><pre><code class="lang-text">view  ──postMessage({ type:&quot;ready&quot;, … })─────────────────────────────▶  IDE
 IDE   ──(flush queued deliveries)────────────────────────────────────▶  view
 view  ──postMessage({ type:&quot;sourceAsm&quot;, payload })───────────────────▶  IDE
 view  ──postMessage({ kind:&quot;rpc&quot;, id, target:&quot;ide&quot;, method, args })──▶  IDE
 IDE   ──postMessage({ kind:&quot;rpc-result&quot;, id, result })───────────────▶  view
 IDE   ──postMessage({ kind:&quot;rpc-call&quot;, id, method, args })───────────▶  view
 view  ──postMessage({ kind:&quot;rpc-call-result&quot;, id, result })──────────▶  IDE
-</code></pre><p>On view close or transfer, the connector tears down its listener; on restore, the persisted
+</code></pre><p>Every message also carries <code>v</code> (elided above); see
+<a href="#wire-versioning-and-trust-stamps">Wire versioning and trust stamps</a>.</p><p>On view close or transfer, the connector tears down its listener; on restore, the persisted
 <a href="#options"><code>channel</code></a> contract reconstructs an identical connector.</p><h3 id="view-ide-rpc">View → IDE RPC</h3><p>RPC requests use the same connector but never touch the IDE bus:</p><pre><code class="lang-typescript">// view → IDE request
 { v: 1, kind: &quot;rpc&quot;, id: number | string, target: string, method: string, args?: any[] }
 // IDE → view response
@@ -296,7 +298,7 @@ proxy to the safe subset of Plugin API <strong>operations</strong>.</p><p><stron
 <td><code>getContext</code></td>
 <td>—</td>
 <td>`{ mnemonic: string, params: object \</td>
-<td>null, theme: { dark: boolean } }<code>— the view&#39;s registered</code>params<code>, its own assigned mnemonic (seldom needed once reserved — see [Mnemonics and uniquification](#mnemonics-and-uniquification)), and the IDE&#39;s current theme (thereafter tracked via the [</code>theme`](#first-party-events) event).</td>
+<td>null, theme: { dark: boolean }, wire: { min, max, selected } }<code>— the view&#39;s registered</code>params<code>, its own assigned mnemonic (seldom needed once reserved — see [Mnemonics and uniquification](#mnemonics-and-uniquification)), the IDE&#39;s current theme (thereafter tracked via the [</code>theme`](#first-party-events) event), and the negotiated <a href="#wire-versioning-and-trust-stamps">wire version</a>.</td>
 </tr>
 <tr>
 <td><code>setStatus</code></td>
@@ -338,8 +340,35 @@ arguments — the view defines and implements the callable surface.</p><pre><cod
 </code></pre><p>A view opts in by declaring <code>rpc: true</code> and implementing a handler; a request for an unknown
 method (or to a view that never declared <code>rpc: true</code>) is answered with an <code>rpc-call-error</code>, and a
 view that simply never replies is timed out on the caller&#39;s side. Requests are held until the view
-posts <code>ready</code>, so nothing is lost at startup.</p><p><strong>A tiny client (optional, copy-paste).</strong> Nothing is injected into your view; RPC and bus
-events are just documented <code>postMessage</code> protocols. This snippet provides convenient RPC and bus helpers.</p><pre><code class="lang-javascript">const V = 1;
+posts <code>ready</code>, so nothing is lost at startup.</p><h3 id="wire-versioning-and-trust-stamps">Wire versioning and trust stamps</h3><p>These fields extend the <a href="#bus-events">envelope</a> and <a href="#lifecycle-and-wire-protocol">lifecycle</a>.</p><p><strong>Wire-version negotiation.</strong> <code>v</code> is the wire-framing version — today always <code>1</code>, the permanent
+floor. Every message carries it, and a message whose <code>v</code> the receiver does not understand is
+dropped. <code>ready</code> precedes negotiation, so frame it at <code>v: 1</code>, which every IDE understands. In
+<code>ready</code>, a view advertises the range it supports, and the IDE selects the highest common version
+and reports it in the view&#39;s startup context:</p><pre><code class="lang-javascript">parent.postMessage({ v: 1, type: &quot;ready&quot;, versions: { min: 1, max: 1 } }, &quot;*&quot;);
+const { wire } = await callIde(&quot;getContext&quot;);   // { min, max, selected }
+</code></pre><p>Absence of <code>versions</code> means v1. If the ranges do not overlap, the IDE delivers no bus events to the
+view (rather than frames it cannot parse). Each connector then frames outbound messages at, and
+validates inbound messages against, the negotiated version; per-frame <code>v</code> remains as a redundant
+guard. Because bus events fan out to participants that may run different versions, the Bus reframes
+each event into the recipient&#39;s version at delivery (an L1 gasket), so a view never sees a foreign
+<code>v</code> — a no-op while every participant is v1.</p><p><strong>Trust stamps.</strong> Two envelope fields, <code>origin</code> and <code>author</code>, establish provenance so a recipient can authenticate a sender. They characterize a &quot;responsible participant&quot; — the bus participant responsible for sending the message. This may be the sender itself, or — when the sender has no web origin of its own (a blob/opaque URL) — the nearest participant in its creation chain that does. The chase stops at that first origin, never crossing to a more-trusted ancestor, so a stamp can never attribute an event past an origin boundary; a purely first-party chain resolves instead to <code>ide</code>, <code>platform</code> or <code>platform.&lt;agent&gt;</code>. Both are
+resolved and stamped <strong>by the IDE</strong> and, like <code>source</code>, can never be set by a view:</p><pre><code class="lang-typescript">{
+  // …
+  origin?: string,   // web origin of the responsible participant (or absent if first-party or origin-less)
+  author?: string    // responsible participant identifier, if different from source
+}
+</code></pre><p><strong>Recipient helpers.</strong> The optional <code>@rweda/makerchip-view-client</code> library exposes the stamps on each
+delivered message — <code>msg.origin</code> and <code>msg.sameOrigin()</code> (true when the sender shares the view&#39;s own
+origin) — plus a static <code>sameOrigin(a, b)</code> for comparing two origins. Testing the sender&#39;s origin is
+the usual trust check, and the message already carries it, so no argument is needed.</p><p><strong>Identity namespaces (future).</strong> A sigil convention — <code>#</code>-prefixed mnemonics and <code>@</code>-prefixed
+reserved identities (<code>@ide</code>, <code>@platform</code>) — will carve the identity space and leave the bare
+namespace for registered identities. It is deferred to <code>issues/008-registered-view-identities.md</code>;
+nothing above depends on it, since <code>author</code> already resolves to a reserved principal and <code>origin</code>
+carries the web origin.</p><h3 id="a-tiny-client">A tiny client</h3><p>Nothing is injected into your view; RPC and bus events are just the <code>postMessage</code> protocols
+above. Most views should use the
+<a href="https://www.npmjs.com/package/@rweda/makerchip-view-client"><code>@rweda/makerchip-view-client</code></a>
+library, which implements them. Alternatively, this copy-paste snippet provides minimal RPC and
+bus helpers.</p><pre><code class="lang-javascript">const V = 1;
 let _rpcSeq = 0; const _rpcPending = new Map();
 const _busHandlers = new Map();
 const _rpcServed = new Map();
@@ -370,7 +399,7 @@ const on = (type, fn) =&gt; {
 };
 // Register a method the IDE (or an AI agent via the Plugin API) may call on this view (rpc-call).
 const serve = (method, fn) =&gt; _rpcServed.set(method, fn);
-parent.postMessage({ v: V, type: &quot;ready&quot; }, &quot;*&quot;);
+parent.postMessage({ v: V, type: &quot;ready&quot;, versions: { min: V, max: V } }, &quot;*&quot;);
 
 // usage:
 const { params } = await callIde(&quot;getContext&quot;);
@@ -378,29 +407,7 @@ on(&quot;sourceAsm&quot;, (env) =&gt; render(env.payload));
 emit(&quot;warpvConfig&quot;, { xlen: 32 });
 serve(&quot;runOnWarpV&quot;, async () =&gt; runAndReturnOutcome());
 </code></pre>
-<h3 id="wire-versioning-and-trust-stamps">Wire versioning and trust stamps</h3><p>These fields extend the <a href="#bus-events">envelope</a> and <a href="#lifecycle-and-wire-protocol">lifecycle</a>.</p><p><strong>Wire-version negotiation.</strong> <code>v</code> is the wire-framing version — today always <code>1</code>, the permanent
-floor. A view advertises the range it supports on its <code>ready</code> message, and the IDE selects the
-highest common version and reports it in the view&#39;s startup context:</p><pre><code class="lang-javascript">parent.postMessage({ v: 1, type: &quot;ready&quot;, versions: { min: 1, max: 1 } }, &quot;*&quot;);
-const { wire } = await callIde(&quot;getContext&quot;);   // { min, max, selected }
-</code></pre><p>Absence of <code>versions</code> means v1. If the ranges do not overlap the IDE degrades gracefully rather than
-delivering frames the view cannot parse. Each connector then frames outbound messages at, and
-validates inbound messages against, the negotiated version; per-frame <code>v</code> remains as a redundant
-guard. Because bus events fan out to participants that may run different versions, the Bus reframes
-each event into the recipient&#39;s version at delivery (an L1 gasket), so a view never sees a foreign
-<code>v</code> — a no-op while every participant is v1.</p><p><strong>Trust stamps.</strong> Two envelope fields, <code>origin</code> and <code>author</code>, establish provenance so a recipient can authenticate a sender. They characterize a &quot;responsible participant&quot; — the bus participant responsible for sending the message. This may be the sender itself, or — when the sender has no web origin of its own (a blob/opaque URL) — the nearest participant in its creation chain that does. The chase stops at that first origin, never crossing to a more-trusted ancestor, so a stamp can never attribute an event past an origin boundary; a purely first-party chain resolves instead to <code>ide</code>, <code>platform</code> or <code>platform.&lt;agent&gt;</code>. Both are
-resolved and stamped <strong>by the IDE</strong> and, like <code>source</code>, can never be set by a view:</p><pre><code class="lang-typescript">{
-  // …
-  origin?: string,   // web origin of the responsible participant (or absent if first-party or origin-less)
-  author?: string    // responsible participant identifier, if different from source
-}
-</code></pre><p><strong>Recipient helpers.</strong> The optional <code>@rweda/makerchip-view-client</code> library exposes the stamps on each
-delivered message — <code>msg.origin</code> and <code>msg.sameOrigin()</code> (true when the sender shares the view&#39;s own
-origin) — plus a static <code>sameOrigin(a, b)</code> for comparing two origins. Testing the sender&#39;s origin is
-the usual trust check, and the message already carries it, so no argument is needed.</p><p><strong>Identity namespaces (future).</strong> A sigil convention — <code>#</code>-prefixed mnemonics and <code>@</code>-prefixed
-reserved identities (<code>@ide</code>, <code>@platform</code>) — will carve the identity space and leave the bare
-namespace for registered identities. It is deferred to <code>issues/008-registered-view-identities.md</code>;
-nothing above depends on it, since <code>author</code> already resolves to a reserved principal and <code>origin</code>
-carries the web origin.</p><h3 id="security-and-future-surface">Security and future surface</h3>
+<h3 id="security-and-future-surface">Security and future surface</h3>
 <ul>
 <li><strong>Identity is stamped, not asserted</strong> — no view can spoof <code>source</code>.</li>
 <li><strong><code>produces</code> bounds emission</strong> and <strong><code>subscribes</code> bounds reception</strong> — least privilege,
