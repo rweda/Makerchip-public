@@ -49,7 +49,7 @@ the IDE is the guest.</li>
 below — participate in the IDE&#39;s event flow alongside built-in views. Here the IDE
 is the parent; the view is the guest.</li>
 </ul><p>A single deployment routinely uses both at once (e.g. a VS Code extension embeds the
-IDE <em>via the Plugin API</em>, and that IDE hosts a Compiler Explorer <em>third-party view</em>).</p></blockquote><p>This document has four sections:</p><ol>
+IDE <em>via the Plugin API</em>, and that IDE hosts a Compiler Explorer <em>third-party view</em>).</p></blockquote><p>This document has five sections:</p><ol>
 <li><strong><a href="#view-construction">View construction</a></strong> — how third-party views are created,
 uniquified, and configured.</li>
 <li><strong><a href="#communication-channel">Communication channel</a></strong> — how a third-party view
@@ -57,6 +57,8 @@ exchanges events with the IDE (via pub/sub on the bus and request/response RPC) 
 with other views (and, TODO: non-view participants).</li>
 <li><strong><a href="#persistence">Persistence</a></strong> — how transferrable views are captured and restored.</li>
 <li><strong><a href="#security-model">Security model</a></strong> — the current trust model and isolation notes.</li>
+<li><strong><a href="#licensing-and-independence">Licensing and independence</a></strong> — the legal relationship
+between views and the IDE.</li>
 </ol>
 <hr>
 <h2 id="view-construction">View construction</h2><p>Third-party views inject external content (PDFs, web pages) into the IDE&#39;s tabbed
@@ -451,10 +453,18 @@ third-party JavaScript in VIZ views.</li>
 <li>Can potentially interact with the IDE if not properly isolated; treat with caution when
 embedding untrusted content.</li>
 <li>When <em>connected</em>, a view&#39;s privileges are <strong>explicitly bounded by its channel contract</strong>
-(see <a href="#security-and-robustness">Security and robustness</a>).</li>
+(see <a href="#security-and-future-surface">Security and future surface</a>).</li>
 </ul><p><strong>Cross-origin support.</strong> The PDF.js viewer modification lets VS Code extensions and other
 platforms load local PDFs and external documentation without origin restrictions,
-facilitating seamless integration of reference material into the IDE workflow.</p>
+facilitating seamless integration of reference material into the IDE workflow.</p><h2 id="licensing-and-independence">Licensing and independence</h2><p>Third-party views are independently authored applications. They run in isolated browsing
+contexts and interact with the Makerchip IDE solely through the interoperability protocol
+defined in this document. Integrating a view through this protocol does not transfer ownership
+of either the view or the IDE, and does not alter the license of either: each remains governed
+by its own terms, and each party is responsible for complying with the licenses of the software
+it distributes or hosts. Integration implies no endorsement and grants no trademark rights.</p><p>This specification is licensed under
+<a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International (CC BY 4.0)</a>.
+The <a href="https://www.npmjs.com/package/@rweda/makerchip-view-client"><code>@rweda/makerchip-view-client</code></a>
+library, which views may embed to speak this protocol, is licensed under the MIT License.</p>
       </div>
     </div>
     <div id='footer'>

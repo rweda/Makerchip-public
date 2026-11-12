@@ -16,7 +16,7 @@
 > A single deployment routinely uses both at once (e.g. a VS Code extension embeds the
 > IDE *via the Plugin API*, and that IDE hosts a Compiler Explorer *third-party view*).
 
-This document has four sections:
+This document has five sections:
 
 1. **[View construction](#view-construction)** — how third-party views are created,
   uniquified, and configured.
@@ -25,6 +25,8 @@ This document has four sections:
    with other views (and, TODO: non-view participants).
 3. **[Persistence](#persistence)** — how transferrable views are captured and restored.
 4. **[Security model](#security-model)** — the current trust model and isolation notes.
+5. **[Licensing and independence](#licensing-and-independence)** — the legal relationship
+   between views and the IDE.
 
 ---
 
@@ -592,8 +594,22 @@ implemented).
 - Can potentially interact with the IDE if not properly isolated; treat with caution when
   embedding untrusted content.
 - When *connected*, a view's privileges are **explicitly bounded by its channel contract**
-  (see [Security and robustness](#security-and-robustness)).
+  (see [Security and future surface](#security-and-future-surface)).
 
 **Cross-origin support.** The PDF.js viewer modification lets VS Code extensions and other
 platforms load local PDFs and external documentation without origin restrictions,
 facilitating seamless integration of reference material into the IDE workflow.
+
+## Licensing and independence
+
+Third-party views are independently authored applications. They run in isolated browsing
+contexts and interact with the Makerchip IDE solely through the interoperability protocol
+defined in this document. Integrating a view through this protocol does not transfer ownership
+of either the view or the IDE, and does not alter the license of either: each remains governed
+by its own terms, and each party is responsible for complying with the licenses of the software
+it distributes or hosts. Integration implies no endorsement and grants no trademark rights.
+
+This specification is licensed under
+[Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/).
+The [`@rweda/makerchip-view-client`](https://www.npmjs.com/package/@rweda/makerchip-view-client)
+library, which views may embed to speak this protocol, is licensed under the MIT License.

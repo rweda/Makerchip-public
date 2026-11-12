@@ -66,15 +66,23 @@ class MyIDE extends IdePlugin {
   onCodeChange() {
     // Save to localStorage, enable save button, etc.
   }
+
+  onTermsAccepted(acceptedAt) {
+    // Remember the user&#39;s acceptance of the Makerchip terms (see below).
+    localStorage.setItem(&#39;makerchipTermsAcceptedAt&#39;, acceptedAt);
+  }
 }
 
 // Initialize the IDE
-const ide = await MyIDE.create(&#39;my-makerchip&#39;);
+const ide = await MyIDE.create(&#39;my-makerchip&#39;, {
+  termsAcceptedAt: localStorage.getItem(&#39;makerchipTermsAcceptedAt&#39;)
+});
 
 // Now you can interact with the IDE
 const { code } = await ide.getCode();  // Get current (default) code
-</code></pre>
-</li>
+</code></pre><p>The IDE asks the user to accept the Makerchip Terms of Service and Privacy Policy. Remembering
+the acceptance, as above, avoids asking on every page load. By passing <code>termsAcceptedAt</code>, you
+attest that the user accepted (see the <code>termsAcceptedAt</code> option of <code>IdePlugin</code>).</p></li>
 <li><p>Create other derived IDEs and instantiate as many of them as you like:</p><pre><code class="lang-html">&lt;div id=&quot;my-makerchip-2&quot;&gt;&lt;/div&gt;
 &lt;div id=&quot;my-other-makerchip&quot;&gt;&lt;/div&gt;
 </code></pre>

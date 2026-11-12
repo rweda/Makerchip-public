@@ -42,7 +42,9 @@ version is bumped for breaking (backward-incompatible) changes.</p><h2 id="2-1-0
 accordingly: <code>openPane</code> → <code>openView</code>, <code>activatePane</code> → <code>activateView</code>, <code>openThirdPartyPane</code> →
 <code>openThirdPartyView</code>, <code>reservePane</code> → <code>reserveView</code>, <code>getAvailablePanes</code> → <code>getAvailableViews</code>,
 <code>fitPane</code> → <code>fitView</code>, <code>callPane</code> → <code>callView</code>, and <code>panes</code>/<code>activePane</code> → <code>views</code>/<code>activeView</code>.
-The old names remain as deprecated <code>ide.api</code> aliases, and layout state using the old keys is still accepted.</p><h2 id="2-0-0">2.0.0</h2><p><strong>Breaking:</strong> instances are now created with the static <code>IdePlugin.create()</code>
+The old names remain as deprecated <code>ide.api</code> aliases, and layout state using the old keys is still accepted.</p><p>The IDE now asks the user to accept the Makerchip Terms of Service and Privacy Policy. To avoid
+asking again, remember the acceptance reported by the new <code>onTermsAccepted()</code> hook and pass it back
+via the new <code>termsAcceptedAt</code> option (see the <a href="README.md.html">README</a>).</p><h2 id="2-0-0">2.0.0</h2><p><strong>Breaking:</strong> instances are now created with the static <code>IdePlugin.create()</code>
 factory instead of a promise-returning constructor.</p><pre><code class="lang-javascript">// Before (1.x)
 const ide = await new MyIDE(&#39;my-makerchip&#39;);
 

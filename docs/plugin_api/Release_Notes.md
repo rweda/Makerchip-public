@@ -12,6 +12,10 @@ accordingly: `openPane` → `openView`, `activatePane` → `activateView`, `open
 `fitPane` → `fitView`, `callPane` → `callView`, and `panes`/`activePane` → `views`/`activeView`.
 The old names remain as deprecated `ide.api` aliases, and layout state using the old keys is still accepted.
 
+The IDE now asks the user to accept the Makerchip Terms of Service and Privacy Policy. To avoid
+asking again, remember the acceptance reported by the new `onTermsAccepted()` hook and pass it back
+via the new `termsAcceptedAt` option (see the [README](README.md)).
+
 ## 2.0.0
 
 **Breaking:** instances are now created with the static `IdePlugin.create()`

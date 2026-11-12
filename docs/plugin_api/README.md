@@ -47,14 +47,25 @@ To embed Makerchip in your application:
      onCodeChange() {
        // Save to localStorage, enable save button, etc.
      }
+
+     onTermsAccepted(acceptedAt) {
+       // Remember the user's acceptance of the Makerchip terms (see below).
+       localStorage.setItem('makerchipTermsAcceptedAt', acceptedAt);
+     }
    }
    
    // Initialize the IDE
-   const ide = await MyIDE.create('my-makerchip');
+   const ide = await MyIDE.create('my-makerchip', {
+     termsAcceptedAt: localStorage.getItem('makerchipTermsAcceptedAt')
+   });
    
    // Now you can interact with the IDE
    const { code } = await ide.getCode();  // Get current (default) code
    ```
+
+   The IDE asks the user to accept the Makerchip Terms of Service and Privacy Policy. Remembering
+   the acceptance, as above, avoids asking on every page load. By passing `termsAcceptedAt`, you
+   attest that the user accepted (see the `termsAcceptedAt` option of `IdePlugin`).
 
 4. Create other derived IDEs and instantiate as many of them as you like:
 

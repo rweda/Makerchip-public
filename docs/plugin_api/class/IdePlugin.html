@@ -1528,7 +1528,7 @@ Returns null if the VIZ view is not available or has no content.</p>
     <div class='docstring'>
   <p>Capture the VIZ simulation as a video (APNG, GIF, MP4, or WebM) and resolve to a Blob,
 optionally downloading it. Rendering is performed headlessly (via the VIZ
-view&#39;s VizRecorder + FFmpeg) blocking in the foreground process. The output format is chosen
+view&#39;s VizRecorder, encoding in the browser via WebCodecs) blocking in the foreground process. The output format is chosen
 from the <code>format</code> option if given, else the <code>filename</code> extension (.apng, .gif, .mp4, .webm),
 else a frames-based default (GIF for a single-frame capture, MP4 for animated captures). Because
 <code>format</code> is independent of <code>filename</code>, a caller can request a format while returning the blob
@@ -1553,7 +1553,8 @@ recording size (when width/height are provided).</li>
 </ul><p>Examples (fps=3, cyclesPerSecond=1, delta=333ms): <code>captureVideo(0, 0, {fps: 3})</code>  → 1 frame at 1000ms (final state of cycle 0) <code>captureVideo(0, 1, {fps: 3})</code>  → 4 frames: 1000ms (cyc 0 final), 333/666/1000ms (cyc 1) <code>captureVideo(-1, 0, {fps: 3})</code> → 3 frames at 333/666/1000ms (cycle 0 animation only)</p><h2 id="limitations">Limitations</h2>
 <ul>
 <li>Maximum 2000 frames per capture (~67s @ 30fps, ~33s @ 60fps).</li>
-<li>All frames are held in memory during encoding (no streaming).</li>
+<li>MP4/WebM are encoded as frames are captured; APNG/GIF frames are held in memory (as PNGs) until encoding.</li>
+<li>MP4 uses H.264 where the browser can encode it (else AV1 or VP9, still in MP4); WebM uses VP9.</li>
 <li><p>For longer captures, reduce fps/cyclesPerSecond or use screen-recording software.</p><pre><code>          but animates to cycle 0)
           from `filename`, else GIF for a single frame / MP4 for animation). Independent of
           `filename`, so it selects the codec even when returning the blob without download.
