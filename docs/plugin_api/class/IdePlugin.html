@@ -1001,11 +1001,14 @@ in its tabbed pane.</p><p>Common view names include:</p><ul>
 This enables platforms to inject custom views into the IDE.
 Views are provided by the embedding platform (e.g., VS Code extension, web app).</p><p>Currently supports:</p><ul>
 <li>&quot;pdf&quot; - Display a PDF document via URL. The viewer&#39;s own origin check is disabled, but the sandbox CSP still governs the fetch (<code>connect-src &#39;self&#39; https: blob:</code>), so <code>https:</code>, <code>blob:</code> and same-origin URLs work. <code>file://</code> does NOT: browsers block local-file loads from an <code>http(s)</code> document beneath CSP, so no CSP change can enable it (see <code>doc-src/plugin/Third_Party_View_API.md</code>). Pass a <code>blob:</code> URL to present local bytes.</li>
-<li>&quot;iframe&quot; - Embed external web content via URL</li>
+<li>&quot;iframe&quot; - Embed external web content via URL, or an HTML file fetched from <code>sourceUrl</code></li>
 </ul><p>All third-party views are closable by default.</p><p>The mnemonic is automatically uniquified if there&#39;s a collision with existing
 views (based on sanitized HTML ID). Uniquification appends +# or -#</p><p>Third-party views are always included in layout state. Recoverable views (default)
 include full creation data and can be automatically recreated. Non-recoverable views
-are tracked with null (position visible, but can&#39;t be recreated if not present).</p><pre><code>Recoverable views retain the contentParams and can provide it in layout state (see `getLayoutState()`)
+are tracked with null (position visible, but can&#39;t be recreated if not present).</p><pre><code>                    except an iframe view may give `sourceUrl` instead) @option contentParams {String} sourceUrl iframe only: an HTML file not served as a page (e.g. on
+                    raw.githubusercontent.com), fetched and framed at an opaque origin @option contentParams {Boolean} rewriteRelativeUrls With `sourceUrl`: resolve relative URLs
+                    (see `doc-src/plugin/Third_Party_View_API.md`)
+Recoverable views retain the contentParams and can provide it in layout state (see `getLayoutState()`)
 to enable automatic recreation in another IDE instance.
 </code></pre>
   <div class='examples'>
@@ -1023,6 +1026,12 @@ ide.api.openThirdPartyView(&quot;External Docs&quot;, &quot;iframe&quot;, {
   contentUrl: &quot;https:&#47;&#47;docs.example.com&quot;
 }, {
   background: true  # Don&#39;t activate immediately
+})
+
+# Open an HTML file from a GitHub repo (pin a commit SHA)
+ide.api.openThirdPartyView(&quot;My View&quot;, &quot;iframe&quot;, {
+  sourceUrl: &quot;https:&#47;&#47;raw.githubusercontent.com&#47;&lt;owner&gt;&#47;&lt;repo&gt;&#47;&lt;sha&gt;&#47;view&#47;index.html&quot;
+  rewriteRelativeUrls: true
 })</code></pre>
   </div>
 </div>
@@ -1057,7 +1066,7 @@ ide.api.openThirdPartyView(&quot;External Docs&quot;, &quot;iframe&quot;, {
         )
       </span>
       &mdash;
-      <span class='desc'>Content-specific parameters: @option contentParams {String} contentUrl URL for the content (required, supports any origin) </span>
+      <span class='desc'>Content-specific parameters: @option contentParams {String} contentUrl URL for the content (required, supports any origin, </span>
     </li>
     <li>
       <span class='name'>options</span>

@@ -133,12 +133,12 @@ include "view_lib.blade"
   h3 ASIC Development Templates
 
   p
-    | A template for Tiny Tapeout 10. (Search
-    <a>.mc-extern(href="https://github.com/stevehoover", target="_blank")
-      | here
-    | for the latest Tiny Tapeout template.)
-  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"https://raw.githubusercontent.com/stevehoover/tt10-makerchip-template/57415ad93768146f3fd108e7579111bf14269df9/src/project.tlv\")")
-    | Tiny Tapeout 10 Template (VIZ)
+    | A template for Tiny Tapeout projects, for any Tiny Tapeout process. (Its
+    <a>.mc-extern(href="https://github.com/stevehoover/tt-makerchip-template", target="_blank")
+      | repository
+    | sets up a project that runs the Tiny Tapeout flow on GitHub Actions.)
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"https://raw.githubusercontent.com/stevehoover/tt-makerchip-template/36b028777a6c86df0a727620170ee7b06d4de81e/src/project.tlv\")")
+    | Tiny Tapeout Template (VIZ)
   
 
   h2 Basic Logic Concepts

@@ -75,10 +75,35 @@ await ide.api.openThirdPartyView(
 
 ```typescript
 { contentUrl: string }
+// or
+{ sourceUrl: string, rewriteRelativeUrls?: boolean }
 ```
 
 - **`contentUrl`** — URL to embed. Subject to browser same-origin and CSP policies, and
   must permit framing (no `X-Frame-Options: DENY` / restrictive `frame-ancestors`).
+  The IDE frames only `https:`, `data:`, and `blob:` URLs, so serve a local view over HTTPS. A
+  `frame-ancestors` policy must allow every ancestor, which in the Makerchip VS Code extension
+  includes `vscode-webview:` and `vscode-file:` (not matched by `*`).
+  The frame is sandboxed: scripts, forms, modals, popups and downloads work, but the view cannot
+  navigate the IDE's top window, and a `blob:` view runs at an opaque (`null`) origin. A `data:`
+  or `blob:` page inherits the IDE's Content Security Policy, which allows inline and `https:`
+  scripts.
+- **`sourceUrl`** — instead of `contentUrl`: the URL of an HTML *file* that is not served as a
+  page, such as one on `raw.githubusercontent.com` (which serves it as `text/plain`). The IDE
+  fetches it (through its CORS proxy if need be) and frames it from a `blob:` URL, so the view
+  runs at an opaque origin: no `localStorage`, IndexedDB or cookies (accessing them throws), and
+  its requests carry `Origin: null`, so it can `fetch` only CORS-`*` resources. Keep state in the
+  IDE (e.g. [`params`](#view-parameters)). `sourceUrl` is what is persisted, so a restored view
+  fetches again. **Pin a commit SHA** rather than a branch: a branch's content changes under a
+  saved layout, and caches lag unpredictably (jsDelivr can serve a stale branch for days).
+- **`rewriteRelativeUrls`** — with `sourceUrl`, opt in to resolving the page's relative URLs. By
+  default they don't resolve, so only a self-contained page (inline or absolute-URL assets)
+  works. With this set, the IDE adds a `<base href>` for `sourceUrl`'s directory, unless the page
+  has its own `<base>`. A GitHub raw source gets its jsDelivr mirror instead
+  (`https://cdn.jsdelivr.net/gh/<owner>/<repo>@<ref>/<dir>/`), because raw serves scripts and
+  stylesheets as `text/plain`, which browsers refuse. This helps only where the host serves assets
+  with correct types (GitLab raw, for one, doesn't), and relative links to other pages still
+  won't render on jsDelivr, which serves HTML as `text/plain`.
 
 > `contentParams` carries **only** content-type-specific parameters. The communication
 > [`channel`](#communication-channel) contract and view-specific
@@ -89,6 +114,11 @@ await ide.api.openThirdPartyView(
 await ide.api.openThirdPartyView(
   "API Docs", "iframe",
   { contentUrl: "https://docs.example.com" }
+);
+await ide.api.openThirdPartyView(
+  "My View", "iframe",
+  { sourceUrl: "https://raw.githubusercontent.com/<owner>/<repo>/<sha>/view/index.html",
+    rewriteRelativeUrls: true }
 );
 ```
 
@@ -158,6 +188,7 @@ It uniquifies `requestedMnemonic` against existing views (and outstanding reserv
 **unchanged** — the reservation is consumed as the view is created.
 
 An unused reservation persists for the session. (TODO: a future `closeThirdPartyView()` will release reservations as well as close open views).
+<!-- TODO(issues/044-close-or-replace-third-party-view.md) -->
 
 ### View parameters
 

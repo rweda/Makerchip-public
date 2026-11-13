@@ -115,7 +115,7 @@ Most of the key repositories are provided by Redwood EDA or Steve Hoover in GitH
   - <a href="https://github.com/stevehoover/warp-v_includes" target="_blank">WARP-V libraries</a>
   - <a href="https://github.com/stevehoover/conversion-to-TLV" target="_blank">A project for converting Verilog code to TL-Verilog</a> (should be very helpful, especially `prompts.json`)
   - <a href="https://github.com/stevehoover/wordle_accelerator" target="_blank">An accelerator for a special-purpose CPU for determining optimal Wordle guesses</a>
-  - <a href="https://github.com/stevehoover/tt10-makerchip-template" target="_blank">A template for Makerchip-based TinyTapeout 10 Projects</a>
+  - <a href="https://github.com/stevehoover/tt-makerchip-template" target="_blank">A template for Makerchip-based Tiny Tapeout projects</a> (any Tiny Tapeout process)
   - <a href="https://github.com/stevehoover/gian-course" target="_blank">The course repository for a two-week TL-Verilog RISC-V design course conducted in India</a> (based on the MYTH Workshop)
   - <a href="https://github.com/stevehoover/VSDOpen2020_TLV_RISC-V_Tutorial" target="_blank">Content for a 2.5-hr VSDOpen2020 tutorial</a>
   - <a href="https://github.com/stevehoover/RISC-V_MYTH_Workshop" target="_blank">Repository for the Microprocessor for You in Thirty Hours (MYTH) Workshop</a> <!-- and shhhh, solutions are here: https://github.com/stevehoover/TLV_lab_solutions -->

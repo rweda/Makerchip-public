@@ -85,10 +85,35 @@ loads from an <code>http(s)</code> document beneath CSP, so no CSP change can en
 </code></pre>
 <h4 id="iframe-content-contenttype-iframe-">Iframe content (<code>contentType: &quot;iframe&quot;</code>)</h4>
 <pre><code class="lang-typescript">{ contentUrl: string }
+// or
+{ sourceUrl: string, rewriteRelativeUrls?: boolean }
 </code></pre>
 <ul>
 <li><strong><code>contentUrl</code></strong> — URL to embed. Subject to browser same-origin and CSP policies, and
-must permit framing (no <code>X-Frame-Options: DENY</code> / restrictive <code>frame-ancestors</code>).</li>
+must permit framing (no <code>X-Frame-Options: DENY</code> / restrictive <code>frame-ancestors</code>).
+The IDE frames only <code>https:</code>, <code>data:</code>, and <code>blob:</code> URLs, so serve a local view over HTTPS. A
+<code>frame-ancestors</code> policy must allow every ancestor, which in the Makerchip VS Code extension
+includes <code>vscode-webview:</code> and <code>vscode-file:</code> (not matched by <code>*</code>).
+The frame is sandboxed: scripts, forms, modals, popups and downloads work, but the view cannot
+navigate the IDE&#39;s top window, and a <code>blob:</code> view runs at an opaque (<code>null</code>) origin. A <code>data:</code>
+or <code>blob:</code> page inherits the IDE&#39;s Content Security Policy, which allows inline and <code>https:</code>
+scripts.</li>
+<li><strong><code>sourceUrl</code></strong> — instead of <code>contentUrl</code>: the URL of an HTML <em>file</em> that is not served as a
+page, such as one on <code>raw.githubusercontent.com</code> (which serves it as <code>text/plain</code>). The IDE
+fetches it (through its CORS proxy if need be) and frames it from a <code>blob:</code> URL, so the view
+runs at an opaque origin: no <code>localStorage</code>, IndexedDB or cookies (accessing them throws), and
+its requests carry <code>Origin: null</code>, so it can <code>fetch</code> only CORS-<code>*</code> resources. Keep state in the
+IDE (e.g. <a href="#view-parameters"><code>params</code></a>). <code>sourceUrl</code> is what is persisted, so a restored view
+fetches again. <strong>Pin a commit SHA</strong> rather than a branch: a branch&#39;s content changes under a
+saved layout, and caches lag unpredictably (jsDelivr can serve a stale branch for days).</li>
+<li><strong><code>rewriteRelativeUrls</code></strong> — with <code>sourceUrl</code>, opt in to resolving the page&#39;s relative URLs. By
+default they don&#39;t resolve, so only a self-contained page (inline or absolute-URL assets)
+works. With this set, the IDE adds a <code>&lt;base href&gt;</code> for <code>sourceUrl</code>&#39;s directory, unless the page
+has its own <code>&lt;base&gt;</code>. A GitHub raw source gets its jsDelivr mirror instead
+(<code>https://cdn.jsdelivr.net/gh/&lt;owner&gt;/&lt;repo&gt;@&lt;ref&gt;/&lt;dir&gt;/</code>), because raw serves scripts and
+stylesheets as <code>text/plain</code>, which browsers refuse. This helps only where the host serves assets
+with correct types (GitLab raw, for one, doesn&#39;t), and relative links to other pages still
+won&#39;t render on jsDelivr, which serves HTML as <code>text/plain</code>.</li>
 </ul>
 <blockquote><p><code>contentParams</code> carries <strong>only</strong> content-type-specific parameters. The communication
 <a href="#communication-channel"><code>channel</code></a> contract and view-specific
@@ -97,6 +122,11 @@ via <a href="#options"><code>options</code></a> instead.</p></blockquote>
 <pre><code class="lang-javascript">await ide.api.openThirdPartyView(
   &quot;API Docs&quot;, &quot;iframe&quot;,
   { contentUrl: &quot;https://docs.example.com&quot; }
+);
+await ide.api.openThirdPartyView(
+  &quot;My View&quot;, &quot;iframe&quot;,
+  { sourceUrl: &quot;https://raw.githubusercontent.com/&lt;owner&gt;/&lt;repo&gt;/&lt;sha&gt;/view/index.html&quot;,
+    rewriteRelativeUrls: true }
 );
 </code></pre>
 <h3 id="options">Options</h3><p>The optional fourth argument groups two kinds of settings — transient open behavior, and
@@ -129,7 +159,8 @@ below). At times it is necessary to know a view&#39;s mnemonic before opening it
 resolves a view&#39;s mnemonic ahead of creating the view:</p><pre><code class="lang-typescript">reserveView(requestedMnemonic: string): Promise&lt;string&gt;   // → the actual (uniquified) mnemonic
 </code></pre><p>It uniquifies <code>requestedMnemonic</code> against existing views (and outstanding reservations), reserves the resulting mnemonic, and returns it. A later <code>openThirdPartyView()</code> (or
 <code>initThirdPartyView()</code>) called with that exact mnemonic is then guaranteed to return it
-<strong>unchanged</strong> — the reservation is consumed as the view is created.</p><p>An unused reservation persists for the session. (TODO: a future <code>closeThirdPartyView()</code> will release reservations as well as close open views).</p><h3 id="view-parameters">View parameters</h3><p><code>params</code> is an opaque, structured-clone-safe, and (because it is persisted)
+<strong>unchanged</strong> — the reservation is consumed as the view is created.</p><p>An unused reservation persists for the session. (TODO: a future <code>closeThirdPartyView()</code> will release reservations as well as close open views).
+<!-- TODO(issues/044-close-or-replace-third-party-view.md) --></p><h3 id="view-parameters">View parameters</h3><p><code>params</code> is an opaque, structured-clone-safe, and (because it is persisted)
 JSON-serializable object of view-specific configuration — for example, a WARP-V
 configurator&#39;s default settings. An iframe view pulls its <code>params</code> on demand (e.g., for initialization) via the
 <strong><code>getContext</code> RPC</strong> (see <a href="#view--ide-rpc">View → IDE RPC</a>):</p><pre><code class="lang-javascript">const { params } = await callIde(&quot;getContext&quot;);  // callIde() as in &quot;A tiny client&quot; below.
