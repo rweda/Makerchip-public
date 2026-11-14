@@ -548,6 +548,7 @@ logic RESET_reset_a2;
 // Debug Signals
 //
 
+   /* verilator lint_save */ /* verilator lint_off UNUSED */
    if (1) begin : DEBUG_SIGS
 
 
@@ -769,6 +770,7 @@ logic RESET_reset_a2;
 
 
    end
+   /* verilator lint_restore */
 
 // ---------- Generated Code Ends ----------
 `line 51 "ring.m4out.tlv"

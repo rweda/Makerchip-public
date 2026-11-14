@@ -542,6 +542,7 @@ reg  RESET_reset_a2;
 
 generate
 
+   /* verilator lint_save */ /* verilator lint_off UNUSED */
    if (1) begin : DEBUG_SIGS
 
 
@@ -763,6 +764,7 @@ generate
 
 
    end
+   /* verilator lint_restore */
 
 endgenerate
 

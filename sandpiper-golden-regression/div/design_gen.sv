@@ -328,6 +328,7 @@ logic clkP_CALC_last_iter_a3 ;
 // Debug Signals
 //
 
+   /* verilator lint_save */ /* verilator lint_off UNUSED */
    if (1) begin : DEBUG_SIGS
 
 
@@ -393,4 +394,5 @@ logic clkP_CALC_last_iter_a3 ;
 
 
    end
+   /* verilator lint_restore */
 

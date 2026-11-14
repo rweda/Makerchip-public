@@ -88,6 +88,7 @@ wire [10:0] LIFE_Yy_Xx_right_alive_accum_a1 [Y_SIZE-1:0][X_SIZE-1:0];
 
 generate
 
+   /* verilator lint_save */ /* verilator lint_off UNUSED */
    if (1) begin : DEBUG_SIGS
 
 
@@ -141,6 +142,7 @@ generate
 
 
    end
+   /* verilator lint_restore */
 
 endgenerate
 

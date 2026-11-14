@@ -224,6 +224,7 @@ logic clkF_BUS_Slave_Entry_write_a2 [2:0][63:0];
 
 generate
 
+   /* verilator lint_save */ /* verilator lint_off UNUSED */
    if (1) begin : DEBUG_SIGS
 
 
@@ -363,6 +364,7 @@ generate
 
 
    end
+   /* verilator lint_restore */
 
 endgenerate
 

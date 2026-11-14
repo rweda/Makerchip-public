@@ -267,7 +267,7 @@ stamped with the reserved <code>ide</code> source. A view opts in by subscribing
 </tr>
 <tr>
 <td><code>compile-result</code></td>
-<td><code>{ which, id, success?, artifacts? }</code></td>
+<td><code>{ which, id, resultsUrl?, success?, artifacts? }</code></td>
 <td>A compile starts, and each stage completes (see below).</td>
 </tr>
 </tbody>
@@ -275,19 +275,24 @@ stamped with the reserved <code>ide</code> source. A view opts in by subscribing
 <li><strong><code>which</code></strong> names the event: <code>&quot;start&quot;</code> when a new compile begins, or the stage that just
 finished — <code>&quot;sandpiper&quot;</code> (Verilog / model generation) or <code>&quot;vcd&quot;</code> (simulation waveform, only if &quot;sandpiper&quot; succeeds).</li>
 <li><strong><code>id</code></strong> is the compile id (stable per compile).</li>
+<li><strong><code>resultsUrl</code></strong> is the absolute URL of the compile&#39;s files. Resolve a file name against it, e.g.
+<code>new URL(&quot;top.sv&quot;, p.resultsUrl)</code>; the files are served with CORS. A file is available once its
+stage succeeds: the <code>artifacts</code> below after <code>&quot;sandpiper&quot;</code>, and <code>vlt_dump.vcd</code> after <code>&quot;vcd&quot;</code>.
+<code>resultsUrl</code> may be absent, in which case the compile&#39;s files are not available to views.</li>
 <li><strong><code>success</code></strong> accompanies the stage events (except <code>&quot;start&quot;</code>) and is <code>true</code> if that stage
 succeeded. A failed <code>&quot;sandpiper&quot;</code> stage skips simulation, so no <code>&quot;vcd&quot;</code> event follows.</li>
 <li><strong><code>artifacts</code></strong> accompanies a successful <code>&quot;sandpiper&quot;</code> stage: a map of model-run artifact
 filename → <code>boolean</code> (present) reporting which intermediates the compile actually produced —
 e.g. <code>top.m4.pre</code>/<code>top.m4</code> exist only when M5/M4 preprocessing ran, and <code>top_gen.sv</code> is absent
-when Verilog generation is inlined. The files themselves are not currently accessible to
-third-party views.<!-- TODO(issues/040-compile-results-under-versioned-path.md): expose a supported way to fetch them. -->
-</li>
+when Verilog generation is inlined. Files downloaded by <code>m4_sv_include_url</code> or <code>m4_sv_get_url</code> are
+listed as <code>sv_url_inc/&lt;path&gt;</code>.</li>
 </ul>
 <pre><code class="lang-javascript">on(&quot;compile-result&quot;, (env) =&gt; {
   const p = env.payload;
   if (p.which === &quot;start&quot;) showBusy();
-  else if (p.which === &quot;sandpiper&quot; &amp;&amp; p.success) myIndicateCompilationStarted(p.artifacts);
+  else if (p.which === &quot;sandpiper&quot; &amp;&amp; p.success &amp;&amp; p.resultsUrl) {
+    fetch(new URL(&quot;top.sv&quot;, p.resultsUrl)).then((r) =&gt; r.text()).then(showVerilog);
+  }
 });
 </code></pre>
 <h3 id="lifecycle-and-wire-protocol">Lifecycle and wire protocol</h3><p>The connector attaches its receive-listener synchronously when the view is created, before
@@ -340,9 +345,9 @@ proxy to the safe subset of Plugin API <strong>operations</strong>.</p><p><stron
 </tr>
 <tr>
 <td><code>getCompileStatus</code></td>
-<td><code>[id: string]</code></td>
-<td>`{ id, model, sim, artifacts? } \</td>
-<td>null<code>— a compile&#39;s recorded per-stage outcome, where</code>model<code>(Verilog / SandPiper) and</code>sim<code>(simulation) are each</code>&quot;pending&quot; \</td>
+<td><code>[id?: string]</code></td>
+<td>`{ id, resultsUrl?, model, sim, artifacts? } \</td>
+<td>null<code>— a compile&#39;s (by default, the latest compile&#39;s) recorded per-stage outcome, where</code>resultsUrl<code>is as in [</code>compile-result<code>](#first-party-events),</code>model<code>(Verilog / SandPiper) and</code>sim<code>(simulation) are each</code>&quot;pending&quot; \</td>
 <td>&quot;success&quot; \</td>
 <td>&quot;fail&quot;<code>,</code>artifacts<code>is the model run&#39;s artifact manifest (present once</code>model<code>succeeds; see [</code>compile-result<code>](#first-party-events)), or</code>null<code>if</code>id<code>is unknown. The [</code>compile-result`](#first-party-events) event is live-only; this lets a view opened <em>after</em> a compile reconstruct the state it missed instead of assuming success.</td>
 </tr>

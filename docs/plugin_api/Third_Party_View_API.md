@@ -348,27 +348,32 @@ stamped with the reserved `ide` source. A view opts in by subscribing with
 | type | payload | when |
 | --- | --- | --- |
 | `theme` | `{ dark: boolean }` | The IDE's dark mode changes. The initial value is also available synchronously from [`getContext().theme`](#view--ide-rpc). |
-| `compile-result` | `{ which, id, success?, artifacts? }` | A compile starts, and each stage completes (see below). |
+| `compile-result` | `{ which, id, resultsUrl?, success?, artifacts? }` | A compile starts, and each stage completes (see below). |
 
 `compile-result` reports Makerchip's build pipeline so a view can follow it live:
 
 - **`which`** names the event: `"start"` when a new compile begins, or the stage that just
   finished — `"sandpiper"` (Verilog / model generation) or `"vcd"` (simulation waveform, only if "sandpiper" succeeds).
 - **`id`** is the compile id (stable per compile).
+- **`resultsUrl`** is the absolute URL of the compile's files. Resolve a file name against it, e.g.
+  `new URL("top.sv", p.resultsUrl)`; the files are served with CORS. A file is available once its
+  stage succeeds: the `artifacts` below after `"sandpiper"`, and `vlt_dump.vcd` after `"vcd"`.
+  `resultsUrl` may be absent, in which case the compile's files are not available to views.
 - **`success`** accompanies the stage events (except `"start"`) and is `true` if that stage
   succeeded. A failed `"sandpiper"` stage skips simulation, so no `"vcd"` event follows.
 - **`artifacts`** accompanies a successful `"sandpiper"` stage: a map of model-run artifact
   filename → `boolean` (present) reporting which intermediates the compile actually produced —
   e.g. `top.m4.pre`/`top.m4` exist only when M5/M4 preprocessing ran, and `top_gen.sv` is absent
-  when Verilog generation is inlined. The files themselves are not currently accessible to
-  third-party views.
-  <!-- TODO(issues/040-compile-results-under-versioned-path.md): expose a supported way to fetch them. -->
+  when Verilog generation is inlined. Files downloaded by `m4_sv_include_url` or `m4_sv_get_url` are
+  listed as `sv_url_inc/<path>`.
 
 ```javascript
 on("compile-result", (env) => {
   const p = env.payload;
   if (p.which === "start") showBusy();
-  else if (p.which === "sandpiper" && p.success) myIndicateCompilationStarted(p.artifacts);
+  else if (p.which === "sandpiper" && p.success && p.resultsUrl) {
+    fetch(new URL("top.sv", p.resultsUrl)).then((r) => r.text()).then(showVerilog);
+  }
 });
 ```
 
@@ -430,7 +435,7 @@ proxy to the safe subset of Plugin API **operations**.
 | --- | --- | --- |
 | `getContext` | — | `{ mnemonic: string, params: object \| null, theme: { dark: boolean }, wire: { min, max, selected } }` — the view's registered `params`, its own assigned mnemonic (seldom needed once reserved — see [Mnemonics and uniquification](#mnemonics-and-uniquification)), the IDE's current theme (thereafter tracked via the [`theme`](#first-party-events) event), and the negotiated [wire version](#wire-versioning-and-trust-stamps). |
 | `setStatus` | `[status: string]` | `boolean` — sets **this** view's own tab-status indicator. `status` is one of the generic values below; an unknown value is ignored (returns `false`). |
-| `getCompileStatus` | `[id: string]` | `{ id, model, sim, artifacts? } \| null` — a compile's recorded per-stage outcome, where `model` (Verilog / SandPiper) and `sim` (simulation) are each `"pending" \| "success" \| "fail"`, `artifacts` is the model run's artifact manifest (present once `model` succeeds; see [`compile-result`](#first-party-events)), or `null` if `id` is unknown. The [`compile-result`](#first-party-events) event is live-only; this lets a view opened *after* a compile reconstruct the state it missed instead of assuming success. |
+| `getCompileStatus` | `[id?: string]` | `{ id, resultsUrl?, model, sim, artifacts? } \| null` — a compile's (by default, the latest compile's) recorded per-stage outcome, where `resultsUrl` is as in [`compile-result`](#first-party-events), `model` (Verilog / SandPiper) and `sim` (simulation) are each `"pending" \| "success" \| "fail"`, `artifacts` is the model run's artifact manifest (present once `model` succeeds; see [`compile-result`](#first-party-events)), or `null` if `id` is unknown. The [`compile-result`](#first-party-events) event is live-only; this lets a view opened *after* a compile reconstruct the state it missed instead of assuming success. |
 
 Accepted `setStatus` values are — `"none"`, `"working"`, `"success"`, `"warning"`,
 `"error"`, `"fail"`, `"timeout"`.
