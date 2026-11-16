@@ -339,6 +339,11 @@ proxy to the safe subset of Plugin API <strong>operations</strong>.</p><p><stron
 <td>null, theme: { dark: boolean }, wire: { min, max, selected } }<code>— the view&#39;s registered</code>params<code>, its own assigned mnemonic (seldom needed once reserved — see [Mnemonics and uniquification](#mnemonics-and-uniquification)), the IDE&#39;s current theme (thereafter tracked via the [</code>theme`](#first-party-events) event), and the negotiated <a href="#wire-versioning-and-trust-stamps">wire version</a>.</td>
 </tr>
 <tr>
+<td><code>openUrl</code></td>
+<td><code>[url: string]</code></td>
+<td><code>boolean</code> — opens an <code>http:</code>/<code>https:</code> URL in a new browser tab (in VS Code, the system browser), returning whether it did. Use it for a view&#39;s external links: a view&#39;s own <code>target=&quot;_blank&quot;</code> links can&#39;t open windows in every host (e.g. VS Code&#39;s webviews).</td>
+</tr>
+<tr>
 <td><code>setStatus</code></td>
 <td><code>[status: string]</code></td>
 <td><code>boolean</code> — sets <strong>this</strong> view&#39;s own tab-status indicator. <code>status</code> is one of the generic values below; an unknown value is ignored (returns <code>false</code>).</td>
@@ -352,8 +357,62 @@ proxy to the safe subset of Plugin API <strong>operations</strong>.</p><p><stron
 <td>&quot;fail&quot;<code>,</code>artifacts<code>is the model run&#39;s artifact manifest (present once</code>model<code>succeeds; see [</code>compile-result<code>](#first-party-events)), or</code>null<code>if</code>id<code>is unknown. The [</code>compile-result`](#first-party-events) event is live-only; this lets a view opened <em>after</em> a compile reconstruct the state it missed instead of assuming success.</td>
 </tr>
 </tbody>
-</table><p>Accepted <code>setStatus</code> values are — <code>&quot;none&quot;</code>, <code>&quot;working&quot;</code>, <code>&quot;success&quot;</code>, <code>&quot;warning&quot;</code>,
-<code>&quot;error&quot;</code>, <code>&quot;fail&quot;</code>, <code>&quot;timeout&quot;</code>.</p><p><strong>Proxied Plugin API operations.</strong> Views may also call a safe whitelisted subset of the Plugin API&#39;s
+</table><p>Accepted <code>setStatus</code> values:</p><table>
+<thead>
+<tr>
+<th>status</th>
+<th>tab icon</th>
+<th>meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&quot;none&quot;</code></td>
+<td>(none)</td>
+<td>No status to show.</td>
+</tr>
+<tr>
+<td><code>&quot;working&quot;</code></td>
+<td>spinner</td>
+<td>Results are pending.</td>
+</tr>
+<tr>
+<td><code>&quot;success&quot;</code></td>
+<td>green check</td>
+<td>Succeeded.</td>
+</tr>
+<tr>
+<td><code>&quot;success_stale&quot;</code></td>
+<td>gray check</td>
+<td>Succeeded, but no longer reflects the current compile (e.g. a build of an earlier version of the design).</td>
+</tr>
+<tr>
+<td><code>&quot;warning&quot;</code></td>
+<td>orange triangle</td>
+<td>Succeeded, with a warning.</td>
+</tr>
+<tr>
+<td><code>&quot;error&quot;</code></td>
+<td>red triangle</td>
+<td>Succeeded, with an error.</td>
+</tr>
+<tr>
+<td><code>&quot;fail&quot;</code></td>
+<td>red X</td>
+<td>Failed.</td>
+</tr>
+<tr>
+<td><code>&quot;timeout&quot;</code></td>
+<td>clock</td>
+<td>Timed out.</td>
+</tr>
+<tr>
+<td><code>&quot;irrelevant&quot;</code></td>
+<td>gray slashed circle</td>
+<td>Doesn&#39;t apply to the current compile.</td>
+</tr>
+</tbody>
+</table><p><strong>Proxied Plugin API operations.</strong> Views may also call a safe whitelisted subset of the Plugin API&#39;s
 <em>operations</em> (host→IDE commands): <code>loadCode</code>, <code>getCode</code>, <code>getChangeGeneration</code>,
 <code>getSettings</code>, <code>getCycle</code>, <code>setCycle</code>, <code>updatePlayState</code>, <code>highlight</code>, <code>clearHighlights</code>,
 <code>setDarkMode</code>, <code>setLiveMode</code>, <code>openView</code>, <code>activateView</code>, <code>reserveView</code>, <code>getVizImage</code>,

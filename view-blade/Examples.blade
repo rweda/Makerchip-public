@@ -20,9 +20,9 @@ include "view_lib.blade"
     li(onclick="ide.anchorLink(this, 'lib')")
       | TLV M5 Macro Library Template
     li(onclick="ide.anchorLink(this, 'fpga')")
-      | FPGA Development Templates
+      | FPGA Development
     li(onclick="ide.anchorLink(this, 'asic')")
-      | ASIC Development Templates
+      | ASIC Development
   h3
     | Basic Logic Concepts
   ul.mc-toc
@@ -117,7 +117,7 @@ include "view_lib.blade"
     | Macro Library Template
   
   a(name="fpga")
-  h3 FPGA Development Templates
+  h3 FPGA Development
 
   p
     | A template for developing FPGA logic for various FPGA boards, based on this
@@ -130,15 +130,36 @@ include "view_lib.blade"
     | SV FPGA Template (VIZ)
   
   a(name="asic")
-  h3 ASIC Development Templates
+  h3 ASIC Development
 
+  h4 Tiny Tapeout Template
   p
-    | A template for Tiny Tapeout projects, for any Tiny Tapeout process. (Its
+    | A template for Tiny Tapeout projects, supporting all Tiny Tapeout processes, Verilog and TL-Verilog. (Its
     <a>.mc-extern(href="https://github.com/stevehoover/tt-makerchip-template", target="_blank")
       | repository
     | sets up a project that runs the Tiny Tapeout flow on GitHub Actions.)
-  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"https://raw.githubusercontent.com/stevehoover/tt-makerchip-template/36b028777a6c86df0a727620170ee7b06d4de81e/src/project.tlv\")")
+  button.btn.mc-tutorial-btn(type="button" onclick="ide.loadStaticPageTLV(\"#{mnemonic}\", 1, \"https://raw.githubusercontent.com/stevehoover/tt-makerchip-template/4d03b0cd4ce59c6c25aa701fe726d085f8d8854e/src/project.tlv\")")
     | Tiny Tapeout Template (VIZ)
+
+  h4 Desert Dash: a Tiny Tapeout VGA Game
+  p
+    | This example is a game you can play in a VGA Playground view, with 2D and 3D views to explore and simulate
+    | its physical ASIC model. To develop your own Tiny Tapeout design with these features, use the Makerchip
+    | extension for VS Code with a project made from this
+    <a>.mc-extern(href="https://github.com/stevehoover/tt-makerchip-template", target="_blank")
+      | template
+    | repository. One click runs the Tiny Tapeout flow on GitHub Actions and shows its results, so you never
+    | leave VS Code until you are ready to submit your project for fabrication.
+  // The demo project, pinned to the commit whose layout its GitHub Pages publishes, with views the extension opens
+  // for it (see github.com/stevehoover/makerchip-tt-views): TT VGA, and TT Layout on its published layout.
+  - var ttDemo = "https://raw.githubusercontent.com/stevehoover/tt-makerchip-demo/63bd5d59b8acb07711c8bb52dd5f96f90533887c/src/project.tlv"
+  - var ttView = function (mnemonic, page, options) { return "ide.openThirdPartyView(" + JSON.stringify(mnemonic) + ", 'iframe', 'ide', {contentUrl: " + JSON.stringify("https://stevehoover.github.io/makerchip-tt-views/" + page) + "}, " + JSON.stringify(options) + ");" }
+  - var theme = {type: "theme", sources: ["ide"]}
+  - var ttVga = ttView("TT VGA", "vga.html", {channel: {subscribes: [{type: "compile-result", sources: ["ide"]}, theme], rpc: true}})
+  - var ttLayout = ttView("TT Layout", "layout.html", {background: true, params: {repo: "stevehoover/tt-makerchip-demo"}, channel: {subscribes: [theme], rpc: true}})
+  - var ttOnclick = "ide.loadStaticPageTLV(" + JSON.stringify(mnemonic) + ", 1, " + JSON.stringify(ttDemo) + "); " + ttLayout + ttVga
+  button.btn.mc-tutorial-btn(type="button" onclick="#{ttOnclick}")
+    | Desert Dash (VGA, VIZ)
   
 
   h2 Basic Logic Concepts

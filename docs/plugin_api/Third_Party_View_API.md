@@ -434,11 +434,23 @@ proxy to the safe subset of Plugin API **operations**.
 | method | args | result |
 | --- | --- | --- |
 | `getContext` | — | `{ mnemonic: string, params: object \| null, theme: { dark: boolean }, wire: { min, max, selected } }` — the view's registered `params`, its own assigned mnemonic (seldom needed once reserved — see [Mnemonics and uniquification](#mnemonics-and-uniquification)), the IDE's current theme (thereafter tracked via the [`theme`](#first-party-events) event), and the negotiated [wire version](#wire-versioning-and-trust-stamps). |
+| `openUrl` | `[url: string]` | `boolean` — opens an `http:`/`https:` URL in a new browser tab (in VS Code, the system browser), returning whether it did. Use it for a view's external links: a view's own `target="_blank"` links can't open windows in every host (e.g. VS Code's webviews). |
 | `setStatus` | `[status: string]` | `boolean` — sets **this** view's own tab-status indicator. `status` is one of the generic values below; an unknown value is ignored (returns `false`). |
 | `getCompileStatus` | `[id?: string]` | `{ id, resultsUrl?, model, sim, artifacts? } \| null` — a compile's (by default, the latest compile's) recorded per-stage outcome, where `resultsUrl` is as in [`compile-result`](#first-party-events), `model` (Verilog / SandPiper) and `sim` (simulation) are each `"pending" \| "success" \| "fail"`, `artifacts` is the model run's artifact manifest (present once `model` succeeds; see [`compile-result`](#first-party-events)), or `null` if `id` is unknown. The [`compile-result`](#first-party-events) event is live-only; this lets a view opened *after* a compile reconstruct the state it missed instead of assuming success. |
 
-Accepted `setStatus` values are — `"none"`, `"working"`, `"success"`, `"warning"`,
-`"error"`, `"fail"`, `"timeout"`.
+Accepted `setStatus` values:
+
+| status | tab icon | meaning |
+| --- | --- | --- |
+| `"none"` | (none) | No status to show. |
+| `"working"` | spinner | Results are pending. |
+| `"success"` | green check | Succeeded. |
+| `"success_stale"` | gray check | Succeeded, but no longer reflects the current compile (e.g. a build of an earlier version of the design). |
+| `"warning"` | orange triangle | Succeeded, with a warning. |
+| `"error"` | red triangle | Succeeded, with an error. |
+| `"fail"` | red X | Failed. |
+| `"timeout"` | clock | Timed out. |
+| `"irrelevant"` | gray slashed circle | Doesn't apply to the current compile. |
 
 **Proxied Plugin API operations.** Views may also call a safe whitelisted subset of the Plugin API's
 *operations* (host→IDE commands): `loadCode`, `getCode`, `getChangeGeneration`,
