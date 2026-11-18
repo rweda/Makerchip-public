@@ -18,6 +18,7 @@ The Makerchip Plugin API provides programmatic control over the IDE, enabling:
 - **Third-Party Views**: Inject custom content (PDFs, web pages) into the tabbed interface
   (see the [Third-Party View API](Third_Party_View_API.md))
 - **View Control**: Open, activate, and manage IDE views
+- **External Waveforms**: Load a VCD trace (e.g. from a non-TL-Verilog simulation) for the waveform and VIZ
 - **Visualization Export**: Export VIZ view diagrams as images
 - **Navigation Integration**: Handle line navigation requests from the IDE
 

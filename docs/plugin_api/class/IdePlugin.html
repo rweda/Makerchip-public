@@ -53,6 +53,7 @@
           Semantic version of the IdePlugin API. 2.0.0: instances are created via the static <a href='../class/IdePlugin.html#create-static'>IdePlugin.create</a> factory; the
 constructor no longer returns a Promise (breaking change from 1.x).
 2.1.0: &quot;pane&quot; methods and layout-state keys renamed to &quot;view&quot; (old names deprecated).
+2.2.0: external VCD loading (loadVcd, unlockVcd, getWaveformStatus).
 
         </dd>
         <dt id='API_METHODS-property'>
@@ -150,7 +151,7 @@ are described as &quot;Public API method to...&quot; in their descriptions.
       <a href='#compile-dynamic'>
         #
 (void)
-<b>compile</b><span>(code, enableSimulation = true, settings = {})</span>
+<b>compile</b><span>(code, opts = {}, settings = {})</span>
       </a>
     </span>
     <span class='desc'>
@@ -398,6 +399,42 @@ are described as &quot;Public API method to...&quot; in their descriptions.
     </span>
     <span class='desc'>
       Public API method to control waveform playback. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#loadVcd-dynamic'>
+        #
+(Promise&lt;Object&gt;)
+<b>loadVcd</b><span>(vcd, options = {})</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Public API method to load an external VCD trace (e.g. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#unlockVcd-dynamic'>
+        #
+(Promise&lt;void&gt;)
+<b>unlockVcd</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Public API method to unlock the waveform (e.g. 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#getWaveformStatus-dynamic'>
+        #
+(Promise&lt;Object&gt;)
+<b>getWaveformStatus</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Public API method to get the waveform&#39;s status. 
     </span>
   </li>
   <li>
@@ -710,7 +747,7 @@ Note that contruction should be done via the <code>create()</code> factory, whic
     <p class='signature' id='compile-dynamic'>
       #
 (void)
-<b>compile</b><span>(code, enableSimulation = true, settings = {})</span>
+<b>compile</b><span>(code, opts = {}, settings = {})</span>
       <br>
     </p>
     <div class='docstring'>
@@ -730,14 +767,14 @@ Note that contruction should be done via the <code>create()</code> factory, whic
       <span class='desc'>(optional) TL-Verilog source to compile. A String compiles a single top file. An Object of the form <code>{files, top}</code> compiles multiple files, where <code>files</code> maps relative path -&gt; contents and <code>top</code> names the entry file (default &quot;top.tlv&quot;); sibling files referenced via <code>m4_include</code> are resolved by their relative path. If not provided, retrieves code from the editor. Required (in either form) when using hasEditor: false mode. </span>
     </li>
     <li>
-      <span class='name'>enableSimulation</span>
+      <span class='name'>opts</span>
       <span class='type'>
         (
-          <tt>Boolean</tt>
+          <tt>Object|Boolean</tt>
         )
       </span>
       &mdash;
-      <span class='desc'>(optional, default true) whether to run the Verilator simulation after Verilog generation. Pass false for a faster Verilog-only (model) run. </span>
+      <span class='desc'>(optional) compilation options (a Boolean gives <code>sim</code>): </span>
     </li>
     <li>
       <span class='name'>settings</span>
@@ -748,6 +785,32 @@ Note that contruction should be done via the <code>create()</code> factory, whic
       </span>
       &mdash;
       <span class='desc'>(optional, default {}) user compilation settings. </span>
+    </li>
+  </ul>
+  <h3>
+    Options Hash:
+    (opts):
+  </h3>
+  <ul class='options'>
+    <li>
+      <span class='name'>sim</span>
+      <span class='type'>
+        (
+          <tt>Boolean</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>whether to run the Verilator simulation after Verilog generation. Default: true, unless the waveform is locked (see {loadVcd}). </span>
+    </li>
+    <li>
+      <span class='name'>dot</span>
+      <span class='type'>
+        (
+          <tt>Boolean</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>(default true) whether to generate the diagram. </span>
     </li>
   </ul>
 </div>
@@ -2212,6 +2275,131 @@ await ide.api.updatePlayState(true, undefined, 0);</code></pre>
       )
       &mdash;
       <span class='desc'>Promise that resolves when play state is updated </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='loadVcd-dynamic'>
+      #
+(Promise&lt;Object&gt;)
+<b>loadVcd</b><span>(vcd, options = {})</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Public API method to load an external VCD trace (e.g. from simulating a non-TL-Verilog model) and lock
+the waveform to it. While locked, simulation is disabled, so compilations (e.g. of TL-Verilog that
+provides VIZ for this trace) leave the waveform in place, and VIZ renders from it.</p><p>SV signals are named by their VCD hierarchy and are referenced from VIZ by these names via
+<code>this.sigVal(name)</code>, except that a top-level &quot;TOP&quot; scope (Verilator&#39;s wrapper) is dropped. (For a
+Makerchip-generated trace, the &quot;top&quot; module is dropped, as are scopes outside it.) The global <code>clk</code> and
+<code>reset</code> signals, which define cycle timing, are taken from the top level or, failing that, the outermost
+scopes. TL-Verilog signals come from the trace&#39;s <code>DEBUG_SIGS</code> scope (from SandPiper&#39;s <code>--debugSigs</code>).</p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      
+    </h4>
+    <pre><code class='coffeescript'>const summary = await ide.api.loadVcd(vcdText, {name: &#39;sim.vcd&#39;});</code></pre>
+  </div>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>vcd</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>the VCD text </span>
+    </li>
+    <li>
+      <span class='name'>options</span>
+      <span class='type'>
+        (
+          <tt>Object</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>(optional) </span>
+    </li>
+  </ul>
+  <h3>
+    Options Hash:
+    (options):
+  </h3>
+  <ul class='options'>
+    <li>
+      <span class='name'>name</span>
+      <span class='type'>
+        (
+          <tt>String</tt>
+        )
+      </span>
+      &mdash;
+      <span class='desc'>a name for the trace (e.g. its file path), reported by {getWaveformStatus} </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>Promise&lt;Object&gt;</tt>
+      )
+      &mdash;
+      <span class='desc'>resolving to a summary of the trace: <code>{name, startCycle, endCycle, clk, reset, numSignals, numTlvSignals, sampleSvSignals, warnings}</code>, where <code>clk</code>/<code>reset</code> are the full names of the global clk/reset signals (or null), <code>sampleSvSignals</code> are a few SV signal names (as for <code>sigVal()</code>), and <code>warnings</code> report problems interpreting the trace (e.g. a missing clk or reset, making cycle timing heuristic). Rejects, leaving the waveform unchanged, if the VCD is malformed. </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='unlockVcd-dynamic'>
+      #
+(Promise&lt;void&gt;)
+<b>unlockVcd</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Public API method to unlock the waveform (e.g. from {loadVcd}), reenabling simulation. The waveform is
+empty until the next compilation.</p>
+</div>
+<div class='tags'>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>Promise&lt;void&gt;</tt>
+      )
+      &mdash;
+      <span class='desc'>Promise that resolves when unlocked </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='getWaveformStatus-dynamic'>
+      #
+(Promise&lt;Object&gt;)
+<b>getWaveformStatus</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Public API method to get the waveform&#39;s status.</p>
+</div>
+<div class='tags'>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (
+        <tt>Promise&lt;Object&gt;</tt>
+      )
+      &mdash;
+      <span class='desc'>Promise resolving to <code>{simulationEnabled, externalVcd}</code>, where <code>simulationEnabled</code> is false while the waveform is locked, and <code>externalVcd</code> is null or, if locked to an external trace, its summary, as returned by {loadVcd}. </span>
     </li>
   </ul>
 </div>

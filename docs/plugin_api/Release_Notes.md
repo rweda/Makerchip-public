@@ -4,6 +4,15 @@ Version history for the Makerchip Plugin API, tracked by the static
 `IdePlugin.version` property. The API follows semantic versioning: the major
 version is bumped for breaking (backward-incompatible) changes.
 
+## 2.2.0
+
+External waveforms: `loadVcd()` loads a VCD trace (e.g. from simulating a non-TL-Verilog model) and locks
+the waveform to it, so VIZ (from compiled TL-Verilog) renders from it; `unlockVcd()` reenables simulation,
+and `getWaveformStatus()` reports the lock. While locked, `compile()` defaults to not simulating.
+
+`compile()`'s second argument is now documented as the options object (`{sim, dot}`) that it has
+effectively always been; a Boolean (giving `sim`) is still accepted and, previously, was ignored.
+
 ## 2.1.0
 
 "Panes" are now **views**, matching common IDE terminology. Methods and layout-state keys are renamed
