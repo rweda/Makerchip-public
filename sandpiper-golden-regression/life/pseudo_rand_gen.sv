@@ -42,6 +42,7 @@ wire DEFAULT_reset_a0;
 // Debug Signals
 //
 
+`ifndef SYNTHESIS
 generate
 
    /* verilator lint_save */ /* verilator lint_off UNUSED */
@@ -63,4 +64,4 @@ generate
    /* verilator lint_restore */
 
 endgenerate
-
+`endif

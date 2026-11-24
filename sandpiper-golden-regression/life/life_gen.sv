@@ -86,6 +86,7 @@ wire [10:0] LIFE_Yy_Xx_right_alive_accum_a1 [Y_SIZE-1:0][X_SIZE-1:0];
 // Debug Signals
 //
 
+`ifndef SYNTHESIS
 generate
 
    /* verilator lint_save */ /* verilator lint_off UNUSED */
@@ -145,4 +146,4 @@ generate
    /* verilator lint_restore */
 
 endgenerate
-
+`endif

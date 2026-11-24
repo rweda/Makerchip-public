@@ -24,7 +24,7 @@ INFORM(0) (VERSION): File 'run/gen/bank/bank.tlv' Line 1 (char 46)
 	To up-rev this file to TL-X 1d use "--scrub".
 
 INFORM(0) (STATS):
-	SandPiper generated 72% of your HDL code.
+	SandPiper generated 73% of your HDL code.
 	This includes: 31 signal declarations, 20 flops/latches, and 3 conditional clock signals.
 	View "run/gen/bank/bank.m4out_stats" for more details.
 

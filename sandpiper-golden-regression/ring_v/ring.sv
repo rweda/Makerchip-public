@@ -540,6 +540,7 @@ reg  RESET_reset_a2;
 // Debug Signals
 //
 
+`ifndef SYNTHESIS
 generate
 
    /* verilator lint_save */ /* verilator lint_off UNUSED */
@@ -767,7 +768,7 @@ generate
    /* verilator lint_restore */
 
 endgenerate
-
+`endif
 // ---------- Generated Code Ends ----------
 `line 51 "ring.m4out.tlv"
 //_\TLV

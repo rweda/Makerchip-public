@@ -28,8 +28,8 @@
       ['File(s)', 'Untouched', 'Logic', 'Declarations', 'Staging', 'Structure', 'Validity', 'Instrumentation', 'Comments', 'Whitespace'],
       ['TLV ◱', 360, 6566, 0, 96, 3090, 277, 308, 9774, 11148],
       ['SV ◲', 360, 19248, 10755, 0, 942, 0, 0, 12157, 12068],
-      ['SV ◳', 0, 0, 737, 9087, 617, 9904, 0, 4838, 5799],
-      ['SV Total', 360, 19248, 11492, 9087, 1559, 9904, 0, 16995, 17867]
+      ['SV ◳', 0, 0, 737, 9087, 654, 9904, 0, 4854, 5806],
+      ['SV Total', 360, 19248, 11492, 9087, 1596, 9904, 0, 17011, 17874]
     ];
   }
 
@@ -56,11 +56,13 @@
 </span><span class="tlx_structure">`define BOGUS_USE(ignore)
 
 
-</span><span class="tlx_comments">// For X injection on assignments, disableable using `define SP_PHYS.
+</span><span class="tlx_comments">// For X injection on assignments, disabled by SYNTHESIS (or the deprecated SP_PHYS).
 </span><span class="tlx_structure">`ifdef WHEN
    $warning(&quot;WHEN macro redefined.&quot;);
 `endif
 `ifdef SP_PHYS
+   `define WHEN(valid_sig)
+`elsif SYNTHESIS
    `define WHEN(valid_sig)
 `else
    `define WHEN(valid_sig) !valid_sig ? 'x :

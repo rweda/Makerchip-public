@@ -256,6 +256,7 @@ logic [7:0] PIPE2_Copy_eight_a3;
 // Debug Signals
 //
 
+`ifndef SYNTHESIS
    /* verilator lint_save */ /* verilator lint_off UNUSED */
    if (1) begin : DEBUG_SIGS
 
@@ -340,3 +341,4 @@ logic [7:0] PIPE2_Copy_eight_a3;
    end
    /* verilator lint_restore */
 
+`endif

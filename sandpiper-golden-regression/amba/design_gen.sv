@@ -222,6 +222,7 @@ logic clkF_BUS_Slave_Entry_write_a2 [2:0][63:0];
 // Debug Signals
 //
 
+`ifndef SYNTHESIS
 generate
 
    /* verilator lint_save */ /* verilator lint_off UNUSED */
@@ -367,4 +368,4 @@ generate
    /* verilator lint_restore */
 
 endgenerate
-
+`endif

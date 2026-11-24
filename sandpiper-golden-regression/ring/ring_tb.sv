@@ -75,11 +75,13 @@ logic [15:0] cyc_cnt;
 `define BOGUS_USE(ignore)
 
 
-// For X injection on assignments, disableable using `define SP_PHYS.
+// For X injection on assignments, disabled by SYNTHESIS (or the deprecated SP_PHYS).
 `ifdef WHEN
    $warning("WHEN macro redefined.");
 `endif
 `ifdef SP_PHYS
+   `define WHEN(valid_sig)
+`elsif SYNTHESIS
    `define WHEN(valid_sig)
 `else
    `define WHEN(valid_sig) !valid_sig ? 'x :

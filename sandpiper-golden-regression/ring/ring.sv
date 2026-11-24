@@ -56,11 +56,13 @@ module ring (
 `define BOGUS_USE(ignore)
 
 
-// For X injection on assignments, disableable using `define SP_PHYS.
+// For X injection on assignments, disabled by SYNTHESIS (or the deprecated SP_PHYS).
 `ifdef WHEN
    $warning("WHEN macro redefined.");
 `endif
 `ifdef SP_PHYS
+   `define WHEN(valid_sig)
+`elsif SYNTHESIS
    `define WHEN(valid_sig)
 `else
    `define WHEN(valid_sig) !valid_sig ? 'x :
@@ -548,6 +550,7 @@ logic RESET_reset_a2;
 // Debug Signals
 //
 
+`ifndef SYNTHESIS
    /* verilator lint_save */ /* verilator lint_off UNUSED */
    if (1) begin : DEBUG_SIGS
 
@@ -772,6 +775,7 @@ logic RESET_reset_a2;
    end
    /* verilator lint_restore */
 
+`endif
 // ---------- Generated Code Ends ----------
 `line 51 "ring.m4out.tlv"
 //_\TLV
