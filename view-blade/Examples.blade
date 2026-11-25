@@ -143,23 +143,29 @@ include "view_lib.blade"
 
   h4 Desert Dash: a Tiny Tapeout VGA Game
   p
-    | This example is a game you can play in a VGA Playground view, with 2D and 3D views to explore and simulate
-    | its physical ASIC model. To develop your own Tiny Tapeout design with these features, use the Makerchip
-    | extension for VS Code with a project made from this
+    | This example is a game you can play in a VGA Playground view (TT VGA). It is a Tiny Tapeout project whose
+    | flow has run on GitHub Actions: TT Build shows the results, and TT Layout shows its physical ASIC model in 2D
+    | and 3D, where you can also explore and simulate it. To develop your own Tiny Tapeout design with these
+    | features, use the
+    <a>.mc-extern(href="https://marketplace.visualstudio.com/items?itemName=RedwoodEDA.makerchip", target="_blank")
+      | Makerchip extension for VS Code
+    | with a project made from this
     <a>.mc-extern(href="https://github.com/stevehoover/tt-makerchip-template", target="_blank")
       | template
-    | repository. One click runs the Tiny Tapeout flow on GitHub Actions and shows its results, so you never
-    | leave VS Code until you are ready to submit your project for fabrication.
-  // The demo project, pinned to the commit whose layout its GitHub Pages publishes, with views the extension opens
-  // for it (see github.com/stevehoover/makerchip-tt-views): TT VGA, and TT Layout on its published layout.
-  - var ttDemo = "https://raw.githubusercontent.com/stevehoover/tt-makerchip-demo/63bd5d59b8acb07711c8bb52dd5f96f90533887c/src/project.tlv"
+    | repository. One click runs the Tiny Tapeout flow and shows its results, so you never leave VS Code until you
+    | are ready to submit your project for fabrication.
+  // The demo project's latest main, whose results its GitHub Pages publishes, with the views the extension opens
+  // for it (see github.com/stevehoover/makerchip-tt-views). TT Layout follows TT Build's tt/run-status.
+  - var ttDemoRepo = "stevehoover/tt-makerchip-demo"
+  - var ttDemo = "https://raw.githubusercontent.com/" + ttDemoRepo + "/main/src/project.tlv"
   - var ttView = function (mnemonic, page, options) { return "ide.openThirdPartyView(" + JSON.stringify(mnemonic) + ", 'iframe', 'ide', {contentUrl: " + JSON.stringify("https://stevehoover.github.io/makerchip-tt-views/" + page) + "}, " + JSON.stringify(options) + ");" }
   - var theme = {type: "theme", sources: ["ide"]}
+  - var ttBuild = ttView("TT Build", "progress.html", {background: true, params: {repo: ttDemoRepo}, channel: {produces: ["tt/run-status"], subscribes: [theme], rpc: true}})
+  - var ttLayout = ttView("TT Layout", "layout.html", {background: true, params: {repo: ttDemoRepo}, channel: {subscribes: [{type: "tt/run-status"}, theme], rpc: true}})
   - var ttVga = ttView("TT VGA", "vga.html", {channel: {subscribes: [{type: "compile-result", sources: ["ide"]}, theme], rpc: true}})
-  - var ttLayout = ttView("TT Layout", "layout.html", {background: true, params: {repo: "stevehoover/tt-makerchip-demo"}, channel: {subscribes: [theme], rpc: true}})
-  - var ttOnclick = "ide.loadStaticPageTLV(" + JSON.stringify(mnemonic) + ", 1, " + JSON.stringify(ttDemo) + "); " + ttLayout + ttVga
+  - var ttOnclick = "ide.loadStaticPageTLV(" + JSON.stringify(mnemonic) + ", 1, " + JSON.stringify(ttDemo) + "); " + ttBuild + ttLayout + ttVga
   button.btn.mc-tutorial-btn(type="button" onclick="#{ttOnclick}")
-    | Desert Dash (VGA, VIZ)
+    | Desert Dash (VGA, VIZ, TT Build/Layout)
   
 
   h2 Basic Logic Concepts

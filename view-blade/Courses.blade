@@ -40,6 +40,10 @@ include "view_lib.blade"
     | FPGA Courses
   h3.mc-anchor-link(onclick="ide.anchorLink(this, 'asic')")
     | ASIC Courses
+  ul.mc-toc
+    li(onclick="ide.anchorLink(this, 'tt-vga')")
+      | [In Development] 
+      i Tiny Tapeout using Makerchip in VS Code
   h3.mc-anchor-link(onclick="ide.anchorLink(this, 'tlv')")
     | TL-Verilog Training
   ul.mc-toc
@@ -263,10 +267,6 @@ include "view_lib.blade"
     | as "Building your own RISC-V Processor".
   p
     | Continued course offerings are expected.
-    | Feel free to
-    <a>.mc-extern(href="https://docs.google.com/forms/d/e/1FAIpQLScBBurTohnXCrzS2rLRk0eB0A177uJivC4s8rFoJr6Ds--02Q/viewform?usp=sf_link", target="_blank")
-      | leave your contact information
-    | if interested in future course offerings.
   //h4
     | Note that:
   //ul
@@ -350,12 +350,6 @@ include "view_lib.blade"
     <a>.mc-anchor-link(onclick="ide.anchorLink(this, 'myth')")
       | MYTH Workshop
     | has been updated to include FPGA content.
-  p
-    | Other courses may be coming soon.
-    | Feel free to
-    <a>.mc-extern(href="https://docs.google.com/forms/d/e/1FAIpQLScBBurTohnXCrzS2rLRk0eB0A177uJivC4s8rFoJr6Ds--02Q/viewform?usp=sf_link", target="_blank")
-      | leave your contact information
-    | if interested in future course offerings.
 
 
   a(name="asic")
@@ -373,12 +367,26 @@ include "view_lib.blade"
     <a.mc-anchor-link(onclick="ide.anchorLink(this, 'myth')")
       | MYTH Workshop
     | .
+  a(name="tt-vga")
+  h3
+    | Tiny Tapeout using Makerchip in VS Code
   p
-    | Other courses may be coming soon.
-    | Feel free to
-    <a>.mc-extern(href="https://docs.google.com/forms/d/e/1FAIpQLScBBurTohnXCrzS2rLRk0eB0A177uJivC4s8rFoJr6Ds--02Q/viewform?usp=sf_link", target="_blank")
-      | leave your contact information
-    | if interested in future course offerings.
+    i
+      | This mini course is under development.
+  p
+    img.mc-figure-body(src="#{basePath}/module/View/TT_Makerchip.png", style="width: 70%")
+  p
+    | Design a chip that can be fabricated through
+    <a.mc-extern(href="https://tinytapeout.com", target="_blank")
+      | Tiny Tapeout
+    | . You start by designing a VGA game with an AI agent, using the
+    <a.mc-extern(href="https://marketplace.visualstudio.com/items?itemName=RedwoodEDA.makerchip", target="_blank")
+      | Makerchip extension for VS Code
+    | . You play your game as it develops, and with one click, run the Tiny Tapeout flow to see it in silicon
+    | layout, ready to submit for fabrication. Then we step back, and you learn to design a submission yourself,
+    | without AI.
+  p
+    | For a preview, open the game shown above, Desert Dash, from Examples, "ASIC Development".
 
 
   a(name="tlv")
